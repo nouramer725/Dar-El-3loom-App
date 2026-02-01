@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/responsive.dart';
 import '../../../widgets/filter_widget.dart';
@@ -20,6 +21,7 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
     return Column(
       children: [
         FilterWidget(
+          type: FilterType.dropdown,
           color: AppColors.container2Color,
           items: [
             DropdownMenuItem(value: "عربي", child: Text("عربي")),
@@ -27,7 +29,6 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
             DropdownMenuItem(value: "انجليزي", child: Text("انجليزي")),
             DropdownMenuItem(value: "الماني", child: Text("الماني")),
           ],
-          selectedItem: selectedSubject,
           text: "المادة",
           onChanged: (value) {
             setState(() {
@@ -36,6 +37,7 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
           },
         ),
         FilterWidget(
+          type: FilterType.dropdown,
           color: AppColors.container2Color,
           items: [
             DropdownMenuItem(value: "حسن", child: Text("حسن")),
@@ -43,7 +45,6 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
             DropdownMenuItem(value: "محمد", child: Text("محمد")),
             DropdownMenuItem(value: "زينب", child: Text("زينب")),
           ],
-          selectedItem: selectedSubject,
           text: "المدرس",
           onChanged: (value) {
             setState(() {
@@ -52,32 +53,27 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
           },
         ),
         FilterWidget(
+          text: 'التاريخ',
+          type: FilterType.calendar,
           color: AppColors.container2Color,
-          items: [
-            DropdownMenuItem(value: "عربي", child: Text("عربي")),
-            DropdownMenuItem(value: "رياضة", child: Text("رياضة")),
-            DropdownMenuItem(value: "انجليزي", child: Text("انجليزي")),
-            DropdownMenuItem(value: "الماني", child: Text("الماني")),
-          ],
-          selectedItem: selectedSubject,
-          text: "التاريخ",
-          onChanged: (value) {
+          selectedValue: selectedMonth,
+          onMonthSelected: (value) {
             setState(() {
-              selectedSubject = value;
+              selectedMonth = value;
             });
           },
         ),
         SizedBox(height: h(20)),
-        TableWidget(
-          tableTitleColor: AppColors.container2Color,
-          headers: ["المجموعة", "المدرس", "المادة", "التاريخ", "الساعة"],
-        ),
-        // Image.asset(
-        //   AppAssets.container2Image,
-        //   fit: BoxFit.fill,
-        //   height: h(350),
-        //   width: w(350),
+        // TableWidget(
+        //   tableTitleColor: AppColors.container2Color,
+        //   headers: ["المجموعة", "المدرس", "المادة", "التاريخ", "الساعة"],
         // ),
+        Image.asset(
+          AppAssets.container2Image,
+          fit: BoxFit.fill,
+          height: h(350),
+          width: w(350),
+        ),
       ],
     );
   }

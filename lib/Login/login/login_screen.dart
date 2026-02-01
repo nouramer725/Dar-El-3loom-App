@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../provider/app_flow.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -16,7 +17,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   int code = 0;
-  int phoneNumber = 0;
+  String password = '';
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -46,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      code = value as int;
+                      code = int.tryParse(value) ?? 0;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -70,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      phoneNumber = value as int;
+                      password = value;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -88,11 +89,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     text: "انضم",
                     colorContainer: AppColors.container1Color,
-                    onPressed: () {
+                    onPressed: () async {
                       if (formKey.currentState!.validate() == true) {
+                        await AppFlow.goToCompleted();
+
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          AppRoutes.detailsScreen,
+                          AppRoutes.homeScreenName,
                           (route) => false,
                         );
                       }

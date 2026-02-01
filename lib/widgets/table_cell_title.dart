@@ -13,11 +13,10 @@ class TableCellTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(14)),
-      child: Center(
-        child: Text(
-          text,
-          style: AppText.regularText(color: AppColors.blackColor, fontSize: sp(15)),
-        ),
+      child: Text(
+        textAlign: TextAlign.center,
+        text,
+        style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(14)),
       ),
     );
   }

@@ -22,16 +22,15 @@ class CustomTableCell extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(12)),
       child: Center(
-        child:
-            isIcon
-                ? Icon(icon, color: color)
-                : Text(
-                  text ?? '',
-                  style: AppText.regularText(
-                    color: AppColors.blackColor,
-                    fontSize: sp(15),
-                  ),
+        child: isIcon
+            ? Icon(icon, color: color)
+            : Text(
+                text ?? '',
+                style: AppText.mediumText(
+                  color: AppColors.blackColor,
+                  fontSize: sp(15),
                 ),
+              ),
       ),
     );
   }

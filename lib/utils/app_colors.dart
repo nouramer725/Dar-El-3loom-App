@@ -12,6 +12,7 @@ class AppColors {
   static const Color whiteColor = Color(0xFFFFFFFF);
   static const Color blackColor = Color(0xFF000000);
   static const Color strokeBottomNavBarColor = Color(0xFFECECEC);
+  static const Color strokeBottomNavBarColor2 = Color(0xFFF4F4F4);
   static const Color checkIconColor = Color(0xFF99A6FF);
   static const Color wrongIconColor = Color(0xFFDA0000);
   static const Color bottomNavBarIcon = Color(0xFFD3D1D1);

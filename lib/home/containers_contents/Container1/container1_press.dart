@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
@@ -17,17 +18,20 @@ class _Container1PressState extends State<Container1Press> {
   String? selectedSubject;
   String? selectedTeacher;
   String? selectedMonth;
+  bool isSelected = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.whiteColor,
       appBar: AppBar(
         centerTitle: false,
         automaticallyImplyLeading: false,
         title: Text(
           "المستوي الدراسي",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(25)),
+          style: AppText.boldText(
+            color: AppColors.blackColor,
+            fontSize: sp(25),
+          ),
         ),
         backgroundColor: AppColors.container1Color,
         actions: [
@@ -43,6 +47,7 @@ class _Container1PressState extends State<Container1Press> {
           child: Column(
             children: [
               FilterWidget(
+                type: FilterType.dropdown,
                 color: AppColors.container1Color,
                 items: [
                   DropdownMenuItem(value: "عربي", child: Text("عربي")),
@@ -50,7 +55,6 @@ class _Container1PressState extends State<Container1Press> {
                   DropdownMenuItem(value: "انجليزي", child: Text("انجليزي")),
                   DropdownMenuItem(value: "الماني", child: Text("الماني")),
                 ],
-                selectedItem: selectedSubject,
                 text: "المادة",
                 onChanged: (value) {
                   setState(() {
@@ -59,6 +63,7 @@ class _Container1PressState extends State<Container1Press> {
                 },
               ),
               FilterWidget(
+                type: FilterType.dropdown,
                 color: AppColors.container1Color,
                 items: [
                   DropdownMenuItem(
@@ -78,7 +83,6 @@ class _Container1PressState extends State<Container1Press> {
                     child: Text("اسامة سعدالله"),
                   ),
                 ],
-                selectedItem: selectedTeacher,
                 text: "المدرس",
                 onChanged: (value) {
                   setState(() {
@@ -87,39 +91,34 @@ class _Container1PressState extends State<Container1Press> {
                 },
               ),
               FilterWidget(
+                text: 'التاريخ',
+                type: FilterType.calendar,
                 color: AppColors.container1Color,
-                items: [
-                  DropdownMenuItem(value: "الاول", child: Text("الاول")),
-                  DropdownMenuItem(value: "الثاني", child: Text("الثاني")),
-                  DropdownMenuItem(value: "الثالث", child: Text("الثالث")),
-                  DropdownMenuItem(value: "الرابع", child: Text("الرابع")),
-                ],
-                selectedItem: selectedMonth,
-                text: "الشهر",
-                onChanged: (value) {
+                selectedValue: selectedMonth,
+                onMonthSelected: (value) {
                   setState(() {
                     selectedMonth = value;
                   });
                 },
               ),
               SizedBox(height: h(20)),
-              TableWidget(
-                tableTitleColor: AppColors.container1Color,
-                headers: ["الحصة", "التاريخ", "الحضور", "الامتحان", "الواجب"],
-              ),
-              // Image.asset(
-              //   AppAssets.container1Image,
-              //   fit: BoxFit.fill,
-              //   height: h(350),
-              //   width: w(350),
+              // TableWidget(
+              //   tableTitleColor: AppColors.container1Color,
+              //   headers: ["الحصة", "التاريخ", "الحضور", "الامتحان", "الواجب"],
               // ),
+              Image.asset(
+                AppAssets.container1Image,
+                fit: BoxFit.fill,
+                height: h(350),
+                width: w(350),
+              ),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBarRowWidget(
-        tableTitleColor: AppColors.container1Color,
-      ),
+      // bottomNavigationBar: BottomNavBarRowWidget(
+      //   tableTitleColor: AppColors.container1Color,
+      // ),
     );
   }
 }

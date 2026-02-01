@@ -50,15 +50,15 @@ class _Container2PressState extends State<Container2Press> {
                   });
                 },
               ),
-              SizedBox(height: h(20)),
+              SizedBox(height: h(10)),
               isSelected ? StudentDateWidget() : LessonsDateWidget(),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavBarRowWidget(
-        tableTitleColor: AppColors.container2Color,
-      ),
+      // bottomNavigationBar: BottomNavBarRowWidget(
+      //   tableTitleColor: AppColors.container2Color,
+      // ),
     );
   }
 }

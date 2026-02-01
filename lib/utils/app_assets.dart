@@ -7,7 +7,7 @@ class AppAssets {
   static const String container2Image =
       'assets/images/Time management-cuate 1.png';
   static const String container3Image =
-      'assets/images/Reading glasses-rafiki (1) 1.png.png';
+      'assets/images/Reading glasses-rafiki (1) 1.png';
   static const String container4Image = 'assets/images/Invoice-cuate 1.png';
   static const String container5Image =
       'assets/images/Certification-cuate (1) 1.png';

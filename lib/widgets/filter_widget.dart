@@ -2,72 +2,100 @@ import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
+import 'month_picker_dialog.dart';
+
+enum FilterType { dropdown, calendar }
 
 class FilterWidget extends StatelessWidget {
-  final String? selectedItem;
   final String text;
+  final Function(String)? onMonthSelected;
+  final FilterType type;
+  final List<DropdownMenuItem<String>>? items;
+  final String? selectedValue;
   final Function(String?)? onChanged;
-  final List<DropdownMenuItem<String>> items;
-  Color color;
+  final Function(DateTime)? onDateSelected;
+  final Color color;
 
-
-  FilterWidget({
-    required this.items,
-    required this.onChanged,
-    required this.selectedItem,
-    required this.text,
-    required this.color,
+  const FilterWidget({
     super.key,
+    required this.text,
+    required this.type,
+    required this.color,
+    this.items,
+    this.selectedValue,
+    this.onChanged,
+    this.onDateSelected,
+    this.onMonthSelected,
   });
 
   @override
   Widget build(BuildContext context) {
+    return type == FilterType.dropdown
+        ? _buildDropdown(context)
+        : _buildCalendar(context);
+  }
+
+  Widget _buildDropdown(BuildContext context) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: w(10)),
       margin: EdgeInsets.symmetric(vertical: h(5)),
-      width: double.infinity,
       decoration: BoxDecoration(
-        color: AppColors.transparentColor,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: color, width: 2),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.25),
-            spreadRadius: 0,
-            blurRadius: 8,
-            offset: Offset(0, 6),
-          ),
-        ],
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            text,
-            style: AppText.mediumText(
-              color: AppColors.blackColor,
-              fontSize: sp(18),
-            ),
+      child: DropdownButtonFormField<String>(
+        dropdownColor: Theme.of(context).scaffoldBackgroundColor,
+        value: selectedValue,
+        hint: Text(
+          text,
+          style: AppText.boldText(
+            fontSize: sp(18),
+            color: AppColors.blackColor,
           ),
-          Text(
-            selectedItem ?? "",
-            style: AppText.mediumText(
-              color: AppColors.blackColor,
-              fontSize: sp(18),
+        ),
+        items: items,
+        onChanged: onChanged,
+        decoration: const InputDecoration(border: InputBorder.none),
+      ),
+    );
+  }
+
+  Widget _buildCalendar(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(15)),
+      margin: EdgeInsets.symmetric(vertical: h(5)),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: color, width: 2),
+      ),
+      child: InkWell(
+        onTap: () {
+          showDialog(
+            context: context,
+            builder: (_) {
+              return MonthPickerDialog(
+                boxDecorationColor: color,
+                onSelected: (year, month) {
+                  final value = '$month / $year';
+                  onMonthSelected?.call(value);
+                },
+              );
+            },
+          );
+        },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              selectedValue ?? text,
+              style: AppText.boldText(
+                color: AppColors.blackColor,
+                fontSize: sp(18),
+              ),
             ),
-          ),
-          DropdownButton<String>(
-            value: null,
-            underline: SizedBox(),
-            icon: Icon(
-              Icons.keyboard_arrow_down_sharp,
-              color: AppColors.blackColor,
-              size: h(30),
-            ),
-            items: items,
-            onChanged: onChanged,
-          ),
-        ],
+            const Icon(Icons.calendar_month),
+          ],
+        ),
       ),
     );
   }

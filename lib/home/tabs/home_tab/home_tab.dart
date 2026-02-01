@@ -128,7 +128,7 @@ class HomeTab extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: w(12), vertical: h(12)),
         child: SingleChildScrollView(
           child: Column(
-            spacing: h(32),
+            spacing: h(30),
             children: [
               WidgetContainer(
                 onTap: () {

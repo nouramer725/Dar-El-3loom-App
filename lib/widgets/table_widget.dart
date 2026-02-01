@@ -26,10 +26,9 @@ class TableWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
                 color: tableTitleColor,
               ),
-              children:
-                  headers
-                      .map((header) => TableCellTitle(text: header))
-                      .toList(),
+              children: headers
+                  .map((header) => TableCellTitle(text: header))
+                  .toList(),
             ),
           ],
         ),
@@ -61,10 +60,9 @@ class TableWidget extends StatelessWidget {
                     CustomTableCell(
                       isIcon: true,
                       icon: lessons[index].passed ? Icons.check : Icons.close,
-                      color:
-                          lessons[index].passed
-                              ? AppColors.checkIconColor
-                              : AppColors.wrongIconColor,
+                      color: lessons[index].passed
+                          ? AppColors.checkIconColor
+                          : AppColors.wrongIconColor,
                     ),
                   ],
                 ),

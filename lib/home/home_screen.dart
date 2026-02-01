@@ -7,7 +7,6 @@ import 'package:flutter_inner_shadow/flutter_inner_shadow.dart';
 import '../utils/app_colors.dart';
 import '../utils/responsive.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -32,8 +31,8 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
         child: CurvedNavigationBar(
-          backgroundColor: Colors.transparent,
-          color: AppColors.strokeBottomNavBarColor,
+          backgroundColor: AppColors.whiteColor,
+          color: AppColors.strokeBottomNavBarColor2,
           buttonBackgroundColor: AppColors.transparentColor,
           height: h(75),
           index: selectedIndex,
