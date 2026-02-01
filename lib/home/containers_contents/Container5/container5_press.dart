@@ -15,7 +15,7 @@ class Container5press extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(
           "التقرير",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 25),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(25)),
         ),
         backgroundColor: AppColors.container5Color,
         actions: [

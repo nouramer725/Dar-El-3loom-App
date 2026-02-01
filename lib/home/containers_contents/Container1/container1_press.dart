@@ -27,7 +27,7 @@ class _Container1PressState extends State<Container1Press> {
         automaticallyImplyLeading: false,
         title: Text(
           "المستوي الدراسي",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 25),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(25)),
         ),
         backgroundColor: AppColors.container1Color,
         actions: [

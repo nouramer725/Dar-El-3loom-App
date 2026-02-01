@@ -26,7 +26,7 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> {
         backgroundColor: AppColors.strokeBottomNavBarColor,
         title: Text(
           "تعديل الصورة الشخصية",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 24),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(24)),
         ),
         actions: [
           IconButton(
@@ -64,11 +64,11 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> {
                         // updateProfileImage();
                       },
                       child: CircleAvatar(
-                        radius: 25,
+                        radius: sp(25),
                         backgroundColor: AppColors.strokeBottomNavBarColor,
                         child: Icon(
                           Icons.camera_alt_outlined,
-                          size: 25,
+                          size: sp(25),
                           color: Color(0xFFA1A5AC),
                         ),
                       ),

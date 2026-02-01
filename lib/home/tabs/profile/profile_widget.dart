@@ -1,3 +1,4 @@
+import 'package:dar_el_3loom/utils/responsive.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
@@ -29,7 +30,7 @@ class ProfileWidget extends StatelessWidget {
                 text,
                 style: AppText.regularText(
                   color: AppColors.blackColor,
-                  fontSize: 20,
+                  fontSize: sp(20),
                 ),
               ),
               InkWell(onTap: onTap, child: icon),

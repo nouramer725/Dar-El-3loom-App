@@ -29,7 +29,7 @@ class CustomTableCell extends StatelessWidget {
                   text ?? '',
                   style: AppText.regularText(
                     color: AppColors.blackColor,
-                    fontSize: h(15),
+                    fontSize: sp(15),
                   ),
                 ),
       ),

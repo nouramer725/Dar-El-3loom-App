@@ -15,7 +15,7 @@ class Container4Press extends StatelessWidget {
         automaticallyImplyLeading: false,
         title: Text(
           "المدفوعات",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 25),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(25)),
         ),
         backgroundColor: AppColors.container4Color,
         actions: [

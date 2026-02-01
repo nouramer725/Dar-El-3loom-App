@@ -37,7 +37,7 @@ class RowWidgetButtons extends StatelessWidget {
               "مواعيد الطالب",
               style: AppText.mediumText(
                 color: AppColors.blackColor,
-                fontSize: 16,
+                fontSize: sp(16),
               ),
             ),
           ),
@@ -62,7 +62,7 @@ class RowWidgetButtons extends StatelessWidget {
               "مواعيد الحصص",
               style: AppText.mediumText(
                 color: AppColors.blackColor,
-                fontSize: 16,
+                fontSize: sp(16),
               ),
             ),
           ),

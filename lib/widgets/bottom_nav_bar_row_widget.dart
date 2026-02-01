@@ -46,7 +46,7 @@ class BottomNavBarRowWidget extends StatelessWidget {
             "1 من 4",
             style: AppText.regularText(
               color: AppColors.blackColor,
-              fontSize: 15,
+              fontSize: sp(15),
             ),
           ),
         ],

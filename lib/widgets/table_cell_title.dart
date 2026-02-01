@@ -16,7 +16,7 @@ class TableCellTitle extends StatelessWidget {
       child: Center(
         child: Text(
           text,
-          style: AppText.regularText(color: AppColors.blackColor, fontSize: 15),
+          style: AppText.regularText(color: AppColors.blackColor, fontSize: sp(15)),
         ),
       ),
     );

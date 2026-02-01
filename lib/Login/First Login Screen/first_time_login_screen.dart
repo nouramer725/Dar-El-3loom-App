@@ -43,7 +43,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     hintText: "الكود",
                     hintStyle: AppText.boldText(
                       color: AppColors.textColorLogin,
-                      fontSize: 16,
+                      fontSize: sp(16),
                     ),
                     onChanged: (value) {
                       code = value as int;
@@ -67,7 +67,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     hintText: "رقم تليفون ولي الامر",
                     hintStyle: AppText.boldText(
                       color: AppColors.textColorLogin,
-                      fontSize: 16,
+                      fontSize: sp(16),
                     ),
                     onChanged: (value) {
                       phoneNumber = value as int;
@@ -84,7 +84,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     sideColor: AppColors.transparentColor,
                     textStyle: AppText.boldText(
                       color: AppColors.blackColor,
-                      fontSize: 16,
+                      fontSize: sp(16),
                     ),
                     text: "انضم",
                     colorContainer: AppColors.container2Color,

@@ -27,7 +27,7 @@ class _Container2PressState extends State<Container2Press> {
         automaticallyImplyLeading: false,
         title: Text(
           "مواعيد الجداول",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 25),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(25)),
         ),
         backgroundColor: AppColors.container2Color,
         actions: [

@@ -34,21 +34,21 @@ class HomeTab extends StatelessWidget {
                   "احمد محمد",
                   style: AppText.boldText(
                     color: AppColors.blackColor,
-                    fontSize: 24,
+                    fontSize: sp(24),
                   ),
                 ),
                 Text(
                   "اولي ثانوي",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
-                    fontSize: 16,
+                    fontSize: sp(16),
                   ),
                 ),
                 Text(
                   "1001",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
-                    fontSize: 14,
+                    fontSize: sp(14),
                   ),
                 ),
               ],
@@ -76,14 +76,14 @@ class HomeTab extends StatelessWidget {
                               "الاسم :  احمد محمد",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
-                                fontSize: 24,
+                                fontSize: sp(24),
                               ),
                             ),
                             Text(
                               "المرحلة التعليمية :  الثانوية",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
-                                fontSize: 24,
+                                fontSize: sp(24),
                               ),
                             ),
                             Container(
@@ -106,7 +106,7 @@ class HomeTab extends StatelessWidget {
                                     "1001",
                                     style: AppText.boldText(
                                       color: AppColors.blackColor,
-                                      fontSize: 18,
+                                      fontSize: sp(18),
                                     ),
                                   ),
                                 ],

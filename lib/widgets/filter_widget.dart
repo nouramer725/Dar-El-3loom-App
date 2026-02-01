@@ -46,14 +46,14 @@ class FilterWidget extends StatelessWidget {
             text,
             style: AppText.mediumText(
               color: AppColors.blackColor,
-              fontSize: 18,
+              fontSize: sp(18),
             ),
           ),
           Text(
             selectedItem ?? "",
             style: AppText.mediumText(
               color: AppColors.blackColor,
-              fontSize: 18,
+              fontSize: sp(18),
             ),
           ),
           DropdownButton<String>(

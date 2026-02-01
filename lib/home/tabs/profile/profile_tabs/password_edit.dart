@@ -27,7 +27,7 @@ class _PasswordEditState extends State<PasswordEdit> {
         backgroundColor: AppColors.strokeBottomNavBarColor,
         title: Text(
           "تعديل كلمة السر",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 24),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(24)),
         ),
         actions: [
           IconButton(
@@ -52,7 +52,7 @@ class _PasswordEditState extends State<PasswordEdit> {
                 hintText: "كلمة السر القديمة",
                 hintStyle: AppText.regularText(
                   color: AppColors.greyColor,
-                  fontSize: 16,
+                  fontSize: sp(16),
                 ),
                 suffixIcon: Icon(
                   Icons.visibility_off_outlined,
@@ -79,7 +79,7 @@ class _PasswordEditState extends State<PasswordEdit> {
                 hintText: "كلمة السر الجديدة",
                 hintStyle: AppText.regularText(
                   color: AppColors.greyColor,
-                  fontSize: 16,
+                  fontSize: sp(16),
                 ),
                 suffixIcon: Icon(
                   Icons.visibility_off_outlined,
@@ -106,7 +106,7 @@ class _PasswordEditState extends State<PasswordEdit> {
                 hintText: "تأكيد كلمة السر الجديدة",
                 hintStyle: AppText.regularText(
                   color: AppColors.greyColor,
-                  fontSize: 16,
+                  fontSize: sp(16),
                 ),
                 suffixIcon: Icon(
                   Icons.visibility_off_outlined,

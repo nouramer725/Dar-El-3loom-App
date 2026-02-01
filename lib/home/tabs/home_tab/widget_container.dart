@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
+import '../../../utils/responsive.dart';
 
 class WidgetContainer extends StatelessWidget {
   final String text;
@@ -29,7 +30,7 @@ class WidgetContainer extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 24),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(24)),
           textAlign: TextAlign.center,
         ),
       ),

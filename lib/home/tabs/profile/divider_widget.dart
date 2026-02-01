@@ -1,3 +1,4 @@
+import 'package:dar_el_3loom/utils/responsive.dart';
 import 'package:flutter/material.dart';
 
 import '../../../utils/app_colors.dart';
@@ -10,7 +11,7 @@ class DividerWidget extends StatelessWidget {
     return Divider(
       color: AppColors.strokeBottomNavBarColor,
       thickness: 1,
-      height: 30,
+      height: h(30),
     );
   }
 }

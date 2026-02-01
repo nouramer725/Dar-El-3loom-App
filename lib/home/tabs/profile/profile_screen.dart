@@ -37,7 +37,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.strokeBottomNavBarColor,
         title: Text(
           "الاعدادات",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: 24),
+          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(24)),
         ),
       ),
       body: Padding(

@@ -27,7 +27,7 @@ class DetailsScreen extends StatelessWidget {
               body: Center(
                 child: CircularProgressIndicator(
                   color: AppColors.container2Color,
-                  strokeWidth: 7,
+                  strokeWidth: h(7),
                 ),
               ),
             );
@@ -99,7 +99,7 @@ class DetailsScreen extends StatelessWidget {
                           sideColor: AppColors.transparentColor,
                           textStyle: AppText.boldText(
                             color: AppColors.blackColor,
-                            fontSize: 16,
+                            fontSize: sp(16),
                           ),
                           text: "انضم",
                           colorContainer: AppColors.container2Color,
@@ -114,7 +114,7 @@ class DetailsScreen extends StatelessWidget {
                                       "كلمة المرور غير متطابقة",
                                       style: AppText.boldText(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: sp(16),
                                       ),
                                     ),
                                   ),
@@ -128,7 +128,7 @@ class DetailsScreen extends StatelessWidget {
                                     content: Text(
                                       style: AppText.boldText(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: sp(16),
                                       ),
                                       "برجاء اختيار صورة شخصية",
                                     ),
@@ -142,7 +142,7 @@ class DetailsScreen extends StatelessWidget {
                                     content: Text(
                                       style: AppText.boldText(
                                         color: Colors.white,
-                                        fontSize: 16,
+                                        fontSize: sp(16),
                                       ),
                                       "برجاء اختيار صورة شهادة الميلاد",
                                     ),
@@ -189,7 +189,7 @@ class DetailsScreen extends StatelessWidget {
       labelText: hint,
       labelStyle: AppText.boldText(
         color: AppColors.textColorLogin,
-        fontSize: 16,
+        fontSize: sp(16),
       ),
       controller: controller,
       validator: (v) => v == null || v.isEmpty ? "ادخل $hint" : null,
@@ -218,7 +218,7 @@ class DetailsScreen extends StatelessWidget {
                   Text(
                     title,
                     style: AppText.boldText(
-                      fontSize: 16,
+                      fontSize: sp(16),
                       color: AppColors.textColorLogin,
                     ),
                   ),
@@ -229,11 +229,11 @@ class DetailsScreen extends StatelessWidget {
             : Row(
                 spacing: w(20),
                 children: [
-                  CircleAvatar(radius: 50, backgroundImage: FileImage(image)),
+                  CircleAvatar(radius: h(50), backgroundImage: FileImage(image)),
                   Text(
                     title,
                     style: AppText.boldText(
-                      fontSize: 16,
+                      fontSize: sp(16),
                       color: AppColors.textColorLogin,
                     ),
                   ),
@@ -261,7 +261,7 @@ class DetailsScreen extends StatelessWidget {
         hint: Text(
           "اختر الصف",
           style: AppText.boldText(
-            fontSize: 16,
+            fontSize: sp(16),
             color: AppColors.textColorLogin,
           ),
         ),
@@ -272,7 +272,7 @@ class DetailsScreen extends StatelessWidget {
                 child: Text(
                   level,
                   style: AppText.boldText(
-                    fontSize: 17,
+                    fontSize: sp(17),
                     color: AppColors.darkGreyColor,
                   ),
                 ),
