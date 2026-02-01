@@ -1,6 +1,7 @@
 import 'package:dar_el_3loom/home/tabs/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../provider/app_flow.dart';
 import '../../../provider/app_theme_provider.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
@@ -37,7 +38,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: AppColors.strokeBottomNavBarColor,
         title: Text(
           "الاعدادات",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(24)),
+          style: AppText.boldText(
+            color: AppColors.blackColor,
+            fontSize: sp(24),
+          ),
         ),
       ),
       body: Padding(
@@ -76,17 +80,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
             DividerWidget(),
             ProfileWidget(
               text: "تسجيل خروج",
-              onTap: () {},
-              icon: InkWell(
-                onTap: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    AppRoutes.loginScreen,
-                    (route) => false,
-                  );
-                },
-                child: Image.asset(AppAssets.logoutIcon),
-              ),
+              onTap: () async {
+                await AppFlow.logout();
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  AppRoutes.loginScreen,
+                  (route) => false,
+                );
+              },
+              icon: Image.asset(AppAssets.logoutIcon),
             ),
           ],
         ),

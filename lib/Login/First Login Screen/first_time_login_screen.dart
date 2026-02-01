@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../provider/app_flow.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -88,8 +89,10 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     ),
                     text: "انضم",
                     colorContainer: AppColors.container2Color,
-                    onPressed: () {
+                    onPressed: () async{
                       if (formKey.currentState!.validate() == true) {
+                        await AppFlow.goToDetails();
+
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           AppRoutes.detailsScreen,

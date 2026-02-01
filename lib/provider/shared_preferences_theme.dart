@@ -1,9 +1,8 @@
+import 'package:dar_el_3loom/utils/pref_keys.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesTheme {
-  static const String _themeKey = 'app_theme';
-
   static late SharedPreferences sharedPreferences;
 
   static Future<void> init() async {
@@ -11,7 +10,7 @@ class SharedPreferencesTheme {
   }
 
   static ThemeMode getTheme() {
-    final theme = sharedPreferences.getString(_themeKey);
+    final theme = sharedPreferences.getString(PrefKeys.themeKey);
 
     if (theme == 'dark') return ThemeMode.dark;
     if (theme == 'light') return ThemeMode.light;
@@ -19,8 +18,20 @@ class SharedPreferencesTheme {
     return ThemeMode.light;
   }
 
-
   static Future<void> setTheme(ThemeMode theme) async {
-    await sharedPreferences.setString(_themeKey, theme.name);
+    await sharedPreferences.setString(PrefKeys.themeKey, theme.name);
+  }
+
+  ///App Flow functions
+  static String? getUserStep() {
+    return sharedPreferences.getString(PrefKeys.userStepKey);
+  }
+
+  static Future<void> setUserStep(String step) async {
+    await sharedPreferences.setString(PrefKeys.userStepKey, step);
+  }
+
+  static Future<void> clearUserStep() async {
+    await sharedPreferences.remove(PrefKeys.userStepKey);
   }
 }

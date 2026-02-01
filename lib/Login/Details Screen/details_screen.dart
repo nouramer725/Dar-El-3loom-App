@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../provider/app_flow.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
@@ -104,7 +105,7 @@ class DetailsScreen extends StatelessWidget {
                           ),
                           text: "انضم",
                           colorContainer: AppColors.container2Color,
-                          onPressed: () {
+                          onPressed: () async {
                             List<String> errors = [];
 
                             if (!formKey.currentState!.validate()) {
@@ -134,6 +135,7 @@ class DetailsScreen extends StatelessWidget {
                               );
                               return;
                             }
+                            await AppFlow.goToCompleted();
 
                             Navigator.pushNamedAndRemoveUntil(
                               context,

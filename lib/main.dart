@@ -1,3 +1,4 @@
+import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:dar_el_3loom/provider/app_theme_provider.dart';
 import 'package:dar_el_3loom/provider/shared_preferences_theme.dart';
 import 'package:dar_el_3loom/utils/app_routes.dart';
@@ -51,7 +52,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.firstTimeLoginScreenName,
+      initialRoute: AppFlow.getInitialRoute(),
       builder: (context, child) {
         SizeConfig.init(context);
         return Directionality(textDirection: TextDirection.rtl, child: child!);
@@ -72,3 +73,9 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+/// req:
+/// 1)  enter code of student and parent number (for the first time)
+/// 2) check data of this student :
+///   الاسم و الصف و رقم الطالب و رقم ولي الامر و الرقم القومي و الباسورد وتاكيد الباسورد و صورة شهاده الميلاد وصورة الشخصية
+///
