@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
@@ -104,59 +105,41 @@ class DetailsScreen extends StatelessWidget {
                           text: "انضم",
                           colorContainer: AppColors.container2Color,
                           onPressed: () {
-                            if (formKey.currentState!.validate()) {
-                              if (controller.password.text !=
-                                  controller.confirmPassword.text) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                      "كلمة المرور غير متطابقة",
-                                      style: AppText.boldText(
-                                        color: Colors.white,
-                                        fontSize: sp(16),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
-                              if (controller.personalImage == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                      style: AppText.boldText(
-                                        color: Colors.white,
-                                        fontSize: sp(16),
-                                      ),
-                                      "برجاء اختيار صورة شخصية",
-                                    ),
-                                  ),
-                                );
-                                return;
-                              } else if (controller.birthImage == null) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Text(
-                                      style: AppText.boldText(
-                                        color: Colors.white,
-                                        fontSize: sp(16),
-                                      ),
-                                      "برجاء اختيار صورة شهادة الميلاد",
-                                    ),
-                                  ),
-                                );
-                                return;
-                              }
+                            List<String> errors = [];
 
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                AppRoutes.homeScreenName,
-                                (route) => false,
-                              );
+                            if (!formKey.currentState!.validate()) {
+                              errors.add("برجاء اختيار الصف الدراسي");
                             }
+
+                            if (controller.password.text !=
+                                controller.confirmPassword.text) {
+                              errors.add("كلمة المرور غير مطابقة");
+                            }
+
+                            if (controller.personalImage == null) {
+                              errors.add("برجاء اختيار صورة شخصية");
+                            }
+
+                            if (controller.birthImage == null) {
+                              errors.add("برجاء اختيار صورة شهادة الميلاد");
+                            }
+
+                            if (errors.isNotEmpty) {
+                              Fluttertoast.showToast(
+                                msg: errors.map((e) => "• $e").join("\n"),
+                                backgroundColor: AppColors.wrongIconColor,
+                                textColor: Colors.white,
+                                fontSize: sp(16),
+                                gravity: ToastGravity.TOP,
+                              );
+                              return;
+                            }
+
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.homeScreenName,
+                              (route) => false,
+                            );
                           },
                         ),
                       ],
@@ -229,7 +212,10 @@ class DetailsScreen extends StatelessWidget {
             : Row(
                 spacing: w(20),
                 children: [
-                  CircleAvatar(radius: h(50), backgroundImage: FileImage(image)),
+                  CircleAvatar(
+                    radius: h(50),
+                    backgroundImage: FileImage(image),
+                  ),
                   Text(
                     title,
                     style: AppText.boldText(

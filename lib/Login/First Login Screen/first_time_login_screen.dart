@@ -46,7 +46,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      code = value as int;
+                      code = int.tryParse(value) ?? 0;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -70,7 +70,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      phoneNumber = value as int;
+                      phoneNumber = int.tryParse(value) ?? 0;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
