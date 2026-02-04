@@ -1,5 +1,6 @@
+import 'package:dar_el_3loom/BackendSetup%20Data/Api/api_service.dart';
 import 'package:flutter/material.dart';
-import '../../provider/app_flow.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -7,6 +8,7 @@ import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import '../../widgets/custom_text_form_field_widget.dart';
+import '../Details Screen/Model/student_model.dart';
 
 class FirstTimeLoginScreen extends StatefulWidget {
   const FirstTimeLoginScreen({super.key});
@@ -16,8 +18,8 @@ class FirstTimeLoginScreen extends StatefulWidget {
 }
 
 class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
-  int code = 0;
-  int phoneNumber = 0;
+  String code = '';
+  String phoneNumber = '';
   var formKey = GlobalKey<FormState>();
 
   @override
@@ -47,7 +49,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      code = int.tryParse(value) ?? 0;
+                      code = value;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -71,7 +73,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      phoneNumber = int.tryParse(value) ?? 0;
+                      phoneNumber = value;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -89,15 +91,38 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     ),
                     text: "انضم",
                     colorContainer: AppColors.container2Color,
-                    onPressed: () async{
-                      if (formKey.currentState!.validate() == true) {
-                        await AppFlow.goToDetails();
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        try {
+                          final response = await ApiService().verifyStudent(
+                            code: code,
+                            parentNumber: phoneNumber,
+                          );
 
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          AppRoutes.detailsScreen,
-                          (route) => false,
-                        );
+                          if (response['status'] == 'success') {
+                            final studentJson = response['data']['student'];
+                            final student = StudentModel.fromJson(studentJson);
+
+                            Navigator.pushNamed(
+                              context,
+                              AppRoutes.detailsScreen,
+                              arguments: student,
+                            );
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: "الطالب غير موجود",
+                              backgroundColor: AppColors.wrongIconColor,
+                              textColor: Colors.white,
+                            );
+                          }
+                        } catch (e) {
+                          Fluttertoast.showToast(
+                            msg: "الطالب غير موجود",
+                            backgroundColor: AppColors.wrongIconColor,
+                            textColor: Colors.white,
+                          );
+                          print(e);
+                        }
                       }
                     },
                   ),

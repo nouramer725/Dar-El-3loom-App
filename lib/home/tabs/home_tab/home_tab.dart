@@ -7,6 +7,7 @@ import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 
 class HomeTab extends StatelessWidget {
+
   const HomeTab({super.key});
 
   @override
@@ -25,27 +26,27 @@ class HomeTab extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Image.asset(AppAssets.person, fit: BoxFit.fill),
+              child: Image(image: AssetImage(AppAssets.boy), fit: BoxFit.fill),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "احمد محمد",
+                  "student.name",
                   style: AppText.boldText(
                     color: AppColors.blackColor,
                     fontSize: sp(24),
                   ),
                 ),
                 Text(
-                  "اولي ثانوي",
+                  "student.level",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
                     fontSize: sp(16),
                   ),
                 ),
                 Text(
-                  "1001",
+                  "student.code",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
                     fontSize: sp(14),
@@ -73,14 +74,14 @@ class HomeTab extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "الاسم :  احمد محمد",
+                              "الاسم : ",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
                                 fontSize: sp(24),
                               ),
                             ),
                             Text(
-                              "المرحلة التعليمية :  الثانوية",
+                              " المرحلة التعليمية :,",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
                                 fontSize: sp(24),
@@ -103,7 +104,7 @@ class HomeTab extends StatelessWidget {
                                     fit: BoxFit.contain,
                                   ),
                                   Text(
-                                    "1001",
+                                    "code student",
                                     style: AppText.boldText(
                                       color: AppColors.blackColor,
                                       fontSize: sp(18),

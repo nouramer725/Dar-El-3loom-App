@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../../BackendSetup Data/Api/api_service.dart';
 import '../../provider/app_flow.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
@@ -7,6 +9,7 @@ import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import '../../widgets/custom_text_form_field_widget.dart';
+import '../Details Screen/Model/student_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,7 +19,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  int code = 0;
+  String code = '';
   String password = '';
   var formKey = GlobalKey<FormState>();
 
@@ -47,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: sp(16),
                     ),
                     onChanged: (value) {
-                      code = int.tryParse(value) ?? 0;
+                      code = value;
                     },
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
@@ -90,14 +93,39 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "انضم",
                     colorContainer: AppColors.container1Color,
                     onPressed: () async {
-                      if (formKey.currentState!.validate() == true) {
-                        await AppFlow.goToCompleted();
+                      if (formKey.currentState!.validate()) {
+                        try {
+                          final response = await ApiService().login(
+                            code: code,
+                            password: password,
+                          );
 
-                        Navigator.pushNamedAndRemoveUntil(
-                          context,
-                          AppRoutes.homeScreenName,
-                          (route) => false,
-                        );
+                          if (response['status'] == 'success') {
+                            final studentJson = response['data']['student'];
+                            final student = StudentModel.fromJson(studentJson);
+
+                            await AppFlow.goToCompleted();
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              AppRoutes.homeScreenName,
+                              (route) => false,
+                              arguments: student,
+                            );
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: "الطالب غير موجود",
+                              backgroundColor: AppColors.wrongIconColor,
+                              textColor: Colors.white,
+                            );
+                          }
+                        } catch (e) {
+                          Fluttertoast.showToast(
+                            msg: "الطالب غير موجود",
+                            backgroundColor: AppColors.wrongIconColor,
+                            textColor: Colors.white,
+                          );
+                          print(e);
+                        }
                       }
                     },
                   ),

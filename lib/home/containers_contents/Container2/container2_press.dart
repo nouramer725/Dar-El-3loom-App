@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import '../../../widgets/bottom_nav_bar_row_widget.dart';
 import 'lessons_date_widget.dart';
 
 class Container2Press extends StatefulWidget {

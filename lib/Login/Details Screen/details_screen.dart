@@ -1,16 +1,16 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../BackendSetup Data/Api/api_service.dart';
 import '../../provider/app_flow.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
-import '../../widgets/custom_text_form_field_widget.dart';
 import 'package:provider/provider.dart';
-import 'Api/student_api.dart';
 import 'Controllers/student_controller.dart';
+import 'Model/student_model.dart';
+import 'Widgets/widget.dart';
 
 class DetailsScreen extends StatelessWidget {
   DetailsScreen({super.key});
@@ -19,9 +19,9 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final student = ModalRoute.of(context)!.settings.arguments as StudentModel?;
     return ChangeNotifierProvider(
-      create: (_) =>
-          StudentController(StudentRepositoryImpl())..loadStudentData(),
+      create: (_) => StudentController(student: student),
       child: Consumer<StudentController>(
         builder: (context, controller, _) {
           if (controller.loading) {
@@ -48,12 +48,23 @@ class DetailsScreen extends StatelessWidget {
                       spacing: h(25),
                       children: [
                         buildField(
+                          "الكود",
+                          controller.code,
+                          TextInputType.name,
+                          controller.codeLocked,
+                        ),
+                        buildField(
                           "الاسم",
                           controller.name,
                           TextInputType.name,
                           controller.nameLocked,
                         ),
-                        buildLevelDropdown(controller, context),
+                        buildField(
+                          "الصف",
+                          controller.level,
+                          TextInputType.name,
+                          controller.levelLocked,
+                        ),
                         buildField(
                           "رقم الطالب",
                           controller.phoneStudent,
@@ -89,12 +100,15 @@ class DetailsScreen extends StatelessWidget {
                           "شهادة الميلاد",
                           controller.birthImage,
                           () => controller.pickImage(true),
+                          controller.birthImageUrl,
                         ),
+
                         buildImagePicker(
                           context,
                           "صورة شخصية",
                           controller.personalImage,
                           () => controller.pickImage(false),
+                          controller.personalImageUrl,
                         ),
 
                         CustomElevatedButtonWidget(
@@ -109,6 +123,10 @@ class DetailsScreen extends StatelessWidget {
                             List<String> errors = [];
 
                             if (!formKey.currentState!.validate()) {
+                              errors.add("الرجاء ملء جميع الحقول بشكل صحيح");
+                            }
+
+                            if (controller.level.text.trim().isEmpty) {
                               errors.add("برجاء اختيار الصف الدراسي");
                             }
 
@@ -117,12 +135,14 @@ class DetailsScreen extends StatelessWidget {
                               errors.add("كلمة المرور غير مطابقة");
                             }
 
-                            if (controller.personalImage == null) {
+                            if (controller.personalImage == null &&
+                                controller.personalImageUrl == null) {
                               errors.add("برجاء اختيار صورة شخصية");
                             }
 
-                            if (controller.birthImage == null) {
-                              errors.add("برجاء اختيار صورة شهادة الميلاد");
+                            if (controller.birthImage == null &&
+                                controller.birthImageUrl == null) {
+                              errors.add("برجاء اختيار شهادة الميلاد");
                             }
 
                             if (errors.isNotEmpty) {
@@ -135,13 +155,48 @@ class DetailsScreen extends StatelessWidget {
                               );
                               return;
                             }
-                            await AppFlow.goToCompleted();
 
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              AppRoutes.homeScreenName,
-                              (route) => false,
-                            );
+                            try {
+                              StudentModel updatedStudent = StudentModel(
+                                name: controller.name.text,
+                                level: controller.level.text,
+                                phoneStudent: controller.phoneStudent.text,
+                                phoneParent: controller.phoneParent.text,
+                                nationalId: controller.nationalId.text,
+                                password: controller.password.text,
+                                birthImage: controller.birthImage?.path,
+                                studentImage: controller.personalImage?.path,
+                                code: student?.code ?? '',
+                              );
+
+                              final api = ApiService();
+                              final response = await api.updateStudentInfo(
+                                updatedStudent,
+                              );
+                              print("Response from API: $response");
+
+                              Fluttertoast.showToast(
+                                msg: "تم تحديث بيانات الطالب بنجاح",
+                                backgroundColor: Colors.green,
+                                textColor: Colors.white,
+                              );
+
+                              await AppFlow.goToCompleted();
+
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                AppRoutes.homeScreenName,
+                                arguments: updatedStudent,
+                                (route) => false,
+                              );
+                            } catch (e) {
+                              Fluttertoast.showToast(
+                                msg: "حدث خطأ أثناء تحديث البيانات",
+                                backgroundColor: AppColors.wrongIconColor,
+                                textColor: Colors.white,
+                              );
+                              print("Error updating student: $e");
+                            }
                           },
                         ),
                       ],
@@ -152,128 +207,6 @@ class DetailsScreen extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-
-  Widget buildField(
-    String hint,
-    TextEditingController controller,
-    TextInputType keyboardType,
-    bool locked,
-  ) {
-    return CustomTextFormFieldWidget(
-      enabled: !locked,
-      shadowColor: AppColors.container2Color,
-      filled: false,
-      cursorColor: AppColors.textColorLogin,
-      keyboardType: keyboardType,
-      fillColor: AppColors.transparentColor,
-      borderColor: AppColors.container2Color,
-      borderWidth: 2,
-      labelText: hint,
-      labelStyle: AppText.boldText(
-        color: AppColors.textColorLogin,
-        fontSize: sp(16),
-      ),
-      controller: controller,
-      validator: (v) => v == null || v.isEmpty ? "ادخل $hint" : null,
-    );
-  }
-
-  Widget buildImagePicker(
-    BuildContext context,
-    String title,
-    File? image,
-    VoidCallback onTap,
-  ) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        height: h(120),
-        width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: w(12), vertical: h(6)),
-        decoration: BoxDecoration(
-          border: Border.all(color: AppColors.container2Color, width: 2),
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: image == null
-            ? Row(
-                children: [
-                  Text(
-                    title,
-                    style: AppText.boldText(
-                      fontSize: sp(16),
-                      color: AppColors.textColorLogin,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.camera_alt, color: AppColors.greyColor),
-                ],
-              )
-            : Row(
-                spacing: w(20),
-                children: [
-                  CircleAvatar(
-                    radius: h(50),
-                    backgroundImage: FileImage(image),
-                  ),
-                  Text(
-                    title,
-                    style: AppText.boldText(
-                      fontSize: sp(16),
-                      color: AppColors.textColorLogin,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.edit, color: AppColors.greyColor),
-                ],
-              ),
-      ),
-    );
-  }
-
-  Widget buildLevelDropdown(
-    StudentController controller,
-    BuildContext context,
-  ) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: w(12)),
-      decoration: BoxDecoration(
-        border: Border.all(color: AppColors.container2Color, width: 2),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: DropdownButtonFormField<String>(
-        dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-        initialValue: controller.selectedLevel,
-        hint: Text(
-          "اختر الصف",
-          style: AppText.boldText(
-            fontSize: sp(16),
-            color: AppColors.textColorLogin,
-          ),
-        ),
-        items: controller.levels
-            .map(
-              (level) => DropdownMenuItem(
-                value: level,
-                child: Text(
-                  level,
-                  style: AppText.boldText(
-                    fontSize: sp(17),
-                    color: AppColors.darkGreyColor,
-                  ),
-                ),
-              ),
-            )
-            .toList(),
-        onChanged: controller.levelLocked
-            ? null
-            : (value) {
-                controller.setLevel(value!);
-              },
-        validator: (value) => value == null ? "اختر الصف" : null,
-        decoration: InputDecoration(border: InputBorder.none),
       ),
     );
   }

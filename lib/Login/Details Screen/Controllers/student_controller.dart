@@ -1,32 +1,34 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Api/student_api.dart';
+import '../Model/student_model.dart';
 
 class StudentController extends ChangeNotifier {
-  final StudentRepository repository;
+  StudentController({StudentModel? student}) {
+    if (student != null) {
+      _loadStudentData(student);
+    }
+    loading = false;
+    notifyListeners();
+  }
 
-  StudentController(this.repository);
+  bool hasValidValue(String? v) {
+    if (v == null) return false;
+    final trimmed = v.trim();
+    if (trimmed.isEmpty) return false;
+    if (trimmed.toLowerCase() == 'string') return false;
+    return true;
+  }
 
-  String? selectedLevel;
+  String? validImageUrl(String? url) {
+    if (url == null) return null;
+    final trimmed = url.trim();
+    if (trimmed.isEmpty) return null;
+    if (trimmed.toLowerCase() == 'string') return null;
+    return trimmed;
+  }
 
-  List<String> levels = [
-    "الصف الأول الابتدائي",
-    "الصف الثاني الابتدائي",
-    "الصف الثالث الابتدائي",
-    "الصف الرابع الابتدائي",
-    "الصف الخامس الابتدائي",
-    "الصف السادس الابتدائي",
-    "الصف الأول الإعدادي",
-    "الصف الثاني الإعدادي",
-    "الصف الثالث الإعدادي",
-    "الصف الأول الثانوي",
-    "الصف الثاني الثانوي",
-    "الصف الثالث الثانوي",
-  ];
-
-
-  // Controllers
+  final code = TextEditingController();
   final name = TextEditingController();
   final level = TextEditingController();
   final phoneStudent = TextEditingController();
@@ -35,8 +37,7 @@ class StudentController extends ChangeNotifier {
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
 
-
-  // Locks
+  bool codeLocked = false;
   bool nameLocked = false;
   bool phoneStudentLocked = false;
   bool phoneParentLocked = false;
@@ -45,76 +46,96 @@ class StudentController extends ChangeNotifier {
   bool confirmPasswordLocked = false;
   bool levelLocked = false;
 
-
-
-  bool loading = true;
-
-  // Images
   File? birthImage;
   File? personalImage;
 
+  String? birthImageUrl;
+  String? personalImageUrl;
 
-  Future loadStudentData() async {
-    final data = await repository.getStudentData();
+  String? selectedLevel;
 
-    if (data.name != null && data.name!.isNotEmpty) {
-      name.text = data.name!;
-      nameLocked = true;
-    }
+  bool get hasBirthImage => birthImage != null || birthImageUrl != null;
+  bool get hasPersonalImage =>
+      personalImage != null || personalImageUrl != null;
 
-    if (data.level != null && data.level!.isNotEmpty) {
-      level.text = data.level!;
-      levelLocked = true;
-    }
+  void _loadStudentData(StudentModel student) {
+    code.text = hasValidValue(student.code) ? student.code : '';
+    name.text = hasValidValue(student.name) ? student.name : '';
+    level.text = hasValidValue(student.level) ? student.level : '';
+    selectedLevel = hasValidValue(student.level) ? student.level : null;
+    phoneStudent.text = hasValidValue(student.phoneStudent)
+        ? student.phoneStudent
+        : '';
+    phoneParent.text = hasValidValue(student.phoneParent)
+        ? student.phoneParent
+        : '';
+    nationalId.text = hasValidValue(student.nationalId)
+        ? student.nationalId
+        : '';
+    password.text = hasValidValue(student.password) ? student.password : '';
+    confirmPassword.text = hasValidValue(student.password)
+        ? student.password
+        : '';
 
-    if (data.phoneStudent != null && data.phoneStudent!.isNotEmpty) {
-      phoneStudent.text = data.phoneStudent!;
-      phoneStudentLocked = true;
-    }
+    const baseUrl = 'http://10.0.2.2:3000';
 
-    if (data.phoneParent != null && data.phoneParent!.isNotEmpty) {
-      phoneParent.text = data.phoneParent!;
-      phoneParentLocked = true;
-    }
+    birthImageUrl = student.birthImage != null
+        ? '$baseUrl${student.birthImage}'
+        : null;
+    personalImageUrl = student.studentImage != null
+        ? '$baseUrl${student.studentImage}'
+        : null;
 
-    if (data.nationalId != null && data.nationalId!.isNotEmpty) {
-      nationalId.text = data.nationalId!;
-      nationalIdLocked = true;
-    }
-
-    if (data.password != null && data.password!.isNotEmpty) {
-      password.text = data.password!;
+    // Lock fields
+    if (code.text.isNotEmpty) codeLocked = true;
+    if (name.text.isNotEmpty) nameLocked = true;
+    if (level.text.isNotEmpty) levelLocked = true;
+    if (phoneStudent.text.isNotEmpty) phoneStudentLocked = true;
+    if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
+    if (nationalId.text.isNotEmpty) nationalIdLocked = true;
+    if (password.text.isNotEmpty) {
       passwordLocked = true;
-    }
-
-    if (data.confirmPassword != null && data.confirmPassword!.isNotEmpty) {
-      confirmPassword.text = data.confirmPassword!;
       confirmPasswordLocked = true;
     }
-
-
-    loading = false;
-    notifyListeners();
   }
 
   void setLevel(String value) {
     selectedLevel = value;
+    level.text = value;
     notifyListeners();
   }
 
-
-  Future pickImage(bool isBirth) async {
+  Future<void> pickImage(bool isBirth) async {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
-
-
     if (image != null) {
       if (isBirth) {
         birthImage = File(image.path);
+        birthImageUrl = null;
       } else {
         personalImage = File(image.path);
+        personalImageUrl = null;
       }
       notifyListeners();
     }
   }
+
+  Map<String, dynamic> buildUpdateRequest() {
+    final data = <String, dynamic>{};
+
+    if (!codeLocked) data['cod_talb'] = code.text;
+    if (!nameLocked) data['n_talb'] = name.text;
+    if (!levelLocked) data['n_saf'] = selectedLevel;
+    if (!phoneStudentLocked) data['tel'] = phoneStudent.text;
+    if (!phoneParentLocked) data['tel_1'] = phoneParent.text;
+    if (!nationalIdLocked) data['personal_id'] = nationalId.text;
+    if (!passwordLocked) data['password'] = password.text;
+
+    if (birthImage != null) data['birth_certificate'] = birthImage;
+    if (personalImage != null) data['profile_picture'] = personalImage;
+
+    return data;
+  }
+
+  bool loading = true;
 }

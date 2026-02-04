@@ -3,9 +3,7 @@ import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import '../../../widgets/bottom_nav_bar_row_widget.dart';
 import '../../../widgets/filter_widget.dart';
-import '../../../widgets/table_widget.dart';
 
 class Container1Press extends StatefulWidget {
   const Container1Press({super.key});
