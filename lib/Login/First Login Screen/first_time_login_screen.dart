@@ -1,8 +1,10 @@
-import 'package:dar_el_3loom/BackendSetup%20Data/Api/api_service.dart';
-import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
+import '../../BackendSetup Data/Api/api_service.dart';
 import '../../Model/student_model.dart';
+import '../../provider/student_provider.dart';
+import '../../provider/app_flow.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -21,7 +23,7 @@ class FirstTimeLoginScreen extends StatefulWidget {
 class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
   String code = '';
   String phoneNumber = '';
-  var formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +51,12 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       color: AppColors.textColorLogin,
                       fontSize: sp(16),
                     ),
-                    onChanged: (value) {
-                      code = value;
-                    },
+                    onChanged: (value) => code = value,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "برجاء ادخال الكود";
-                      } else {
-                        return null;
                       }
+                      return null;
                     },
                   ),
                   CustomTextFormFieldWidget(
@@ -73,15 +72,12 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       color: AppColors.textColorLogin,
                       fontSize: sp(16),
                     ),
-                    onChanged: (value) {
-                      phoneNumber = value;
-                    },
+                    onChanged: (value) => phoneNumber = value,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "برجاء ادخال رقم تليفون ولي الامر";
-                      } else {
-                        return null;
                       }
+                      return null;
                     },
                   ),
                   CustomElevatedButtonWidget(
@@ -93,38 +89,41 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     text: "انضم",
                     colorContainer: AppColors.container2Color,
                     onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        try {
-                          final response = await ApiService().verifyStudent(
-                            code: code,
-                            parentNumber: phoneNumber,
-                          );
+                      if (!formKey.currentState!.validate()) return;
 
-                          if (response['status'] == 'success') {
-                            final studentJson = response['data']['student'];
-                            final student = StudentModel.fromJson(studentJson);
+                      try {
+                        final response = await ApiService().verifyStudent(
+                          code: code,
+                          parentNumber: phoneNumber,
+                        );
 
-                            await AppFlow.goToDetails();
-                            Navigator.pushNamed(
-                              context,
-                              AppRoutes.detailsScreen,
-                              arguments: student,
-                            );
-                          } else {
-                            Fluttertoast.showToast(
-                              msg: "الطالب غير موجود",
-                              backgroundColor: AppColors.wrongIconColor,
-                              textColor: Colors.white,
-                            );
-                          }
-                        } catch (e) {
+                        if (response['status'] == 'success') {
+                          final studentJson = response['data']['student'];
+                          final student = StudentModel.fromJson(studentJson);
+
+                          // حفظ البيانات في Provider
+                          Provider.of<StudentProvider>(
+                            context,
+                            listen: false,
+                          ).setStudent(student);
+
+                          await AppFlow.goToDetails();
+
+                          Navigator.pushNamed(context, AppRoutes.detailsScreen);
+                        } else {
                           Fluttertoast.showToast(
                             msg: "الطالب غير موجود",
                             backgroundColor: AppColors.wrongIconColor,
                             textColor: Colors.white,
                           );
-                          print(e);
                         }
+                      } catch (e) {
+                        Fluttertoast.showToast(
+                          msg: "حدث خطأ، حاول مرة اخرى",
+                          backgroundColor: AppColors.wrongIconColor,
+                          textColor: Colors.white,
+                        );
+                        print("Error verifying student: $e");
                       }
                     },
                   ),

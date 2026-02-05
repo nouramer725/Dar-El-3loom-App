@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
 import '../../Model/student_model.dart';
 import '../../provider/app_flow.dart';
+import '../../provider/student_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
-import 'package:provider/provider.dart';
 import 'Controllers/student_controller.dart';
 import 'Widgets/widget.dart';
 
@@ -19,7 +20,23 @@ class DetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final student = ModalRoute.of(context)!.settings.arguments as StudentModel?;
+    final studentProvider = Provider.of<StudentProvider>(context);
+    final student = studentProvider.student;
+
+    if (student == null) {
+      return Scaffold(
+        body: Center(
+          child: Text(
+            "لا توجد بيانات للطالب، يرجى تسجيل الدخول مرة أخرى",
+            style: AppText.boldText(
+              color: AppColors.blackColor,
+              fontSize: sp(18),
+            ),
+          ),
+        ),
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (_) => StudentController(student: student),
       child: Consumer<StudentController>(
@@ -34,6 +51,7 @@ class DetailsScreen extends StatelessWidget {
               ),
             );
           }
+
           return Scaffold(
             body: Form(
               key: formKey,
@@ -95,6 +113,7 @@ class DetailsScreen extends StatelessWidget {
                           TextInputType.visiblePassword,
                           controller.confirmPasswordLocked,
                         ),
+
                         buildImagePicker(
                           context,
                           "شهادة الميلاد",
@@ -102,7 +121,6 @@ class DetailsScreen extends StatelessWidget {
                           () => controller.pickImage(true),
                           controller.birthImageUrl,
                         ),
-
                         buildImagePicker(
                           context,
                           "صورة شخصية",
@@ -122,28 +140,19 @@ class DetailsScreen extends StatelessWidget {
                           onPressed: () async {
                             List<String> errors = [];
 
-                            if (!formKey.currentState!.validate()) {
+                            if (!formKey.currentState!.validate())
                               errors.add("الرجاء ملء جميع الحقول بشكل صحيح");
-                            }
-
-                            if (controller.level.text.trim().isEmpty) {
+                            if (controller.level.text.trim().isEmpty)
                               errors.add("برجاء اختيار الصف الدراسي");
-                            }
-
                             if (controller.password.text !=
-                                controller.confirmPassword.text) {
+                                controller.confirmPassword.text)
                               errors.add("كلمة المرور غير مطابقة");
-                            }
-
                             if (controller.personalImage == null &&
-                                controller.personalImageUrl == null) {
+                                controller.personalImageUrl == null)
                               errors.add("برجاء اختيار صورة شخصية");
-                            }
-
                             if (controller.birthImage == null &&
-                                controller.birthImageUrl == null) {
+                                controller.birthImageUrl == null)
                               errors.add("برجاء اختيار شهادة الميلاد");
-                            }
 
                             if (errors.isNotEmpty) {
                               Fluttertoast.showToast(
@@ -166,14 +175,21 @@ class DetailsScreen extends StatelessWidget {
                                 password: controller.password.text,
                                 birthImage: controller.birthImage?.path,
                                 studentImage: controller.personalImage?.path,
-                                code: student?.code ?? '',
+                                code: student.code,
                               );
 
                               final api = ApiService();
                               final response = await api.updateStudentInfo(
                                 updatedStudent,
                               );
+
                               print("Response from API: $response");
+
+                              studentProvider.setStudent(
+                                StudentModel.fromJson(
+                                  response['data']['student'],
+                                ),
+                              );
 
                               Fluttertoast.showToast(
                                 msg: "تم تحديث بيانات الطالب بنجاح",
@@ -186,7 +202,6 @@ class DetailsScreen extends StatelessWidget {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 AppRoutes.homeScreenName,
-                                arguments: updatedStudent,
                                 (route) => false,
                               );
                             } catch (e) {

@@ -1,6 +1,7 @@
 import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:dar_el_3loom/provider/app_theme_provider.dart';
 import 'package:dar_el_3loom/provider/shared_preferences_theme.dart';
+import 'package:dar_el_3loom/provider/student_provider.dart';
 import 'package:dar_el_3loom/utils/app_routes.dart';
 import 'package:dar_el_3loom/utils/app_theme.dart';
 import 'package:dar_el_3loom/utils/size_config.dart';
@@ -33,7 +34,10 @@ Future<void> main() async {
   await SharedPreferencesTheme.init();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AppThemeProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AppThemeProvider()),
+        ChangeNotifierProvider(create: (_) => StudentProvider()),
+      ],
       child: const MyApp(),
     ),
   );
@@ -45,6 +49,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<AppThemeProvider>(context);
+    final studentProvider = Provider.of<StudentProvider>(context, listen: false);
+    studentProvider.loadStudent();
 
     return MaterialApp(
       title: 'Flutter Demo',

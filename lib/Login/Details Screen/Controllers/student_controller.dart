@@ -1,8 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-
 import '../../../Model/student_model.dart';
+import 'package:image_picker/image_picker.dart';
 
 class StudentController extends ChangeNotifier {
   StudentController({StudentModel? student}) {
@@ -11,22 +10,6 @@ class StudentController extends ChangeNotifier {
     }
     loading = false;
     notifyListeners();
-  }
-
-  bool hasValidValue(String? v) {
-    if (v == null) return false;
-    final trimmed = v.trim();
-    if (trimmed.isEmpty) return false;
-    if (trimmed.toLowerCase() == 'string') return false;
-    return true;
-  }
-
-  String? validImageUrl(String? url) {
-    if (url == null) return null;
-    final trimmed = url.trim();
-    if (trimmed.isEmpty) return null;
-    if (trimmed.toLowerCase() == 'string') return null;
-    return trimmed;
   }
 
   final code = TextEditingController();
@@ -59,6 +42,14 @@ class StudentController extends ChangeNotifier {
   bool get hasPersonalImage =>
       personalImage != null || personalImageUrl != null;
 
+  bool hasValidValue(String? v) {
+    if (v == null) return false;
+    final trimmed = v.trim();
+    if (trimmed.isEmpty) return false;
+    if (trimmed.toLowerCase() == 'string') return false;
+    return true;
+  }
+
   void _loadStudentData(StudentModel student) {
     code.text = hasValidValue(student.code) ? student.code : '';
     name.text = hasValidValue(student.name) ? student.name : '';
@@ -87,7 +78,7 @@ class StudentController extends ChangeNotifier {
         ? '$baseUrl${student.studentImage}'
         : null;
 
-    // Lock fields
+    // Lock fields if already have data
     if (code.text.isNotEmpty) codeLocked = true;
     if (name.text.isNotEmpty) nameLocked = true;
     if (level.text.isNotEmpty) levelLocked = true;

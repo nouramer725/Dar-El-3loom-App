@@ -1,5 +1,8 @@
 import 'package:dar_el_3loom/home/tabs/home_tab/widget_container.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../Model/student_model.dart';
+import '../../../provider/student_provider.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_routes.dart';
@@ -7,11 +10,13 @@ import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 
 class HomeTab extends StatelessWidget {
-
   const HomeTab({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final studentProvider = Provider.of<StudentProvider>(context);
+    final StudentModel? student = studentProvider.student;
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: h(130),
@@ -26,27 +31,36 @@ class HomeTab extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Image(image: AssetImage(AppAssets.boy), fit: BoxFit.fill),
+              child: student?.studentImage != null
+                  ? Image.network(
+                student!.studentImage!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Image.asset(AppAssets.boy, fit: BoxFit.fill),
+              )
+                  : Image.asset(AppAssets.boy, fit: BoxFit.fill),
             ),
+
+            // بيانات الطالب
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "student.name",
+                  student?.name ?? "اسم الطالب",
                   style: AppText.boldText(
                     color: AppColors.blackColor,
                     fontSize: sp(24),
                   ),
                 ),
                 Text(
-                  "student.level",
+                  student?.level ?? "الصف الدراسي",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
                     fontSize: sp(16),
                   ),
                 ),
                 Text(
-                  "student.code",
+                  student?.code ?? "كود الطالب",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
                     fontSize: sp(14),
@@ -54,7 +68,10 @@ class HomeTab extends StatelessWidget {
                 ),
               ],
             ),
+
             Spacer(),
+
+            // أيقونة الباركود
             InkWell(
               onTap: () {
                 showDialog(
@@ -74,19 +91,20 @@ class HomeTab extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "الاسم : ",
+                              "الاسم: ${student?.name ?? "-"}",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
                                 fontSize: sp(24),
                               ),
                             ),
                             Text(
-                              " المرحلة التعليمية :,",
+                              "المرحلة التعليمية: ${student?.level ?? "-"}",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
                                 fontSize: sp(24),
                               ),
                             ),
+                            SizedBox(height: h(10)),
                             Container(
                               width: double.infinity,
                               padding: EdgeInsets.all(w(20)),
@@ -103,8 +121,9 @@ class HomeTab extends StatelessWidget {
                                     AppAssets.barcodeImage,
                                     fit: BoxFit.contain,
                                   ),
+                                  SizedBox(height: h(8)),
                                   Text(
-                                    "code student",
+                                    student?.code ?? "-",
                                     style: AppText.boldText(
                                       color: AppColors.blackColor,
                                       fontSize: sp(18),

@@ -39,4 +39,17 @@ class StudentModel {
       studentImage: json["profile_picture"],
     );
   }
+  Map<String, dynamic> toJson() {
+    return {
+      "cod_talb": code,
+      "n_talb": name,
+      "n_saf": level,
+      "tel": phoneStudent,
+      "tel_1": phoneParent,
+      "personal_id": nationalId,
+      "password": password,
+      "birth_certificate": birthImage,
+      "profile_picture": studentImage,
+    };
+  }
 }
