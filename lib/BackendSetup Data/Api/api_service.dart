@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import '../../Login/Details Screen/Model/student_model.dart';
+
+import '../../Model/student_model.dart';
 
 class ApiService {
   late Dio dio;

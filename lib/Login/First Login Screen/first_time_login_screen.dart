@@ -1,6 +1,8 @@
 import 'package:dar_el_3loom/BackendSetup%20Data/Api/api_service.dart';
+import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../Model/student_model.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -8,7 +10,6 @@ import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import '../../widgets/custom_text_form_field_widget.dart';
-import '../Details Screen/Model/student_model.dart';
 
 class FirstTimeLoginScreen extends StatefulWidget {
   const FirstTimeLoginScreen({super.key});
@@ -103,6 +104,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                             final studentJson = response['data']['student'];
                             final student = StudentModel.fromJson(studentJson);
 
+                            await AppFlow.goToDetails();
                             Navigator.pushNamed(
                               context,
                               AppRoutes.detailsScreen,

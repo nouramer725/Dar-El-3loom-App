@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
+import '../../Model/student_model.dart';
 import '../../provider/app_flow.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -9,7 +10,6 @@ import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import 'package:provider/provider.dart';
 import 'Controllers/student_controller.dart';
-import 'Model/student_model.dart';
 import 'Widgets/widget.dart';
 
 class DetailsScreen extends StatelessWidget {

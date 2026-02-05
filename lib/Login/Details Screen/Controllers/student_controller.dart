@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import '../Model/student_model.dart';
+
+import '../../../Model/student_model.dart';
 
 class StudentController extends ChangeNotifier {
   StudentController({StudentModel? student}) {

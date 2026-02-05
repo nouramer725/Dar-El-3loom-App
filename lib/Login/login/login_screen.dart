@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
+import '../../Model/student_model.dart';
 import '../../provider/app_flow.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
@@ -9,7 +10,6 @@ import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import '../../widgets/custom_text_form_field_widget.dart';
-import '../Details Screen/Model/student_model.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
