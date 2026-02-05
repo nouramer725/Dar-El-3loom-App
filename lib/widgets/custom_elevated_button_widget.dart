@@ -10,6 +10,7 @@ class CustomElevatedButtonWidget extends StatelessWidget {
   Color sideColor;
   double sideWidth;
   Function()? onPressed;
+  WidgetStateProperty<EdgeInsetsGeometry?>? padding;
 
   CustomElevatedButtonWidget({
     required this.text,
@@ -18,6 +19,7 @@ class CustomElevatedButtonWidget extends StatelessWidget {
     this.sideWidth = 2,
     required this.colorContainer,
     this.onPressed,
+    this.padding,
     super.key,
   });
 
@@ -25,6 +27,7 @@ class CustomElevatedButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
+        padding: padding,
         backgroundColor: WidgetStateProperty.all(colorContainer),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(

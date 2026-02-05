@@ -79,6 +79,13 @@ class ProfilePictureWidget extends StatelessWidget {
               ),
               CustomElevatedButtonWidget(
                 text: "حفظ",
+                textStyle: AppText.boldText(
+                  color: AppColors.blackColor,
+                  fontSize: sp(25),
+                ),
+                padding: WidgetStateProperty.all(
+                  EdgeInsets.symmetric(horizontal: w(40), vertical: h(10)),
+                ),
                 colorContainer: AppColors.whiteColor,
                 onPressed: () {},
               ),

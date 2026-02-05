@@ -26,7 +26,6 @@ class ApiService {
     return response.data;
   }
 
-
   Future<Map<String, dynamic>> updateStudentInfo(StudentModel student) async {
     FormData formData = FormData.fromMap({
       "cod_talb": student.code,
@@ -64,7 +63,6 @@ class ApiService {
 
     return response.data;
   }
-
 
   Future<Map<String, dynamic>> login({
     required String code,
