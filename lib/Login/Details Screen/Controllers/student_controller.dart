@@ -1,7 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import '../../../Model/student_model.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../../Model/student_model.dart';
 
 class StudentController extends ChangeNotifier {
   StudentController({StudentModel? student}) {
@@ -50,6 +51,21 @@ class StudentController extends ChangeNotifier {
     return true;
   }
 
+  String? buildImageUrl(String? path) {
+    if (!hasValidValue(path)) return null;
+
+    if (path!.startsWith('http') || path.startsWith('https')) {
+      return path;
+    }
+
+    const baseUrl = 'http://10.0.2.2:3000';
+    if (path.startsWith('/')) {
+      return '$baseUrl$path';
+    } else {
+      return '$baseUrl/$path';
+    }
+  }
+
   void _loadStudentData(StudentModel student) {
     code.text = hasValidValue(student.code) ? student.code : '';
     name.text = hasValidValue(student.name) ? student.name : '';
@@ -69,14 +85,8 @@ class StudentController extends ChangeNotifier {
         ? student.password
         : '';
 
-    const baseUrl = 'http://10.0.2.2:3000';
-
-    birthImageUrl = student.birthImage != null
-        ? '$baseUrl${student.birthImage}'
-        : null;
-    personalImageUrl = student.studentImage != null
-        ? '$baseUrl${student.studentImage}'
-        : null;
+    birthImageUrl = buildImageUrl(student.birthImage);
+    personalImageUrl = buildImageUrl(student.studentImage);
 
     // Lock fields if already have data
     if (code.text.isNotEmpty) codeLocked = true;

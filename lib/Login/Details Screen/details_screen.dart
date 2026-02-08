@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -167,6 +168,7 @@ class DetailsScreen extends StatelessWidget {
 
                             try {
                               StudentModel updatedStudent = StudentModel(
+                                code: student.code,
                                 name: controller.name.text,
                                 level: controller.level.text,
                                 phoneStudent: controller.phoneStudent.text,
@@ -175,7 +177,6 @@ class DetailsScreen extends StatelessWidget {
                                 password: controller.password.text,
                                 birthImage: controller.birthImage?.path,
                                 studentImage: controller.personalImage?.path,
-                                code: student.code,
                               );
 
                               final api = ApiService();

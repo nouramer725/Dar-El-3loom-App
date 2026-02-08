@@ -80,10 +80,7 @@ Widget buildImagePicker(
               ),
             ),
           ),
-
-          isClickable
-              ? Icon(Icons.camera_alt, color: AppColors.greyColor)
-              : Container(),
+          if (isClickable) Icon(Icons.camera_alt, color: AppColors.greyColor),
         ],
       ),
     ),
