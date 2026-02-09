@@ -28,7 +28,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
   final TextInputType? keyboardType;
   final Color cursorColor;
   final bool enabled;
-
+  final bool obscureText;
 
   const CustomTextFormFieldWidget({
     this.suffixIcon,
@@ -47,6 +47,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
     this.borderWidth = 1,
     this.borderRadius = 16,
     this.maxLines,
+    this.obscureText = false,
     this.validator,
     this.controller,
     this.onChanged,
@@ -81,6 +82,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
         keyboardType: keyboardType,
         validator: validator,
         controller: controller,
+        obscureText: obscureText,
         onChanged: onChanged,
         maxLines: maxLines,
         cursorColor: cursorColor,

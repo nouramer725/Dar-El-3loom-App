@@ -40,7 +40,8 @@ class ApiService {
       "password": student.password,
     });
 
-    if (student.birthCertificate != null && student.birthCertificate!.isNotEmpty) {
+    if (student.birthCertificate != null &&
+        student.birthCertificate!.isNotEmpty) {
       formData.files.add(
         MapEntry(
           "birth_certificate",
@@ -75,6 +76,18 @@ class ApiService {
       '/api/v1/students/login',
       data: {"cod_talb": code, "password": password},
     );
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> changePassword({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    final response = await dio.post(
+      '/api/v1/students/change-password',
+      data: {"oldPassword": oldPassword, "newPassword": newPassword},
+    );
+
     return response.data;
   }
 }
