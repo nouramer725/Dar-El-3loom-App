@@ -1,11 +1,10 @@
 import 'dart:io';
+import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../../../Model/student_model.dart';
-
 class StudentController extends ChangeNotifier {
-  StudentController({StudentModel? student}) {
+  StudentController({Student? student}) {
     if (student != null) {
       _loadStudentData(student);
     }
@@ -66,27 +65,21 @@ class StudentController extends ChangeNotifier {
     }
   }
 
-  void _loadStudentData(StudentModel student) {
-    code.text = hasValidValue(student.code) ? student.code : '';
-    name.text = hasValidValue(student.name) ? student.name : '';
-    level.text = hasValidValue(student.level) ? student.level : '';
-    selectedLevel = hasValidValue(student.level) ? student.level : null;
-    phoneStudent.text = hasValidValue(student.phoneStudent)
-        ? student.phoneStudent
-        : '';
-    phoneParent.text = hasValidValue(student.phoneParent)
-        ? student.phoneParent
-        : '';
-    nationalId.text = hasValidValue(student.nationalId)
-        ? student.nationalId
-        : '';
-    password.text = hasValidValue(student.password) ? student.password : '';
-    confirmPassword.text = hasValidValue(student.password)
-        ? student.password
-        : '';
-
-    birthImageUrl = buildImageUrl(student.birthImage);
-    personalImageUrl = buildImageUrl(student.studentImage);
+  void _loadStudentData(Student student) {
+    code.text = (hasValidValue(student.codTalb) ? student.codTalb : '')!;
+    name.text = (hasValidValue(student.nTalb) ? student.nTalb : '')!;
+    level.text = (hasValidValue(student.nSaf) ? student.nSaf : '')!;
+    phoneStudent.text = (hasValidValue(student.tel)
+        ? student.tel
+        : '')!;
+    phoneParent.text = (hasValidValue(student.tel1)
+        ? student.tel1
+        : '')!;
+    nationalId.text = (hasValidValue(student.personalId)
+        ? student.personalId
+        : '')!;
+    birthImageUrl = buildImageUrl(student.birthCertificate);
+    personalImageUrl = buildImageUrl(student.profilePicture);
 
     // Lock fields if already have data
     if (code.text.isNotEmpty) codeLocked = true;

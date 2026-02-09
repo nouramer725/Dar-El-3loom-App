@@ -40,7 +40,7 @@ Widget buildImagePicker(
   final bool isClickable = image == null && imageUrl == null;
 
   return InkWell(
-    onTap: isClickable ? onTap : null,
+    onTap: onTap,
     child: Container(
       height: h(120),
       width: double.infinity,
@@ -59,16 +59,38 @@ Widget buildImagePicker(
           CircleAvatar(
             radius: h(50),
             backgroundColor: AppColors.greyColor.withOpacity(0.2),
-            backgroundImage: image != null
-                ? FileImage(image)
-                : (imageUrl != null ? NetworkImage(imageUrl) : null),
-            child: image == null && imageUrl == null
-                ? Icon(
-                    Icons.camera_alt,
-                    size: h(40),
-                    color: AppColors.greyColor,
+            child: image != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(h(50)),
+                    child: Image.file(
+                      image,
+                      fit: BoxFit.cover,
+                      width: h(100),
+                      height: h(100),
+                    ),
                   )
-                : null,
+                : (imageUrl != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(h(50)),
+                          child: Image.network(
+                            imageUrl,
+                            fit: BoxFit.cover,
+                            width: h(100),
+                            height: h(100),
+                            errorBuilder: (context, error, stackTrace) {
+                              return Icon(
+                                Icons.broken_image,
+                                size: h(50),
+                                color: AppColors.greyColor,
+                              );
+                            },
+                          ),
+                        )
+                      : Icon(
+                          Icons.camera_alt,
+                          size: h(40),
+                          color: AppColors.greyColor,
+                        )),
           ),
           SizedBox(width: w(16)),
           Expanded(

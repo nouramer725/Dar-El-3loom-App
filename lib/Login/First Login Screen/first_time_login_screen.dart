@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
-import '../../Model/student_model.dart';
-import '../../provider/student_provider.dart';
+import '../../Model/student_login_model.dart';
 import '../../provider/app_flow.dart';
+import '../../provider/student_login_provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -92,22 +92,27 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       if (!formKey.currentState!.validate()) return;
 
                       try {
-                        final response = await ApiService().verifyStudent(
+                        final api = ApiService();
+
+                        final response = await api.verifyStudent(
                           code: code,
                           parentNumber: phoneNumber,
                         );
 
-                        if (response['status'] == 'success') {
-                          final studentJson = response['data']['student'];
-                          final student = StudentModel.fromJson(studentJson);
+                        final loginModel = StudentLoginModel.fromJson(response);
 
-                          // حفظ البيانات في Provider
-                          Provider.of<StudentProvider>(
-                            context,
-                            listen: false,
-                          ).setStudent(student);
+                        if (loginModel.status == 'success' &&
+                            loginModel.data?.student != null) {
+                          final loginProvider =
+                              Provider.of<StudentLoginProvider>(
+                                context,
+                                listen: false,
+                              );
 
-                          await AppFlow.goToDetails();
+                          await loginProvider.setLogin(loginModel);
+
+                          // ✅ Token already saved in provider and SharedPreferences
+                          print("Token: ${loginProvider.token}");
 
                           Navigator.pushNamed(context, AppRoutes.detailsScreen);
                         } else {
@@ -123,7 +128,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                           backgroundColor: AppColors.wrongIconColor,
                           textColor: Colors.white,
                         );
-                        print("Error verifying student: $e");
+                        debugPrint("Verify error: $e");
                       }
                     },
                   ),

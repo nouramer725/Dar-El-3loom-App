@@ -1,10 +1,10 @@
+import 'package:dar_el_3loom/Model/student_login_model.dart';
+import 'package:dar_el_3loom/provider/student_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
-import '../../Model/student_model.dart';
 import '../../provider/app_flow.dart';
-import '../../provider/student_provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -95,46 +95,56 @@ class _LoginScreenState extends State<LoginScreen> {
                     text: "انضم",
                     colorContainer: AppColors.container1Color,
                     onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        try {
-                          final response = await ApiService().login(
-                            code: code,
-                            password: password,
-                          );
+                      if (!formKey.currentState!.validate()) return;
 
-                          if (response['status'] == 'success') {
-                            final studentJson = response['data']['student'];
-                            final student = StudentModel.fromJson(studentJson);
+                      try {
+                        final api = ApiService();
 
-                            final studentProvider =
-                                Provider.of<StudentProvider>(
-                                  context,
-                                  listen: false,
-                                );
-                            studentProvider.setStudent(student);
+                        final response = await api.login(
+                          code: code,
+                          password: password,
+                        );
 
-                            await AppFlow.goToCompleted();
+                        final loginModel = StudentLoginModel.fromJson(response);
 
-                            Navigator.pushNamedAndRemoveUntil(
-                              context,
-                              AppRoutes.homeScreenName,
-                              (route) => false,
-                            );
-                          } else {
-                            Fluttertoast.showToast(
-                              msg: "الطالب غير موجود",
-                              backgroundColor: AppColors.wrongIconColor,
-                              textColor: Colors.white,
-                            );
+                        if (loginModel.status == 'success' &&
+                            loginModel.data?.student != null) {
+
+                          Provider.of<StudentLoginProvider>(
+                            context,
+                            listen: false,
+                          ).setLogin(loginModel);
+
+                          print("-----------Login------------------");
+                          print(loginModel.data?.student);
+                          print(loginModel.status);
+                          print(loginModel.data);
+                          print(loginModel.token);
+                          print("-----------------------------");
+
+                          if (loginModel.token != null) {
+                            await AppFlow.saveToken(loginModel.token!);
                           }
-                        } catch (e) {
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.homeScreenName,
+                                (route) => false,
+                          );
+                        } else {
                           Fluttertoast.showToast(
                             msg: "الطالب غير موجود",
                             backgroundColor: AppColors.wrongIconColor,
                             textColor: Colors.white,
                           );
-                          print(e);
                         }
+                      } catch (e) {
+                        Fluttertoast.showToast(
+                          msg: "حدث خطأ أثناء تسجيل الدخول",
+                          backgroundColor: AppColors.wrongIconColor,
+                          textColor: Colors.white,
+                        );
+                        debugPrint("Login error: $e");
                       }
                     },
                   ),

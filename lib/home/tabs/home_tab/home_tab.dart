@@ -1,8 +1,8 @@
+import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dar_el_3loom/home/tabs/home_tab/widget_container.dart';
+import 'package:dar_el_3loom/provider/student_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Model/student_model.dart';
-import '../../../provider/student_provider.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_routes.dart';
@@ -14,8 +14,8 @@ class HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final studentProvider = Provider.of<StudentProvider>(context);
-    final StudentModel? student = studentProvider.student;
+    final studentProvider = Provider.of<StudentLoginProvider>(context);
+    final Student? student = studentProvider.student;
 
     return Scaffold(
       appBar: AppBar(
@@ -31,9 +31,9 @@ class HomeTab extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: student?.studentImage != null
+              child: student?.profilePicture != null
                   ? Image.network(
-                student!.studentImage!,
+                student!.profilePicture!,
                 fit: BoxFit.cover,
                 errorBuilder: (context, error, stackTrace) =>
                     Image.asset(AppAssets.boy, fit: BoxFit.fill),
@@ -45,21 +45,21 @@ class HomeTab extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  student?.name ?? "اسم الطالب",
+                  student?.nTalb ?? "اسم الطالب",
                   style: AppText.boldText(
                     color: AppColors.blackColor,
                     fontSize: sp(24),
                   ),
                 ),
                 Text(
-                  student?.level ?? "الصف الدراسي",
+                  student?.nSaf ?? "الصف الدراسي",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
                     fontSize: sp(16),
                   ),
                 ),
                 Text(
-                  student?.code ?? "كود الطالب",
+                  student?.codTalb ?? "كود الطالب",
                   style: AppText.regularText(
                     color: AppColors.greyColor,
                     fontSize: sp(14),
@@ -89,14 +89,14 @@ class HomeTab extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "الاسم: ${student?.name ?? "-"}",
+                              "الاسم: ${student?.nTalb ?? "-"}",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
                                 fontSize: sp(24),
                               ),
                             ),
                             Text(
-                              "المرحلة التعليمية: ${student?.level ?? "-"}",
+                              "المرحلة التعليمية: ${student?.nSaf ?? "-"}",
                               style: AppText.boldText(
                                 color: AppColors.blackColor,
                                 fontSize: sp(24),
@@ -121,7 +121,7 @@ class HomeTab extends StatelessWidget {
                                   ),
                                   SizedBox(height: h(8)),
                                   Text(
-                                    student?.code ?? "-",
+                                    student?.codTalb ?? "-",
                                     style: AppText.boldText(
                                       color: AppColors.blackColor,
                                       fontSize: sp(18),

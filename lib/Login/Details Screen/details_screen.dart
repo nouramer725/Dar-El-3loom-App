@@ -1,11 +1,10 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
-import '../../Model/student_model.dart';
+import '../../Model/student_login_model.dart';
 import '../../provider/app_flow.dart';
-import '../../provider/student_provider.dart';
+import '../../provider/student_login_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
@@ -14,14 +13,32 @@ import '../../widgets/custom_elevated_button_widget.dart';
 import 'Controllers/student_controller.dart';
 import 'Widgets/widget.dart';
 
-class DetailsScreen extends StatelessWidget {
+class DetailsScreen extends StatefulWidget {
   DetailsScreen({super.key});
 
+  @override
+  State<DetailsScreen> createState() => _DetailsScreenState();
+}
+
+class _DetailsScreenState extends State<DetailsScreen> {
   final formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    super.initState();
+    final loginProvider =
+    Provider.of<StudentLoginProvider>(context, listen: false);
+    final token = loginProvider.token;
+    final student = loginProvider.student;
+
+    print("Token from provider: $token");
+    print("Student: ${student?.nTalb}");
+  }
+
+
+  @override
   Widget build(BuildContext context) {
-    final studentProvider = Provider.of<StudentProvider>(context);
+    final studentProvider = Provider.of<StudentLoginProvider>(context);
     final student = studentProvider.student;
 
     if (student == null) {
@@ -141,6 +158,7 @@ class DetailsScreen extends StatelessWidget {
                           onPressed: () async {
                             List<String> errors = [];
 
+                            // Validation checks
                             if (!formKey.currentState!.validate())
                               errors.add("الرجاء ملء جميع الحقول بشكل صحيح");
                             if (controller.level.text.trim().isEmpty)
@@ -167,30 +185,63 @@ class DetailsScreen extends StatelessWidget {
                             }
 
                             try {
-                              StudentModel updatedStudent = StudentModel(
-                                code: student.code,
-                                name: controller.name.text,
-                                level: controller.level.text,
-                                phoneStudent: controller.phoneStudent.text,
-                                phoneParent: controller.phoneParent.text,
-                                nationalId: controller.nationalId.text,
+                              final loginProvider =
+                                  Provider.of<StudentLoginProvider>(
+                                    context,
+                                    listen: false,
+                                  );
+
+                              final token = loginProvider.token;
+                              final student = loginProvider.student;
+
+                              if (token == null || student == null) {
+                                throw Exception("User not logged in");
+                              }
+
+                              final updatedStudent = Student(
+                                codTalb: controller.code.text,
+                                nTalb: controller.name.text,
+                                nSaf: controller.level.text,
+                                tel: controller.phoneStudent.text,
+                                tel1: controller.phoneParent.text,
+                                personalId: controller.nationalId.text,
+                                birthCertificate: controller.birthImage?.path,
+                                profilePicture: controller.personalImage?.path,
+                                verified: true,
                                 password: controller.password.text,
-                                birthImage: controller.birthImage?.path,
-                                studentImage: controller.personalImage?.path,
                               );
 
-                              final api = ApiService();
+                              final api = ApiService(token: token);
+
                               final response = await api.updateStudentInfo(
                                 updatedStudent,
                               );
 
-                              print("Response from API: $response");
+                              final oldLogin = loginProvider.loginModel;
 
-                              studentProvider.setStudent(
-                                StudentModel.fromJson(
-                                  response['data']['student'],
-                                ),
-                              );
+                              final updatedLoginModel = StudentLoginModel.fromJson(response);
+
+                              updatedLoginModel.token ??= oldLogin?.token;
+
+                              updatedLoginModel.data?.student?.password ??=
+                                  oldLogin?.data?.student?.password;
+
+                              await loginProvider.setLogin(updatedLoginModel);
+
+
+                              AppFlow.getToken();
+
+                              print(updatedLoginModel.token);
+
+
+                              if (updatedLoginModel.token != null) {
+                                await AppFlow.saveToken(updatedLoginModel.token!);
+                              }
+
+                              print("-----------Update------------------");
+                              print(updatedLoginModel.status);
+                              print(updatedLoginModel.token);
+                              print("-----------------------------");
 
                               Fluttertoast.showToast(
                                 msg: "تم تحديث بيانات الطالب بنجاح",
@@ -198,8 +249,7 @@ class DetailsScreen extends StatelessWidget {
                                 textColor: Colors.white,
                               );
 
-                              await AppFlow.goToCompleted();
-
+                              // Navigate to home and remove all previous screens
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 AppRoutes.homeScreenName,
@@ -211,7 +261,7 @@ class DetailsScreen extends StatelessWidget {
                                 backgroundColor: AppColors.wrongIconColor,
                                 textColor: Colors.white,
                               );
-                              print("Error updating student: $e");
+                              debugPrint("Update error: $e");
                             }
                           },
                         ),

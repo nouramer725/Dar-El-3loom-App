@@ -1,7 +1,7 @@
+import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../Model/student_model.dart';
-import '../../../../provider/student_provider.dart';
+import '../../../../provider/student_login_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_text.dart';
@@ -13,8 +13,8 @@ class ProfilePictureWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final studentProvider = Provider.of<StudentProvider>(context);
-    final StudentModel? student = studentProvider.student;
+    final studentProvider = Provider.of<StudentLoginProvider>(context);
+    final Student? student = studentProvider.student;
 
     return Scaffold(
       appBar: AppBar(
@@ -53,9 +53,9 @@ class ProfilePictureWidget extends StatelessWidget {
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: student?.studentImage != null
+                      child: student?.profilePicture != null
                           ? Image.network(
-                              student!.studentImage!,
+                              student!.profilePicture!,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) =>
                                   Image.asset(AppAssets.boy, fit: BoxFit.fill),

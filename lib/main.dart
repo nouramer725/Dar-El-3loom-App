@@ -1,7 +1,7 @@
 import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:dar_el_3loom/provider/app_theme_provider.dart';
 import 'package:dar_el_3loom/provider/shared_preferences_theme.dart';
-import 'package:dar_el_3loom/provider/student_provider.dart';
+import 'package:dar_el_3loom/provider/student_login_provider.dart';
 import 'package:dar_el_3loom/utils/app_routes.dart';
 import 'package:dar_el_3loom/utils/app_theme.dart';
 import 'package:dar_el_3loom/utils/size_config.dart';
@@ -32,11 +32,15 @@ Future<void> main() async {
   );
 
   await SharedPreferencesTheme.init();
+
+  final studentProvider = StudentLoginProvider();
+  await studentProvider.loadStudent();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppThemeProvider()),
-        ChangeNotifierProvider(create: (_) => StudentProvider()),
+        ChangeNotifierProvider(create: (_) => studentProvider),
       ],
       child: const MyApp(),
     ),
@@ -49,8 +53,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var themeProvider = Provider.of<AppThemeProvider>(context);
-    final studentProvider = Provider.of<StudentProvider>(context, listen: false);
-    studentProvider.loadStudent();
 
     return MaterialApp(
       title: 'Flutter Demo',
@@ -58,30 +60,27 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       debugShowCheckedModeBanner: false,
-      initialRoute: AppFlow.getInitialRoute(),
+
+      initialRoute: AppFlow.getInitialRoute(context),
+
       builder: (context, child) {
         SizeConfig.init(context);
         return Directionality(textDirection: TextDirection.rtl, child: child!);
       },
+
       routes: {
-        AppRoutes.firstTimeLoginScreenName: (context) => FirstTimeLoginScreen(),
-        AppRoutes.detailsScreen: (context) => DetailsScreen(),
-        AppRoutes.loginScreen: (context) => LoginScreen(),
-        AppRoutes.homeScreenName: (context) => HomeScreen(),
-        AppRoutes.container1Press: (context) => Container1Press(),
-        AppRoutes.container2Press: (context) => Container2Press(),
-        AppRoutes.container3Press: (context) => Container3Press(),
-        AppRoutes.container4Press: (context) => Container4Press(),
-        AppRoutes.container5Press: (context) => Container5press(),
-        AppRoutes.passwordEdit: (context) => PasswordEdit(),
-        AppRoutes.profilePictureEdit: (context) => ProfilePictureWidget(),
+        AppRoutes.firstTimeLoginScreenName: (_) => FirstTimeLoginScreen(),
+        AppRoutes.detailsScreen: (_) => DetailsScreen(),
+        AppRoutes.loginScreen: (_) => LoginScreen(),
+        AppRoutes.homeScreenName: (_) => HomeScreen(),
+        AppRoutes.container1Press: (_) => Container1Press(),
+        AppRoutes.container2Press: (_) => Container2Press(),
+        AppRoutes.container3Press: (_) => Container3Press(),
+        AppRoutes.container4Press: (_) => Container4Press(),
+        AppRoutes.container5Press: (_) => Container5press(),
+        AppRoutes.passwordEdit: (_) => PasswordEdit(),
+        AppRoutes.profilePictureEdit: (_) => ProfilePictureWidget(),
       },
     );
   }
 }
-
-/// req:
-/// 1)  enter code of student and parent number (for the first time)
-/// 2) check data of this student :
-///   الاسم و الصف و رقم الطالب و رقم ولي الامر و الرقم القومي و الباسورد وتاكيد الباسورد و صورة شهاده الميلاد وصورة الشخصية
-///

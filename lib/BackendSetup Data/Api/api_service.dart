@@ -1,15 +1,17 @@
+import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
-
-import '../../Model/student_model.dart';
 
 class ApiService {
   late Dio dio;
 
-  ApiService() {
+  ApiService({String? token}) {
     dio = Dio(
       BaseOptions(
         baseUrl: 'http://10.0.2.2:3000',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
       ),
     );
   }
@@ -26,37 +28,38 @@ class ApiService {
     return response.data;
   }
 
-  Future<Map<String, dynamic>> updateStudentInfo(StudentModel student) async {
+  Future<Map<String, dynamic>> updateStudentInfo(Student student) async {
     FormData formData = FormData.fromMap({
-      "cod_talb": student.code,
-      "n_talb": student.name,
-      "n_saf": student.level,
-      "tel": student.phoneStudent,
-      "tel_1": student.phoneParent,
-      "personal_id": student.nationalId,
+      "cod_talb": student.codTalb,
+      "n_talb": student.nTalb,
+      "n_saf": student.nSaf,
+      "tel": student.tel,
+      "tel_1": student.tel1,
+      "personal_id": student.personalId,
+      "verified": student.verified,
       "password": student.password,
     });
 
-    if (student.birthImage != null && student.birthImage!.isNotEmpty) {
+    if (student.birthCertificate != null && student.birthCertificate!.isNotEmpty) {
       formData.files.add(
         MapEntry(
           "birth_certificate",
-          await MultipartFile.fromFile(student.birthImage!),
+          await MultipartFile.fromFile(student.birthCertificate!),
         ),
       );
     }
 
-    if (student.studentImage != null && student.studentImage!.isNotEmpty) {
+    if (student.profilePicture != null && student.profilePicture!.isNotEmpty) {
       formData.files.add(
         MapEntry(
           "profile_picture",
-          await MultipartFile.fromFile(student.studentImage!),
+          await MultipartFile.fromFile(student.profilePicture!),
         ),
       );
     }
 
     final response = await dio.patch(
-      '/api/v1/students/${student.code}',
+      '/api/v1/students/${student.codTalb}',
       data: formData,
       options: Options(headers: {"Content-Type": "multipart/form-data"}),
     );
