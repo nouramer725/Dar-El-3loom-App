@@ -1,7 +1,9 @@
+import 'package:dar_el_3loom/home/containers_contents/Performance/table_widget.dart';
+import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../Model/performance_model.dart';
 import '../../../provider/student_login_provider.dart';
-import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
@@ -25,6 +27,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   List<String> teachers = [];
   List<Map<String, dynamic>> availableMonths = [];
   Map<String, dynamic>? scheduleDetails;
+  List<SessionModel> fetchedSessions = [];
 
   final monthNames = [
     "يناير",
@@ -115,14 +118,25 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
 
       setState(() => isLoading = true);
 
-      scheduleDetails = await apiService.fetchScheduleDetails(
+      final response = await apiService.fetchScheduleDetails(
         subject: selectedSubject!,
         teacher: selectedTeacher!,
         month: month,
         year: year,
       );
 
-      setState(() => isLoading = false);
+      // Convert sessions to SessionModel list
+      final sessionsJson = response!['sessions'] as List<dynamic>;
+      final sessionsList = sessionsJson
+          .map((s) => SessionModel.fromJson(s as Map<String, dynamic>))
+          .toList();
+
+      setState(() {
+        isLoading = false;
+        scheduleDetails = response;
+        // store sessions list somewhere accessible
+        fetchedSessions = sessionsList;
+      });
     }
   }
 
@@ -246,12 +260,26 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                       ),
 
                     SizedBox(height: h(20)),
-                    Image.asset(
-                      AppAssets.container1Image,
-                      fit: BoxFit.fill,
-                      height: h(350),
-                      width: w(350),
-                    ),
+                    if (scheduleDetails != null && fetchedSessions.isNotEmpty)
+                      PerformanceTableWidget(
+                        tableTitleColor: AppColors.container1Color,
+                        sessions: fetchedSessions,
+                      ),
+                    if (scheduleDetails == null || fetchedSessions.isEmpty)
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Text(
+                              'لا توجد معلومات ل تلك البيانات',
+                              style: AppText.mediumText(
+                                color: AppColors.blackColor,
+                                fontSize: sp(25),
+                              ),
+                            ),
+                            Image.asset(AppAssets.container1Image),
+                          ],
+                        ),
+                      ),
                   ],
                 ),
               ),
