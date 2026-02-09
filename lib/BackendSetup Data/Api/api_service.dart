@@ -141,4 +141,48 @@ class ApiService {
       return [];
     }
   }
+
+  // Fetch subjects and teachers for the student
+  Future<List<Map<String, dynamic>>> fetchSubjects() async {
+    try {
+      final response = await dio.get('/api/v1/schedule/subjects');
+      if (response.data['status'] == 'success') {
+        List subjects = response.data['data']['subjects'] ?? [];
+        return List<Map<String, dynamic>>.from(subjects);
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print("Error fetching subjects: $e");
+      return [];
+    }
+  }
+
+  // Fetch detailed schedule for a subject, teacher, month, year
+  Future<Map<String, dynamic>?> fetchScheduleDetails({
+    required String subject,
+    required String teacher,
+    required int month,
+    int? year,
+  }) async {
+    try {
+      final response = await dio.get(
+        '/api/v1/schedule/details',
+        queryParameters: {
+          'subject': subject,
+          'teacher': teacher,
+          'month': month,
+          'year': year ?? DateTime.now().year,
+        },
+      );
+      if (response.data['status'] == 'success') {
+        return response.data['data'];
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching schedule details: $e");
+      return null;
+    }
+  }
 }

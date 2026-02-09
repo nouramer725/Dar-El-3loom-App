@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../provider/student_login_provider.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 import '../Mozakrat/filter_widget.dart';
+import '../../../BackendSetup Data/Api/api_service.dart';
 
 class PerformanceScreen extends StatefulWidget {
   const PerformanceScreen({super.key});
@@ -16,7 +19,112 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   String? selectedSubject;
   String? selectedTeacher;
   String? selectedMonth;
-  bool isSelected = false;
+  bool isLoading = true;
+
+  List<Map<String, dynamic>> subjects = [];
+  List<String> teachers = [];
+  List<Map<String, dynamic>> availableMonths = [];
+  Map<String, dynamic>? scheduleDetails;
+
+  final monthNames = [
+    "يناير",
+    "فبراير",
+    "مارس",
+    "أبريل",
+    "مايو",
+    "يونيو",
+    "يوليو",
+    "أغسطس",
+    "سبتمبر",
+    "أكتوبر",
+    "نوفمبر",
+    "ديسمبر",
+  ];
+
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+    final loginProvider = Provider.of<StudentLoginProvider>(
+      context,
+      listen: false,
+    );
+    final token = loginProvider.token;
+    apiService = ApiService(token: token);
+    fetchSubjects();
+  }
+
+  /// Fetch subjects from API
+  void fetchSubjects() async {
+    setState(() => isLoading = true);
+
+    subjects = await apiService.fetchSubjects();
+
+    setState(() => isLoading = false);
+  }
+
+  /// Update teachers based on selected subject
+  void updateTeachers() {
+    if (selectedSubject != null) {
+      final subjectData = subjects.firstWhere(
+        (s) => s['subject_name'] == selectedSubject,
+      );
+
+      teachers = List<String>.from(
+        subjectData['teachers'].map((t) => t['teacher_name']),
+      ).toSet().toList(); // إزالة التكرارات
+
+      // هنا المشكلة: إعادة تعيين selectedTeacher
+      if (selectedTeacher != null && !teachers.contains(selectedTeacher)) {
+        selectedTeacher = null;
+      }
+    } else {
+      teachers = [];
+      selectedTeacher = null;
+    }
+  }
+
+  /// Update months based on selected subject & teacher
+  void updateAvailableMonths() {
+    if (selectedSubject != null && selectedTeacher != null) {
+      final subjectData = subjects.firstWhere(
+        (s) => s['subject_name'] == selectedSubject,
+      );
+
+      final teacherData = subjectData['teachers'].firstWhere(
+        (t) => t['teacher_name'] == selectedTeacher,
+      );
+
+      availableMonths = List<Map<String, dynamic>>.from(
+        teacherData['available_months'],
+      );
+    } else {
+      availableMonths = [];
+    }
+  }
+
+  /// Fetch schedule based on selections
+  void fetchSchedule() async {
+    if (selectedSubject != null &&
+        selectedTeacher != null &&
+        selectedMonth != null) {
+      final parts = selectedMonth!.split('/').map((e) => e.trim()).toList();
+      final month = int.parse(parts[0]);
+      final year = int.parse(parts[1]);
+
+      setState(() => isLoading = true);
+
+      scheduleDetails = await apiService.fetchScheduleDetails(
+        subject: selectedSubject!,
+        teacher: selectedTeacher!,
+        month: month,
+        year: year,
+      );
+
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,84 +147,115 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              FilterWidget(
-                type: FilterType.dropdown,
+      body: isLoading
+          ? Center(
+              child: CircularProgressIndicator(
                 color: AppColors.container1Color,
-                items: [
-                  DropdownMenuItem(value: "عربي", child: Text("عربي")),
-                  DropdownMenuItem(value: "رياضة", child: Text("رياضة")),
-                  DropdownMenuItem(value: "انجليزي", child: Text("انجليزي")),
-                  DropdownMenuItem(value: "الماني", child: Text("الماني")),
-                ],
-                text: "المادة",
-                onChanged: (value) {
-                  setState(() {
-                    selectedSubject = value;
-                  });
-                },
               ),
-              FilterWidget(
-                type: FilterType.dropdown,
-                color: AppColors.container1Color,
-                items: [
-                  DropdownMenuItem(
-                    value: "محمد احمد",
-                    child: Text("محمد احمد"),
-                  ),
-                  DropdownMenuItem(
-                    value: "احمد بدري",
-                    child: Text("احمد بدري"),
-                  ),
-                  DropdownMenuItem(
-                    value: "سالم محمد",
-                    child: Text("سالم محمد"),
-                  ),
-                  DropdownMenuItem(
-                    value: "اسامة سعدالله",
-                    child: Text("اسامة سعدالله"),
-                  ),
-                ],
-                text: "المدرس",
-                onChanged: (value) {
-                  setState(() {
-                    selectedTeacher = value;
-                  });
-                },
+            )
+          : Padding(
+              padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    /// Subject Dropdown
+                    FilterWidget(
+                      type: FilterType.dropdown,
+                      color: AppColors.container1Color,
+                      items: subjects
+                          .map<DropdownMenuItem<String>>(
+                            (s) => DropdownMenuItem<String>(
+                              value: s['subject_name'] as String,
+                              child: Text(s['subject_name'] as String),
+                            ),
+                          )
+                          .toList(),
+                      text: "المادة",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedSubject = value;
+
+                          // إعادة تعيين المختار للمدرس والشهر
+                          selectedTeacher = null;
+                          selectedMonth = null;
+                          scheduleDetails = null;
+
+                          // تحديث قائمة المدرسين
+                          updateTeachers();
+
+                          // إعادة تعيين قائمة الشهور المتاحة
+                          availableMonths = [];
+                        });
+                      },
+                    ),
+
+                    /// Teacher Dropdown
+                    FilterWidget(
+                      type: FilterType.dropdown,
+                      color: AppColors.container1Color,
+                      selectedValue: selectedTeacher,
+                      items: teachers
+                          .map<DropdownMenuItem<String>>(
+                            (t) => DropdownMenuItem<String>(
+                              value: t,
+                              child: Text(t),
+                            ),
+                          )
+                          .toList(),
+                      text: "المدرس",
+                      onChanged: (value) {
+                        setState(() {
+                          selectedTeacher = value;
+                          selectedMonth = null;
+                          scheduleDetails = null;
+                          updateAvailableMonths();
+                        });
+                      },
+                    ),
+
+                    /// Month Dropdown (only if months exist)
+                    if (availableMonths.isNotEmpty)
+                      FilterWidget(
+                        text: 'الشهر',
+                        type: FilterType.dropdown,
+                        color: AppColors.container1Color,
+                        selectedValue: selectedMonth,
+                        items: availableMonths.map<DropdownMenuItem<String>>((
+                          m,
+                        ) {
+                          // Safely handle month & year
+                          final month = m['month'] is int
+                              ? m['month'] as int
+                              : int.parse(m['month'].toString());
+                          final year = m['year'] is int
+                              ? m['year'] as int
+                              : int.parse(m['year'].toString());
+                          final monthName = monthNames[month - 1];
+
+                          return DropdownMenuItem<String>(
+                            value: '$month/$year',
+                            child: Text('$monthName / $year'),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedMonth = value;
+                            fetchSchedule();
+                          });
+                        },
+                      ),
+
+                    SizedBox(height: h(20)),
+                    Image.asset(
+                      AppAssets.container1Image,
+                      fit: BoxFit.fill,
+                      height: h(350),
+                      width: w(350),
+                    ),
+                  ],
+                ),
               ),
-              FilterWidget(
-                text: 'التاريخ',
-                type: FilterType.calendar,
-                color: AppColors.container1Color,
-                selectedValue: selectedMonth,
-                onMonthSelected: (value) {
-                  setState(() {
-                    selectedMonth = value;
-                  });
-                },
-              ),
-              SizedBox(height: h(20)),
-              // TableWidget(
-              //   tableTitleColor: AppColors.container1Color,
-              //   headers: ["الحصة", "التاريخ", "الحضور", "الامتحان", "الواجب"],
-              // ),
-              Image.asset(
-                AppAssets.container1Image,
-                fit: BoxFit.fill,
-                height: h(350),
-                width: w(350),
-              ),
-            ],
-          ),
-        ),
-      ),
-      // bottomNavigationBar: BottomNavBarRowWidget(
-      //   tableTitleColor: AppColors.container1Color,
-      // ),
+            ),
     );
   }
 }
