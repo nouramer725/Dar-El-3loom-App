@@ -41,7 +41,6 @@ class HomeTab extends StatelessWidget {
                   : Image.asset(AppAssets.boy, fit: BoxFit.fill),
             ),
 
-            // بيانات الطالب
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -71,7 +70,6 @@ class HomeTab extends StatelessWidget {
 
             Spacer(),
 
-            // أيقونة الباركود
             InkWell(
               onTap: () {
                 showDialog(

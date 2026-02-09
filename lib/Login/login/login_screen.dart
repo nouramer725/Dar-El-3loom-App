@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
 import '../../Model/student_model.dart';
 import '../../provider/app_flow.dart';
+import '../../provider/student_provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -104,12 +106,19 @@ class _LoginScreenState extends State<LoginScreen> {
                             final studentJson = response['data']['student'];
                             final student = StudentModel.fromJson(studentJson);
 
+                            final studentProvider =
+                                Provider.of<StudentProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                            studentProvider.setStudent(student);
+
                             await AppFlow.goToCompleted();
+
                             Navigator.pushNamedAndRemoveUntil(
                               context,
                               AppRoutes.homeScreenName,
                               (route) => false,
-                              arguments: student,
                             );
                           } else {
                             Fluttertoast.showToast(

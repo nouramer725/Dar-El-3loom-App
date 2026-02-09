@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../provider/app_flow.dart';
 import '../../../provider/app_theme_provider.dart';
+import '../../../provider/student_provider.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_routes.dart';
@@ -81,7 +82,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ProfileWidget(
               text: "تسجيل خروج",
               onTap: () async {
+                // 1️⃣ امسح أي بيانات محلية
                 await AppFlow.logout();
+                final studentProvider = Provider.of<StudentProvider>(
+                  context,
+                  listen: false,
+                );
+                studentProvider.clearStudent();
                 Navigator.pushNamedAndRemoveUntil(
                   context,
                   AppRoutes.loginScreen,
