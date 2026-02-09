@@ -204,7 +204,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
                         Fluttertoast.showToast(
                           msg: "تم تغيير كلمة المرور بنجاح",
-                          backgroundColor: Colors.green,
+                          backgroundColor: AppColors.blackColor,
                           textColor: Colors.white,
                           gravity: ToastGravity.TOP,
                         );

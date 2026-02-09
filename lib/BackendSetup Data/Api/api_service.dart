@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
 
@@ -89,5 +91,34 @@ class ApiService {
     );
 
     return response.data;
+  }
+
+  Future<Map<String, dynamic>> uploadProfilePicture(File imageFile) async {
+    try {
+      String fileName = imageFile.path.split('/').last;
+
+      FormData formData = FormData.fromMap({
+        'profile_picture': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: fileName,
+        ),
+      });
+
+      final response = await dio.post(
+        '/api/v1/students/profile-picture',
+        data: formData,
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        // لو السيرفر رجع رسالة خطأ
+        return e.response!.data;
+      } else {
+        return {'status': 'fail', 'message': e.message};
+      }
+    } catch (e) {
+      return {'status': 'fail', 'message': e.toString()};
+    }
   }
 }
