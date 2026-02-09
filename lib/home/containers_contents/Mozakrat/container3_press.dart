@@ -7,17 +7,17 @@ import '../../../provider/student_login_provider.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import '../../../widgets/filter_widget.dart';
-import '../../../widgets/table_widget.dart';
+import 'filter_widget.dart';
+import 'table_widget.dart';
 
-class Container3Press extends StatefulWidget {
-  const Container3Press({super.key});
+class MozakratScreen extends StatefulWidget {
+  const MozakratScreen({super.key});
 
   @override
-  State<Container3Press> createState() => _Container3PressState();
+  State<MozakratScreen> createState() => _MozakratScreenState();
 }
 
-class _Container3PressState extends State<Container3Press> {
+class _MozakratScreenState extends State<MozakratScreen> {
   List<Mozakrat> mozakrat = [];
   bool isLoading = true;
   String filter = 'teachers';

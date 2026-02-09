@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/responsive.dart';
-import '../../../widgets/filter_widget.dart';
+import '../Mozakrat/filter_widget.dart';
 
 class LessonsDateWidget extends StatefulWidget {
   const LessonsDateWidget({super.key});

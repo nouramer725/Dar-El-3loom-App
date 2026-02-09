@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../utils/app_colors.dart';
-import '../../../utils/app_text.dart';
-import '../../../utils/responsive.dart';
+import '../../../../../utils/app_colors.dart';
+import '../../../../../utils/app_text.dart';
+import '../../../../../utils/responsive.dart';
 
 class TableCellTitle extends StatelessWidget {
   final String text;

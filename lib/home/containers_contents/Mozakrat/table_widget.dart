@@ -1,8 +1,8 @@
 import 'package:dar_el_3loom/Model/mozakrat_model.dart';
-import 'package:dar_el_3loom/widgets/table_cell.dart';
-import 'package:dar_el_3loom/widgets/table_cell_title.dart';
+import 'package:dar_el_3loom/home/containers_contents/Mozakrat/table_cell.dart';
+import 'package:dar_el_3loom/home/containers_contents/Mozakrat/table_cell_title.dart';
 import 'package:flutter/material.dart';
-import '../../../utils/responsive.dart';
+import '../../../../../utils/responsive.dart';
 
 class TableWidget extends StatelessWidget {
   final Color tableTitleColor;

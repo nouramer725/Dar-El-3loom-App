@@ -1,19 +1,19 @@
-import 'package:dar_el_3loom/home/containers_contents/Container2/row_widget_buttons.dart';
-import 'package:dar_el_3loom/home/containers_contents/Container2/student_date_widget.dart';
+import 'package:dar_el_3loom/home/containers_contents/Table%20Time/row_widget_buttons.dart';
+import 'package:dar_el_3loom/home/containers_contents/Table%20Time/student_date_widget.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 import 'lessons_date_widget.dart';
 
-class Container2Press extends StatefulWidget {
-  const Container2Press({super.key});
+class TableTimeScreen extends StatefulWidget {
+  const TableTimeScreen({super.key});
 
   @override
-  State<Container2Press> createState() => _Container2PressState();
+  State<TableTimeScreen> createState() => _TableTimeScreenState();
 }
 
-class _Container2PressState extends State<Container2Press> {
+class _TableTimeScreenState extends State<TableTimeScreen> {
 
   bool isSelected = true;
 

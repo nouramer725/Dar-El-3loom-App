@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
+
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import '../../../widgets/filter_widget.dart';
+import '../Mozakrat/filter_widget.dart';
 
-class Container1Press extends StatefulWidget {
-  const Container1Press({super.key});
+class BalanceScreen extends StatefulWidget {
+  const BalanceScreen({super.key});
 
   @override
-  State<Container1Press> createState() => _Container1PressState();
+  State<BalanceScreen> createState() => _BalanceScreenState();
 }
 
-class _Container1PressState extends State<Container1Press> {
-  String? selectedSubject;
-  String? selectedTeacher;
-  String? selectedMonth;
-  bool isSelected = false;
-
+class _BalanceScreenState extends State<BalanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,13 +21,13 @@ class _Container1PressState extends State<Container1Press> {
         centerTitle: false,
         automaticallyImplyLeading: false,
         title: Text(
-          "المستوي الدراسي",
+          "المدفوعات",
           style: AppText.boldText(
             color: AppColors.blackColor,
             fontSize: sp(25),
           ),
         ),
-        backgroundColor: AppColors.container1Color,
+        backgroundColor: AppColors.container4Color,
         actions: [
           IconButton(
             onPressed: () => Navigator.pop(context),
@@ -46,7 +42,7 @@ class _Container1PressState extends State<Container1Press> {
             children: [
               FilterWidget(
                 type: FilterType.dropdown,
-                color: AppColors.container1Color,
+                color: AppColors.container4Color,
                 items: [
                   DropdownMenuItem(value: "عربي", child: Text("عربي")),
                   DropdownMenuItem(value: "رياضة", child: Text("رياضة")),
@@ -55,14 +51,12 @@ class _Container1PressState extends State<Container1Press> {
                 ],
                 text: "المادة",
                 onChanged: (value) {
-                  setState(() {
-                    selectedSubject = value;
-                  });
+                  setState(() {});
                 },
               ),
               FilterWidget(
                 type: FilterType.dropdown,
-                color: AppColors.container1Color,
+                color: AppColors.container4Color,
                 items: [
                   DropdownMenuItem(
                     value: "محمد احمد",
@@ -83,29 +77,38 @@ class _Container1PressState extends State<Container1Press> {
                 ],
                 text: "المدرس",
                 onChanged: (value) {
-                  setState(() {
-                    selectedTeacher = value;
-                  });
+                  setState(() {});
                 },
               ),
               FilterWidget(
-                text: 'التاريخ',
-                type: FilterType.calendar,
-                color: AppColors.container1Color,
-                selectedValue: selectedMonth,
-                onMonthSelected: (value) {
-                  setState(() {
-                    selectedMonth = value;
-                  });
+                type: FilterType.dropdown,
+                color: AppColors.container4Color,
+                items: [
+                  DropdownMenuItem(value: "المدفوع", child: Text("المدفوع")),
+                  DropdownMenuItem(
+                    value: "غير المدفوع",
+                    child: Text("غير المدفوع"),
+                  ),
+                ],
+                text: "حالة الدفع",
+                onChanged: (value) {
+                  setState(() {});
                 },
               ),
-              SizedBox(height: h(20)),
               // TableWidget(
-              //   tableTitleColor: AppColors.container1Color,
-              //   headers: ["الحصة", "التاريخ", "الحضور", "الامتحان", "الواجب"],
+              //   tableTitleColor: AppColors.container4Color,
+              //   headers: [
+              //     "الماده",
+              //     "المدرس",
+              //     "المدفوعات",
+              //     "تاريخ الدفع",
+              //     "السعر",
+              //     "المسدد",
+              //     "الباقي",
+              //   ],
               // ),
               Image.asset(
-                AppAssets.container1Image,
+                AppAssets.container4Image,
                 fit: BoxFit.fill,
                 height: h(350),
                 width: w(350),
@@ -114,9 +117,6 @@ class _Container1PressState extends State<Container1Press> {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavBarRowWidget(
-      //   tableTitleColor: AppColors.container1Color,
-      // ),
     );
   }
 }

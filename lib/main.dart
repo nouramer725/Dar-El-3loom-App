@@ -11,11 +11,11 @@ import 'package:provider/provider.dart';
 import 'Login/Details Screen/details_screen.dart';
 import 'Login/First Login Screen/first_time_login_screen.dart';
 import 'Login/login/login_screen.dart';
-import 'home/containers_contents/Container1/container1_press.dart';
-import 'home/containers_contents/Container2/container2_press.dart';
-import 'home/containers_contents/Container3/container3_press.dart';
-import 'home/containers_contents/Container4/container4_press.dart';
-import 'home/containers_contents/Container5/container5_press.dart';
+import 'home/containers_contents/Balance/balance_screen.dart';
+import 'home/containers_contents/Certificates/taqarer_screen.dart';
+import 'home/containers_contents/Mozakrat/container3_press.dart';
+import 'home/containers_contents/Performance/performance_screen.dart';
+import 'home/containers_contents/Table Time/table_time_screen.dart';
 import 'home/home_screen.dart';
 import 'home/tabs/profile/profile_tabs/password_edit.dart';
 import 'home/tabs/profile/profile_tabs/profile_picture_widget.dart';
@@ -73,11 +73,11 @@ class MyApp extends StatelessWidget {
         AppRoutes.detailsScreen: (_) => DetailsScreen(),
         AppRoutes.loginScreen: (_) => LoginScreen(),
         AppRoutes.homeScreenName: (_) => HomeScreen(),
-        AppRoutes.container1Press: (_) => Container1Press(),
-        AppRoutes.container2Press: (_) => Container2Press(),
-        AppRoutes.container3Press: (_) => Container3Press(),
-        AppRoutes.container4Press: (_) => Container4Press(),
-        AppRoutes.container5Press: (_) => Container5press(),
+        AppRoutes.container1Press: (_) => PerformanceScreen(),
+        AppRoutes.container2Press: (_) => TableTimeScreen(),
+        AppRoutes.container3Press: (_) => MozakratScreen(),
+        AppRoutes.container4Press: (_) => BalanceScreen(),
+        AppRoutes.container5Press: (_) => TaqarerScreen(),
         AppRoutes.passwordEdit: (_) => PasswordEdit(),
         AppRoutes.profilePictureEdit: (_) => ProfilePictureWidget(),
       },
