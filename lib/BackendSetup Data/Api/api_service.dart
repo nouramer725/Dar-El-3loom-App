@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dar_el_3loom/Model/mozakrat_model.dart';
 import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
 
@@ -119,6 +120,25 @@ class ApiService {
       }
     } catch (e) {
       return {'status': 'fail', 'message': e.toString()};
+    }
+  }
+
+  Future<List<Mozakrat>> fetchMozakrat({String filter = 'all'}) async {
+    try {
+      final response = await dio.get(
+        '/api/v1/mozakrat',
+        options: Options(headers: {'filter': filter}),
+      );
+
+      if (response.data['status'] == 'success') {
+        List mozakratList = response.data['data']['mozakrat'] ?? [];
+        return mozakratList.map((e) => Mozakrat.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print("Error fetching mozakrat: $e");
+      return [];
     }
   }
 }

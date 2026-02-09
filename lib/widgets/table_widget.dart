@@ -1,17 +1,18 @@
+import 'package:dar_el_3loom/Model/mozakrat_model.dart';
 import 'package:dar_el_3loom/widgets/table_cell.dart';
 import 'package:dar_el_3loom/widgets/table_cell_title.dart';
 import 'package:flutter/material.dart';
-import '../../../utils/app_colors.dart';
 import '../../../utils/responsive.dart';
-import 'lessons_model.dart';
 
 class TableWidget extends StatelessWidget {
   final Color tableTitleColor;
   final List<String> headers;
+  final List<Mozakrat> lessons;
 
   const TableWidget({
     required this.tableTitleColor,
     required this.headers,
+    required this.lessons,
     super.key,
   });
 
@@ -33,42 +34,38 @@ class TableWidget extends StatelessWidget {
           ],
         ),
         SizedBox(height: h(15)),
-        ListView.separated(
-          separatorBuilder: (context, index) => SizedBox(height: h(15)),
-          shrinkWrap: true,
-          itemCount: lessons.length,
-          itemBuilder: (context, index) {
-            final lessonData = [
-              lessons[index].name,
-              lessons[index].date,
-              lessons[index].time,
-              lessons[index].score,
-            ];
+        // Use Expanded/ListView outside
+        SizedBox(
+          height: h(650),
+          child: ListView.separated(
+            separatorBuilder: (context, index) => SizedBox(height: h(15)),
+            itemCount: lessons.length,
+            itemBuilder: (context, index) {
+              final lesson = lessons[index];
+              final rowData = [
+                lesson.nMod,
+                lesson.nSanf,
+                lesson.nMada,
+                lesson.pSales.toString(),
+              ];
 
-            return Table(
-              children: [
-                TableRow(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: tableTitleColor, width: 2),
+              return Table(
+                children: [
+                  TableRow(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: tableTitleColor, width: 2),
+                    ),
+                    children: rowData
+                        .map(
+                          (text) => CustomTableCell(text: text, isIcon: false),
+                        )
+                        .toList(),
                   ),
-                  children: [
-                    ...lessonData.map(
-                      (text) => CustomTableCell(text: text, isIcon: false),
-                    ),
-
-                    CustomTableCell(
-                      isIcon: true,
-                      icon: lessons[index].passed ? Icons.check : Icons.close,
-                      color: lessons[index].passed
-                          ? AppColors.checkIconColor
-                          : AppColors.wrongIconColor,
-                    ),
-                  ],
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ],
     );
