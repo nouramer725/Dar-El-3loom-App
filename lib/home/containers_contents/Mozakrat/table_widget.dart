@@ -21,6 +21,12 @@ class TableWidget extends StatelessWidget {
     return Column(
       children: [
         Table(
+          columnWidths: const {
+            0: FlexColumnWidth(1),
+            1: FlexColumnWidth(2),
+            2: FlexColumnWidth(1),
+            3: FlexColumnWidth(1),
+          },
           children: [
             TableRow(
               decoration: BoxDecoration(
@@ -50,6 +56,12 @@ class TableWidget extends StatelessWidget {
               ];
 
               return Table(
+                columnWidths: const {
+                  0: FlexColumnWidth(1),
+                  1: FlexColumnWidth(2),
+                  2: FlexColumnWidth(1),
+                  3: FlexColumnWidth(1),
+                },
                 children: [
                   TableRow(
                     decoration: BoxDecoration(

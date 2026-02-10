@@ -25,6 +25,7 @@ class CustomTableCell extends StatelessWidget {
         child: isIcon
             ? Icon(icon, color: color)
             : Text(
+          textAlign: TextAlign.center,
                 text ?? '',
                 style: AppText.mediumText(
                   color: AppColors.blackColor,

@@ -16,13 +16,17 @@ class SessionModel {
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
+    final attendance = json['attendance'];
+
     return SessionModel(
-      sessionNumber: json['session_number'],
-      date: json['date'],
-      attendanceStatus: json['attendance']['status'],
-      attendanceIcon: json['attendance']['icon'],
-      homework: json['homework'],
-      evaluation: json['evaluation'],
+      sessionNumber: json['session_number'] ?? 0,
+      date: json['date'] ?? '',
+
+      attendanceStatus: attendance?['status'] ?? '',
+      attendanceIcon: attendance?['icon'] ?? '',
+
+      homework: json['homework'] ?? 0,
+      evaluation: json['timeattendance']?.toString() ?? '',
     );
   }
 }
