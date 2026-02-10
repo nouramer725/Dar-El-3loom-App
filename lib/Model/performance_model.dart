@@ -1,5 +1,3 @@
-import 'exam_model.dart';
-
 class SessionModel {
   final int sessionNumber;
   final String date;
@@ -7,8 +5,6 @@ class SessionModel {
   final String attendanceIcon;
   final int homework;
   final String evaluation;
-  final ExamModel? examGrade;
-
 
   SessionModel({
     required this.sessionNumber,
@@ -17,7 +13,6 @@ class SessionModel {
     required this.attendanceIcon,
     required this.homework,
     required this.evaluation,
-    required this.examGrade,
   });
 
   factory SessionModel.fromJson(Map<String, dynamic> json) {
@@ -28,7 +23,6 @@ class SessionModel {
       attendanceIcon: json['attendance']['icon'],
       homework: json['homework'],
       evaluation: json['evaluation'],
-      examGrade: json['grade_display'],
     );
   }
 }

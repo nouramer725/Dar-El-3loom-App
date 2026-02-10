@@ -61,10 +61,9 @@ class PerformanceTableWidget extends StatelessWidget {
         Table(
           columnWidths: const {
             0: FlexColumnWidth(1),
-            1: FlexColumnWidth(2),
+            1: FlexColumnWidth(1),
             2: FlexColumnWidth(1),
             3: FlexColumnWidth(1),
-            4: FlexColumnWidth(1),
           },
           children: [
             TableRow(
@@ -76,7 +75,6 @@ class PerformanceTableWidget extends StatelessWidget {
                 CustomTableCell(text: 'الحصة', isHeader: true),
                 CustomTableCell(text: 'التاريخ', isHeader: true),
                 CustomTableCell(text: 'الحضور', isHeader: true),
-                CustomTableCell(text: 'التقييم', isHeader: true),
                 CustomTableCell(text: 'الواجب', isHeader: true),
               ],
             ),
@@ -95,10 +93,9 @@ class PerformanceTableWidget extends StatelessWidget {
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(1),
-                1: FlexColumnWidth(2),
+                1: FlexColumnWidth(1),
                 2: FlexColumnWidth(1),
                 3: FlexColumnWidth(1),
-                4: FlexColumnWidth(1),
               },
               children: [
                 TableRow(
@@ -110,7 +107,6 @@ class PerformanceTableWidget extends StatelessWidget {
                   children: [
                     CustomTableCell(text: s.sessionNumber.toString()),
                     CustomTableCell(text: s.date),
-                    CustomTableCell(text: s.attendanceIcon),
                     CustomTableCell(text: s.evaluation),
                     CustomTableCell(
                       icon: Icon(
