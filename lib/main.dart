@@ -77,7 +77,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.container2Press: (_) => TableTimeScreen(),
         AppRoutes.container3Press: (_) => MozakratScreen(),
         AppRoutes.container4Press: (_) => BalanceScreen(),
-        AppRoutes.container5Press: (_) => TaqarerScreen(),
+        AppRoutes.container5Press: (_) => TaqreerScreen(),
         AppRoutes.passwordEdit: (_) => PasswordEdit(),
         AppRoutes.profilePictureEdit: (_) => ProfilePictureWidget(),
       },

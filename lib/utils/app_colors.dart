@@ -19,4 +19,7 @@ class AppColors {
   static const Color buttonColor = Color(0xFFAAA8A8);
   static const Color textColorLogin = Color(0xFFA1A5AC);
   static const Color darkGreyColor = Color(0xFF323233);
+  static const Color backCertificate = Color(0xff7f4e1d);
+  static const Color titleCertificate = Color(0xff343434);
+  static const Color contentCertificate = Color(0xff6A6A6A);
 }

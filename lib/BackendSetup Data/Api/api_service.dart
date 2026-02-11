@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dar_el_3loom/Model/mozakrat_model.dart';
@@ -5,6 +6,7 @@ import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
 
 import '../../Model/balance_model.dart';
+import '../../Model/takim_model.dart';
 
 class ApiService {
   late Dio dio;
@@ -213,4 +215,28 @@ class ApiService {
     return data.map((e) => BalanceModel.fromJson(e)).toList();
   }
 
+  Future<Map<String, dynamic>?> fetchTakiim({required int month}) async {
+    try {
+      final response = await dio.get(
+        "/api/v1/takrer",
+        queryParameters: {"month": month},
+      );
+
+      if (response.data['status'] == 'success') {
+        final takiimJson = response.data['data']['takiim'] as List;
+        final totalsJson = response.data['data']['totals'];
+
+        List<TakiimModel> takiimList = takiimJson
+            .map((e) => TakiimModel.fromJson(e))
+            .toList();
+
+        return {"takiim": takiimList, "totals": totalsJson};
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching takiim: $e");
+      return null;
+    }
+  }
 }

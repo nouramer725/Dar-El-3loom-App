@@ -15,4 +15,5 @@ class AppAssets {
       'assets/images/Push notifications-pana 1.png.png';
   static const String arrowIcon = 'assets/images/arrow.png';
   static const String logoutIcon = 'assets/images/logout.png';
+  static const String certificate = 'assets/images/cer.png';
 }

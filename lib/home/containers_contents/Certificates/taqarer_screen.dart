@@ -1,23 +1,71 @@
+import 'package:dar_el_3loom/home/containers_contents/Certificates/taqarer_table_widget.dart';
+import 'package:dar_el_3loom/utils/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../../../utils/app_assets.dart';
-import '../../../utils/app_colors.dart';
+import '../../../BackendSetup Data/Api/api_service.dart';
+import '../../../Model/takim_model.dart';
+import '../../../provider/student_login_provider.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import '../Mozakrat/filter_widget.dart';
 
-class TaqarerScreen extends StatefulWidget {
-  const TaqarerScreen({super.key});
+class TaqreerScreen extends StatefulWidget {
+  const TaqreerScreen({super.key});
 
   @override
-  State<TaqarerScreen> createState() => _TaqarerScreenState();
+  State<TaqreerScreen> createState() => _TaqreerScreenState();
 }
 
-class _TaqarerScreenState extends State<TaqarerScreen> {
-  String? selectedMonth;
+class _TaqreerScreenState extends State<TaqreerScreen> {
+  late ApiService apiService;
+
+  List<TakiimModel> takiimList = [];
+  int totalGrades = 0;
+  int totalMax = 0;
+  int totalPercentage = 0;
+
+  bool isLoading = false;
+  int selectedMonth = DateTime.now().month;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final loginProvider = Provider.of<StudentLoginProvider>(
+      context,
+      listen: false,
+    );
+
+    apiService = ApiService(token: loginProvider.token);
+    fetchData();
+  }
+
+  Future<void> fetchData() async {
+    setState(() => isLoading = true);
+
+    final response = await apiService.fetchTakiim(month: selectedMonth);
+
+    if (response != null) {
+      setState(() {
+        takiimList = response["takiim"] ?? [];
+
+        final totals = response["totals"] ?? {};
+
+        totalGrades = totals["totalgrades"] ?? 0;
+        totalMax = totals["totalmax"] ?? 0;
+        totalPercentage = totals["totalperstange"] ?? 0;
+
+        isLoading = false;
+      });
+    } else {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    var loginProvider = Provider.of<StudentLoginProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -37,44 +85,87 @@ class _TaqarerScreenState extends State<TaqarerScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              FilterWidget(
-                text: 'الشهر',
-                type: FilterType.calendar,
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
                 color: AppColors.container5Color,
-                selectedValue: selectedMonth,
-                onMonthSelected: (value) {
-                  setState(() {
-                    selectedMonth = value;
-                  });
-                },
               ),
-              // TableWidget(
-              //   tableTitleColor: AppColors.container5Color,
-              //   headers: [
-              //     "التاريخ",
-              //     "المجموعة",
-              //     "المدرس",
-              //     "المادة",
-              //     "الدرجة",
-              //     "القصوي",
-              //     "النسبة",
-              //   ],
-              // ),
-              Image.asset(
-                AppAssets.container5Image,
-                fit: BoxFit.fill,
-                height: h(350),
-                width: w(350),
+            )
+          : SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.all(w(10)),
+                child: Column(
+                  spacing: h(25),
+                  children: [
+                    /// 🔹 Month Dropdown
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: w(10)),
+                      margin: EdgeInsets.symmetric(vertical: h(5)),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(
+                          color: AppColors.container5Color,
+                          width: 2,
+                        ),
+                      ),
+                      child: DropdownButtonFormField<int>(
+                        dropdownColor: Theme.of(
+                          context,
+                        ).scaffoldBackgroundColor,
+                        icon: Icon(Icons.arrow_drop_down),
+                        initialValue: selectedMonth,
+                        hint: Text(
+                          "اختر الشهر",
+                          style: AppText.boldText(
+                            fontSize: sp(18),
+                            color: AppColors.blackColor,
+                          ),
+                        ),
+                        items: List.generate(
+                          12,
+                          (index) => DropdownMenuItem(
+                            value: index + 1,
+                            child: Text("شهر ${index + 1}"),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          if (value != null) {
+                            setState(() => selectedMonth = value);
+                            fetchData();
+                          }
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          isDense: true,
+                        ),
+                      ),
+                    ),
+
+                    isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.container5Color,
+                            ),
+                          )
+                        : takiimList.isEmpty
+                        ? const Center(child: Text("لا توجد بيانات"))
+                        : SingleChildScrollView(
+                            child: TaqarerTableWidget(
+                              selectedMonth: selectedMonth.toString(),
+                              studentName: loginProvider.student?.nTalb ?? "",
+                              tableTitleColor: AppColors.container5Color,
+                              records: takiimList,
+                              totals: {
+                                "totalgrades": totalGrades,
+                                "totalmax": totalMax,
+                                "totalperstange": totalPercentage,
+                              },
+                            ),
+                          ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
