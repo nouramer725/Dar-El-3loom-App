@@ -3,6 +3,8 @@ import 'package:dar_el_3loom/Model/mozakrat_model.dart';
 import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
 import '../../Model/balance_model.dart';
+import '../../Model/lessons_date_model.dart';
+import '../../Model/student_time_model.dart';
 import '../../Model/takim_model.dart';
 
 class ApiService {
@@ -235,5 +237,54 @@ class ApiService {
       print("Error fetching takiim: $e");
       return null;
     }
+  }
+
+  Future<List<String>> fetchScheduleSubjects() async {
+    final response = await dio.get("/api/v1/schedule-dates");
+
+    final data = response.data['data'] as List;
+
+    return data.map<String>((e) => e['n_mada'].toString()).toSet().toList();
+  }
+
+  Future<List<StudentDateModel>> fetchScheduleDatesDetails({
+    required String subject,
+    required String type,
+  }) async {
+    final response = await dio.get(
+      "/api/v1/schedule-dates/details",
+      queryParameters: {"subject": subject, "type": type},
+    );
+
+    final list = response.data['data'] as List;
+
+    return list.map((e) => StudentDateModel.fromJson(e)).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> fetchLessonsFilters() async {
+    final response = await dio.get('/api/v1/schedule-dates/subjects-list');
+
+    return List<Map<String, dynamic>>.from(response.data['data']['subjects']);
+  }
+
+  Future<List<LessonScheduleModel>> fetchLessonsDetails({
+    required String subject,
+    required String teacher,
+    required int month,
+    required int year,
+  }) async {
+    final response = await dio.get(
+      '/api/v1/schedule-dates/grade-details',
+      queryParameters: {
+        "subject": subject,
+        "teacher": teacher,
+        "month": month,
+        "year": year,
+      },
+    );
+
+    return (response.data['data'] as List)
+        .map((e) => LessonScheduleModel.fromJson(e))
+        .toList();
   }
 }

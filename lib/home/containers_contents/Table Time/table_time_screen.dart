@@ -1,10 +1,10 @@
 import 'package:dar_el_3loom/home/containers_contents/Table%20Time/row_widget_buttons.dart';
-import 'package:dar_el_3loom/home/containers_contents/Table%20Time/student_date_widget.dart';
+import 'package:dar_el_3loom/home/containers_contents/Table%20Time/student/student_date_widget.dart';
 import 'package:flutter/material.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import 'lessons_date_widget.dart';
+import 'lessons/lessons_date_widget.dart';
 
 class TableTimeScreen extends StatefulWidget {
   const TableTimeScreen({super.key});
@@ -14,7 +14,6 @@ class TableTimeScreen extends StatefulWidget {
 }
 
 class _TableTimeScreenState extends State<TableTimeScreen> {
-
   bool isSelected = true;
 
   @override
@@ -26,7 +25,10 @@ class _TableTimeScreenState extends State<TableTimeScreen> {
         automaticallyImplyLeading: false,
         title: Text(
           "مواعيد الجداول",
-          style: AppText.boldText(color: AppColors.blackColor, fontSize: sp(25)),
+          style: AppText.boldText(
+            color: AppColors.blackColor,
+            fontSize: sp(25),
+          ),
         ),
         backgroundColor: AppColors.container2Color,
         actions: [
@@ -55,9 +57,6 @@ class _TableTimeScreenState extends State<TableTimeScreen> {
           ),
         ),
       ),
-      // bottomNavigationBar: BottomNavBarRowWidget(
-      //   tableTitleColor: AppColors.container2Color,
-      // ),
     );
   }
 }
