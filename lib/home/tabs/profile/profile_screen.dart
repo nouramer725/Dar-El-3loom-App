@@ -64,20 +64,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
               icon: Image.asset(AppAssets.arrowIcon),
             ),
             DividerWidget(),
-            ProfileWidget(
-              text: "تغير الاضاءة (فاتح/داكن)",
-              icon: Switch(
-                value: switchValue,
-                onChanged: (value) {
-                  themeProvider.changeTheme(
-                    value ? ThemeMode.dark : ThemeMode.light,
-                  );
-                },
-                activeThumbColor: AppColors.blackColor,
-                inactiveThumbColor: AppColors.blackColor,
-              ),
-            ),
-            DividerWidget(),
+            // ProfileWidget(
+            //   text: "تغير الاضاءة (فاتح/داكن)",
+            //   icon: Switch(
+            //     value: switchValue,
+            //     onChanged: (value) {
+            //       themeProvider.changeTheme(
+            //         value ? ThemeMode.dark : ThemeMode.light,
+            //       );
+            //     },
+            //     activeThumbColor: AppColors.blackColor,
+            //     inactiveThumbColor: AppColors.blackColor,
+            //   ),
+            // ),
+            // DividerWidget(),
             ProfileWidget(
               text: "تسجيل خروج",
               onTap: () async {
