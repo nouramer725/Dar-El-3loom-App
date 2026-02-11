@@ -15,7 +15,6 @@ class TaqarerTableWidget extends StatefulWidget {
   final String studentName;
   final String selectedMonth;
 
-
   const TaqarerTableWidget({
     super.key,
     required this.tableTitleColor,
@@ -137,7 +136,7 @@ class _TaqarerTableWidgetState extends State<TaqarerTableWidget> {
           ],
         ),
 
-        SizedBox(height: h(100)),
+        SizedBox(height: h(50)),
 
         CustomElevatedButtonWidget(
           sideColor: AppColors.container5Color,
@@ -154,16 +153,33 @@ class _TaqarerTableWidgetState extends State<TaqarerTableWidget> {
             double percent = (widget.totals['totalperstange'] ?? 0).toDouble();
 
             if (percent >= 85) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (_) => CertificateScreen(
-                    studentName: widget.studentName,
-                    percent: percent.toInt(),
-                    month: widget.selectedMonth,
-                    date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
-                  ),
-                ),
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                barrierColor: AppColors.blackColor.withOpacity(0.7),
+                builder: (context) {
+                  return Dialog(
+                    insetPadding: EdgeInsets.all(h(15)),
+                    backgroundColor: Colors.transparent,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: w(10),
+                        vertical: h(10),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CertificateScreen(
+                            studentName: widget.studentName,
+                            percent: percent.toInt(),
+                            month: widget.selectedMonth,
+                            date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               );
             } else {
               setState(() {

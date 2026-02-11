@@ -22,7 +22,7 @@ class HomeTab extends StatelessWidget {
         toolbarHeight: h(130),
         title: Row(
           spacing: w(10),
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Container(
               clipBehavior: Clip.antiAlias,
@@ -68,77 +68,77 @@ class HomeTab extends StatelessWidget {
               ],
             ),
 
-            Spacer(),
+            // Spacer(),
 
-            InkWell(
-              onTap: () {
-                showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (context) {
-                    return Dialog(
-                      backgroundColor: AppColors.whiteColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.all(w(20)),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: h(10),
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              "الاسم: ${student?.nTalb ?? "-"}",
-                              style: AppText.boldText(
-                                color: AppColors.blackColor,
-                                fontSize: sp(24),
-                              ),
-                            ),
-                            Text(
-                              "المرحلة التعليمية: ${student?.nSaf ?? "-"}",
-                              style: AppText.boldText(
-                                color: AppColors.blackColor,
-                                fontSize: sp(24),
-                              ),
-                            ),
-                            SizedBox(height: h(10)),
-                            Container(
-                              width: double.infinity,
-                              padding: EdgeInsets.all(w(20)),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: AppColors.container1Color,
-                                  width: 3,
-                                ),
-                              ),
-                              child: Column(
-                                children: [
-                                  Image.asset(
-                                    AppAssets.barcodeImage,
-                                    fit: BoxFit.contain,
-                                  ),
-                                  SizedBox(height: h(8)),
-                                  Text(
-                                    student?.codTalb ?? "-",
-                                    style: AppText.boldText(
-                                      color: AppColors.blackColor,
-                                      fontSize: sp(18),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-              child: Image.asset(AppAssets.barcodeImage, fit: BoxFit.fill),
-            ),
+            // InkWell(
+            //   onTap: () {
+            //     showDialog(
+            //       context: context,
+            //       barrierDismissible: true,
+            //       builder: (context) {
+            //         return Dialog(
+            //           backgroundColor: AppColors.whiteColor,
+            //           shape: RoundedRectangleBorder(
+            //             borderRadius: BorderRadius.circular(16),
+            //           ),
+            //           child: Padding(
+            //             padding: EdgeInsets.all(w(20)),
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               spacing: h(10),
+            //               mainAxisSize: MainAxisSize.min,
+            //               children: [
+            //                 Text(
+            //                   "الاسم: ${student?.nTalb ?? "-"}",
+            //                   style: AppText.boldText(
+            //                     color: AppColors.blackColor,
+            //                     fontSize: sp(24),
+            //                   ),
+            //                 ),
+            //                 Text(
+            //                   "المرحلة التعليمية: ${student?.nSaf ?? "-"}",
+            //                   style: AppText.boldText(
+            //                     color: AppColors.blackColor,
+            //                     fontSize: sp(24),
+            //                   ),
+            //                 ),
+            //                 SizedBox(height: h(10)),
+            //                 Container(
+            //                   width: double.infinity,
+            //                   padding: EdgeInsets.all(w(20)),
+            //                   decoration: BoxDecoration(
+            //                     borderRadius: BorderRadius.circular(16),
+            //                     border: Border.all(
+            //                       color: AppColors.container1Color,
+            //                       width: 3,
+            //                     ),
+            //                   ),
+            //                   child: Column(
+            //                     children: [
+            //                       Image.asset(
+            //                         AppAssets.barcodeImage,
+            //                         fit: BoxFit.contain,
+            //                       ),
+            //                       SizedBox(height: h(8)),
+            //                       Text(
+            //                         student?.codTalb ?? "-",
+            //                         style: AppText.boldText(
+            //                           color: AppColors.blackColor,
+            //                           fontSize: sp(18),
+            //                         ),
+            //                       ),
+            //                     ],
+            //                   ),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         );
+            //       },
+            //     );
+            //   },
+            //   child: Image.asset(AppAssets.barcodeImage, fit: BoxFit.fill),
+            // ),
           ],
         ),
       ),
