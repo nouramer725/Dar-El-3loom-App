@@ -161,13 +161,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
           ),
         ],
       ),
-      body: isLoading
-          ? Center(
-              child: CircularProgressIndicator(
-                color: AppColors.container1Color,
-              ),
-            )
-          : Padding(
+      body: Padding(
               padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
               child: SingleChildScrollView(
                 child: Column(
@@ -259,27 +253,12 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                         },
                       ),
 
-                    SizedBox(height: h(20)),
-                    if (scheduleDetails != null && fetchedSessions.isNotEmpty)
-                      PerformanceTableWidget(
-                        tableTitleColor: AppColors.container1Color,
-                        sessions: fetchedSessions,
-                      ),
-                    if (scheduleDetails == null || fetchedSessions.isEmpty)
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            Text(
-                              'لا توجد معلومات ل تلك البيانات',
-                              style: AppText.mediumText(
-                                color: AppColors.blackColor,
-                                fontSize: sp(25),
-                              ),
-                            ),
-                            Image.asset(AppAssets.container1Image),
-                          ],
-                        ),
-                      ),
+                    scheduleDetails != null && fetchedSessions.isNotEmpty
+                        ? PerformanceTableWidget(
+                            tableTitleColor: AppColors.container1Color,
+                            sessions: fetchedSessions,
+                          )
+                        : Image.asset(AppAssets.container1Image),
                   ],
                 ),
               ),

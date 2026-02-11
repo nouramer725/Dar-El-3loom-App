@@ -4,6 +4,8 @@ import 'package:dar_el_3loom/Model/mozakrat_model.dart';
 import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
 
+import '../../Model/balance_model.dart';
+
 class ApiService {
   late Dio dio;
 
@@ -185,4 +187,30 @@ class ApiService {
       return null;
     }
   }
+
+  Future<List<Map<String, dynamic>>> fetchBalanceFilters() async {
+    final response = await dio.get("/api/v1/madfoaat/teachers");
+
+    return List<Map<String, dynamic>>.from(response.data['data']);
+  }
+
+  Future<List<BalanceModel>> fetchBalanceDetails({
+    String? subject,
+    String? teacher,
+    String? status,
+  }) async {
+    final response = await dio.get(
+      "/api/v1/madfoaat",
+      queryParameters: {
+        if (subject != null) "subject": subject,
+        if (teacher != null) "teacher": teacher,
+        if (status != null) "status": status,
+      },
+    );
+
+    final data = response.data['data'] as List;
+
+    return data.map((e) => BalanceModel.fromJson(e)).toList();
+  }
+
 }

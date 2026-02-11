@@ -45,7 +45,8 @@ class FilterWidget extends StatelessWidget {
       ),
       child: DropdownButtonFormField<String>(
         dropdownColor: Theme.of(context).scaffoldBackgroundColor,
-        value: selectedValue,
+        icon: Icon(Icons.arrow_drop_down),
+        initialValue: selectedValue,
         hint: Text(
           text,
           style: AppText.boldText(
@@ -55,7 +56,7 @@ class FilterWidget extends StatelessWidget {
         ),
         items: items,
         onChanged: onChanged,
-        decoration: const InputDecoration(border: InputBorder.none),
+        decoration: InputDecoration(border: InputBorder.none, isDense: true),
       ),
     );
   }

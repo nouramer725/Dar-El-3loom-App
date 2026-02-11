@@ -1,5 +1,10 @@
+import 'package:dar_el_3loom/home/containers_contents/Balance/table_widget_balance.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../../../BackendSetup Data/Api/api_service.dart';
+import '../../../Model/balance_model.dart';
+import '../../../provider/student_login_provider.dart';
 import '../../../utils/app_assets.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
@@ -14,6 +19,58 @@ class BalanceScreen extends StatefulWidget {
 }
 
 class _BalanceScreenState extends State<BalanceScreen> {
+  List<Map<String, dynamic>> filtersData = [];
+  List<String> teachers = [];
+  List<BalanceModel> balances = [];
+
+  String? selectedSubject;
+  String? selectedTeacher;
+  String? selectedStatus;
+
+  bool isLoading = true;
+
+  late ApiService apiService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final loginProvider = Provider.of<StudentLoginProvider>(
+      context,
+      listen: false,
+    );
+
+    apiService = ApiService(token: loginProvider.token);
+
+    fetchFilters();
+  }
+
+  Future<void> fetchFilters() async {
+    filtersData = await apiService.fetchBalanceFilters();
+
+    setState(() => isLoading = false);
+  }
+
+  void updateTeachers() {
+    teachers = filtersData
+        .where((e) => e['n_mada'] == selectedSubject)
+        .map((e) => e['n_mod'].toString())
+        .toSet()
+        .toList();
+  }
+
+  Future<void> fetchBalances() async {
+    setState(() => isLoading = true);
+
+    balances = await apiService.fetchBalanceDetails(
+      subject: selectedSubject,
+      teacher: selectedTeacher,
+      status: selectedStatus,
+    );
+
+    setState(() => isLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,88 +92,98 @@ class _BalanceScreenState extends State<BalanceScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              FilterWidget(
-                type: FilterType.dropdown,
+
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
                 color: AppColors.container4Color,
-                items: [
-                  DropdownMenuItem(value: "عربي", child: Text("عربي")),
-                  DropdownMenuItem(value: "رياضة", child: Text("رياضة")),
-                  DropdownMenuItem(value: "انجليزي", child: Text("انجليزي")),
-                  DropdownMenuItem(value: "الماني", child: Text("الماني")),
-                ],
-                text: "المادة",
-                onChanged: (value) {
-                  setState(() {});
-                },
               ),
-              FilterWidget(
-                type: FilterType.dropdown,
-                color: AppColors.container4Color,
-                items: [
-                  DropdownMenuItem(
-                    value: "محمد احمد",
-                    child: Text("محمد احمد"),
-                  ),
-                  DropdownMenuItem(
-                    value: "احمد بدري",
-                    child: Text("احمد بدري"),
-                  ),
-                  DropdownMenuItem(
-                    value: "سالم محمد",
-                    child: Text("سالم محمد"),
-                  ),
-                  DropdownMenuItem(
-                    value: "اسامة سعدالله",
-                    child: Text("اسامة سعدالله"),
-                  ),
-                ],
-                text: "المدرس",
-                onChanged: (value) {
-                  setState(() {});
-                },
+            )
+          : Padding(
+              padding: EdgeInsets.all(w(10)),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    /// Subject
+                    FilterWidget(
+                      type: FilterType.dropdown,
+                      color: AppColors.container4Color,
+                      selectedValue: selectedSubject,
+                      text: "المادة",
+                      items: filtersData
+                          .map<DropdownMenuItem<String>>(
+                            (e) => DropdownMenuItem<String>(
+                              value: e['n_mada'] as String,
+                              child: Text(e['n_mada'] as String),
+                            ),
+                          )
+                          .toList(),
+
+                      onChanged: (val) {
+                        setState(() {
+                          selectedSubject = val;
+                          selectedTeacher = null;
+                          updateTeachers();
+                        });
+                      },
+                    ),
+
+                    /// Teacher
+                    FilterWidget(
+                      type: FilterType.dropdown,
+                      color: AppColors.container4Color,
+                      selectedValue: selectedTeacher,
+                      text: "المدرس",
+                      items: teachers
+                          .map<DropdownMenuItem<String>>(
+                            (t) => DropdownMenuItem<String>(
+                              value: t,
+                              child: Text(t),
+                            ),
+                          )
+                          .toList(),
+
+                      onChanged: (val) {
+                        setState(() {
+                          selectedTeacher = val;
+                        });
+                      },
+                    ),
+
+                    /// Status
+                    FilterWidget(
+                      type: FilterType.dropdown,
+                      color: AppColors.container4Color,
+                      selectedValue: selectedStatus,
+                      text: "حالة الدفع",
+                      items: const [
+                        DropdownMenuItem(value: "done", child: Text("المدفوع")),
+                        DropdownMenuItem(
+                          value: "not_completed",
+                          child: Text("غير المدفوع"),
+                        ),
+                      ],
+                      onChanged: (val) {
+                        setState(() {
+                          selectedStatus = val;
+                          fetchBalances();
+                        });
+                      },
+                    ),
+
+                    SizedBox(height: h(20)),
+
+                    if (balances.isNotEmpty)
+                      BalanceTableWidget(
+                        tableTitleColor: AppColors.container4Color,
+                        balances: balances,
+                      )
+                    else
+                      Image.asset(AppAssets.container4Image),
+                  ],
+                ),
               ),
-              FilterWidget(
-                type: FilterType.dropdown,
-                color: AppColors.container4Color,
-                items: [
-                  DropdownMenuItem(value: "المدفوع", child: Text("المدفوع")),
-                  DropdownMenuItem(
-                    value: "غير المدفوع",
-                    child: Text("غير المدفوع"),
-                  ),
-                ],
-                text: "حالة الدفع",
-                onChanged: (value) {
-                  setState(() {});
-                },
-              ),
-              // TableWidget(
-              //   tableTitleColor: AppColors.container4Color,
-              //   headers: [
-              //     "الماده",
-              //     "المدرس",
-              //     "المدفوعات",
-              //     "تاريخ الدفع",
-              //     "السعر",
-              //     "المسدد",
-              //     "الباقي",
-              //   ],
-              // ),
-              Image.asset(
-                AppAssets.container4Image,
-                fit: BoxFit.fill,
-                height: h(350),
-                width: w(350),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }
