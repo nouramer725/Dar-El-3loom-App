@@ -161,6 +161,13 @@ class _PasswordEditState extends State<PasswordEdit> {
                 ),
                 CustomElevatedButtonWidget(
                   text: "حفظ",
+                  padding: WidgetStateProperty.all(
+                    EdgeInsets.symmetric(horizontal: w(40), vertical: h(12)),
+                  ),
+                  textStyle: AppText.boldText(
+                    color: AppColors.blackColor,
+                    fontSize: sp(20),
+                  ),
                   colorContainer: AppColors.whiteColor,
                   onPressed: () async {
                     if (!formKey.currentState!.validate()) return;

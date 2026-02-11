@@ -48,6 +48,7 @@ class FilterWidget extends StatelessWidget {
         icon: Icon(Icons.arrow_drop_down),
         initialValue: selectedValue,
         hint: Text(
+          textAlign: TextAlign.center,
           text,
           style: AppText.boldText(
             fontSize: sp(18),
@@ -88,6 +89,7 @@ class FilterWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
+              textAlign: TextAlign.center,
               selectedValue ?? text,
               style: AppText.boldText(
                 color: AppColors.blackColor,

@@ -41,31 +41,33 @@ class HomeTab extends StatelessWidget {
                   : Image.asset(AppAssets.boy, fit: BoxFit.fill),
             ),
 
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  student?.nTalb ?? "اسم الطالب",
-                  style: AppText.boldText(
-                    color: AppColors.blackColor,
-                    fontSize: sp(24),
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    student?.nTalb ?? "اسم الطالب",
+                    style: AppText.boldText(
+                      color: AppColors.blackColor,
+                      fontSize: sp(24),
+                    ),
                   ),
-                ),
-                Text(
-                  student?.nSaf ?? "الصف الدراسي",
-                  style: AppText.regularText(
-                    color: AppColors.greyColor,
-                    fontSize: sp(16),
+                  Text(
+                    student?.nSaf ?? "الصف الدراسي",
+                    style: AppText.regularText(
+                      color: AppColors.greyColor,
+                      fontSize: sp(16),
+                    ),
                   ),
-                ),
-                Text(
-                  student?.codTalb ?? "كود الطالب",
-                  style: AppText.regularText(
-                    color: AppColors.greyColor,
-                    fontSize: sp(14),
+                  Text(
+                    student?.codTalb ?? "كود الطالب",
+                    style: AppText.regularText(
+                      color: AppColors.greyColor,
+                      fontSize: sp(14),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             // Spacer(),

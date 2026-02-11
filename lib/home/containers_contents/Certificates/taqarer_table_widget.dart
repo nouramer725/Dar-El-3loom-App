@@ -166,16 +166,18 @@ class _TaqarerTableWidgetState extends State<TaqarerTableWidget> {
                         horizontal: w(10),
                         vertical: h(10),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CertificateScreen(
-                            studentName: widget.studentName,
-                            percent: percent.toInt(),
-                            month: widget.selectedMonth,
-                            date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
-                          ),
-                        ],
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CertificateScreen(
+                              studentName: widget.studentName,
+                              percent: percent.toInt(),
+                              month: widget.selectedMonth,
+                              date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -216,16 +218,15 @@ class Cell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(10)),
-      child: Center(
-        child: Text(
-          text,
-          style: isHeader
-              ? AppText.boldText(fontSize: sp(16), color: AppColors.blackColor)
-              : AppText.mediumText(
-                  fontSize: sp(15),
-                  color: AppColors.blackColor,
-                ),
-        ),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+        style: isHeader
+            ? AppText.boldText(fontSize: sp(16), color: AppColors.blackColor)
+            : AppText.mediumText(
+                fontSize: sp(15),
+                color: AppColors.blackColor,
+              ),
       ),
     );
   }

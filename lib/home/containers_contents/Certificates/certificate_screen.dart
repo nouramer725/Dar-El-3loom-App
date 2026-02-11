@@ -37,7 +37,7 @@ class _CertificateScreenState extends State<CertificateScreen> {
         Container(
           width: double.infinity,
           clipBehavior: Clip.antiAlias,
-          height: h(320),
+          // height: h(320),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
@@ -45,82 +45,91 @@ class _CertificateScreenState extends State<CertificateScreen> {
               fit: BoxFit.fill,
             ),
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: h(5),
-            children: [
-              Text(
-                "شهادة تقدير",
-                style: GoogleFonts.gulzar(
-                  color: AppColors.titleCertificate,
-                  fontSize: sp(30),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                "مقدمة من دار العلوم الي الطالب",
-                style: GoogleFonts.catamaran(
-                  color: AppColors.contentCertificate,
-                  fontSize: sp(15),
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              Text(
-                widget.studentName,
-                style: GoogleFonts.catamaran(
-                  color: AppColors.contentCertificate,
-                  fontSize: sp(20),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              DottedLine(
-                dashColor: AppColors.contentCertificate,
-                dashLength: 6,
-                dashGapLength: 1,
-                lineThickness: 1,
-                dashRadius: 1,
-                lineLength: w(300),
-              ),
-              Text(
-                "تُمنح هذه الشهادة تقديراً واعتزازاً بجهوده، \n "
-                "لحصوله على نسبة ${widget.percent}% خلال شهر ${widget.month}،",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.catamaran(
-                  color: AppColors.contentCertificate,
-                  fontSize: sp(15),
-                ),
-              ),
-              Text(
-                "نتمنى دوام التوفيق و النجاح",
-                style: GoogleFonts.catamaran(
-                  color: AppColors.titleCertificate,
-                  fontSize: sp(19),
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: h(10)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Text(
-                    widget.date,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.catamaran(
-                      color: AppColors.contentCertificate,
-                      fontSize: sp(12),
-                    ),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: w(25), vertical: h(80)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: h(5),
+              children: [
+                Text(
+                  "شهادة تقدير",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.gulzar(
+                    color: AppColors.titleCertificate,
+                    fontSize: sp(30),
+                    fontWeight: FontWeight.bold,
                   ),
-                  Text(
-                    "محمود عبدالله محمود رضوان",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.gulzar(
-                      color: AppColors.contentCertificate,
-                      fontSize: sp(12),
-                    ),
+                ),
+                Text(
+                  "مقدمة من دار العلوم الي الطالب",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.catamaran(
+                    color: AppColors.contentCertificate,
+                    fontSize: sp(15),
+                    fontWeight: FontWeight.normal,
                   ),
-                ],
-              ),
-            ],
+                ),
+                Text(
+                  widget.studentName,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.catamaran(
+                    color: AppColors.contentCertificate,
+                    fontSize: sp(20),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                DottedLine(
+                  dashColor: AppColors.contentCertificate,
+                  dashLength: 6,
+                  dashGapLength: 1,
+                  lineThickness: 1,
+                  dashRadius: 1,
+                  lineLength: w(300),
+                ),
+                Text(
+                  "تُمنح هذه الشهادة تقديراً واعتزازاً بجهوده، \n "
+                  "لحصوله على نسبة ${widget.percent}% خلال شهر ${widget.month}،",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.catamaran(
+                    color: AppColors.contentCertificate,
+                    fontSize: sp(15),
+                  ),
+                ),
+                Text(
+                  "نتمنى دوام التوفيق و النجاح",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.catamaran(
+                    color: AppColors.titleCertificate,
+                    fontSize: sp(19),
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: h(10)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      widget.date,
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.catamaran(
+                        color: AppColors.contentCertificate,
+                        fontSize: sp(12),
+                      ),
+                    ),
+                    Text(
+                      "محمود عبدالله محمود رضوان",
+                      textAlign: TextAlign.center,
+                      style: GoogleFonts.gulzar(
+                        color: AppColors.contentCertificate,
+                        fontSize: sp(12),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
         CustomElevatedButtonWidget(
