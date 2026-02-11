@@ -159,25 +159,19 @@ class _TaqarerTableWidgetState extends State<TaqarerTableWidget> {
                 barrierColor: AppColors.blackColor.withOpacity(0.7),
                 builder: (context) {
                   return Dialog(
-                    insetPadding: EdgeInsets.all(h(15)),
+                    insetPadding: EdgeInsets.all(h(5)),
                     backgroundColor: Colors.transparent,
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: w(10),
-                        vertical: h(10),
-                      ),
-                      child: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CertificateScreen(
-                              studentName: widget.studentName,
-                              percent: percent.toInt(),
-                              month: widget.selectedMonth,
-                              date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
-                            ),
-                          ],
-                        ),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CertificateScreen(
+                            studentName: widget.studentName,
+                            percent: percent.toInt(),
+                            month: widget.selectedMonth,
+                            date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
+                          ),
+                        ],
                       ),
                     ),
                   );

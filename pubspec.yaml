@@ -48,6 +48,7 @@ dependencies:
   intl: ^0.20.2
   dio: ^5.9.1
   dotted_line: ^3.2.3
+  image_gallery_saver_plus: ^4.0.1
 
 dev_dependencies:
   flutter_test:
