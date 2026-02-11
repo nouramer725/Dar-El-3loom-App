@@ -1,8 +1,8 @@
 import 'package:dar_el_3loom/home/containers_contents/Certificates/taqarer_table_widget.dart';
+import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:dar_el_3loom/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../../../BackendSetup Data/Api/api_service.dart';
 import '../../../Model/takim_model.dart';
 import '../../../provider/student_login_provider.dart';
@@ -25,7 +25,7 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
   int totalPercentage = 0;
 
   bool isLoading = false;
-  int selectedMonth = DateTime.now().month;
+  int? selectedMonth;
 
   @override
   void initState() {
@@ -43,7 +43,7 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
   Future<void> fetchData() async {
     setState(() => isLoading = true);
 
-    final response = await apiService.fetchTakiim(month: selectedMonth);
+    final response = await apiService.fetchTakiim(month: selectedMonth ?? 0);
 
     if (response != null) {
       setState(() {
@@ -113,7 +113,7 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
                           context,
                         ).scaffoldBackgroundColor,
                         icon: Icon(Icons.arrow_drop_down),
-                        initialValue: selectedMonth,
+                        value: selectedMonth,
                         hint: Text(
                           "اختر الشهر",
                           style: AppText.boldText(
@@ -142,13 +142,13 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
                     ),
 
                     isLoading
-                        ? const Center(
+                        ? Center(
                             child: CircularProgressIndicator(
                               color: AppColors.container5Color,
                             ),
                           )
                         : takiimList.isEmpty
-                        ? const Center(child: Text("لا توجد بيانات"))
+                        ? Center(child: Image.asset(AppAssets.container5Image))
                         : SingleChildScrollView(
                             child: TaqarerTableWidget(
                               selectedMonth: selectedMonth.toString(),
