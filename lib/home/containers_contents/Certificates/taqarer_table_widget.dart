@@ -31,6 +31,27 @@ class TaqarerTableWidget extends StatefulWidget {
 class _TaqarerTableWidgetState extends State<TaqarerTableWidget> {
   bool showMessage = false;
 
+  DateTime getLastRecordDate() {
+    if (widget.records.isEmpty) return DateTime.now();
+
+    List<DateTime> dates = [];
+
+    for (var r in widget.records) {
+      try {
+        dates.add(DateFormat("dd/MM/yyyy").parse(r.date));
+      } catch (_) {
+        try {
+          dates.add(DateFormat("yyyy-MM-dd").parse(r.date));
+        } catch (_) {
+          dates.add(DateTime.now());
+        }
+      }
+    }
+
+    dates.sort((a, b) => b.compareTo(a));
+    return dates.first;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -159,19 +180,27 @@ class _TaqarerTableWidgetState extends State<TaqarerTableWidget> {
                 barrierColor: AppColors.blackColor.withOpacity(0.7),
                 builder: (context) {
                   return Dialog(
-                    insetPadding: EdgeInsets.all(h(5)),
+                    insetPadding: EdgeInsets.all(h(15)),
                     backgroundColor: Colors.transparent,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CertificateScreen(
-                            studentName: widget.studentName,
-                            percent: percent.toInt(),
-                            month: widget.selectedMonth,
-                            date: DateFormat("dd/MM/yyyy").format(DateTime.now()),
-                          ),
-                        ],
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: w(10),
+                        vertical: h(10),
+                      ),
+                      child: SingleChildScrollView(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CertificateScreen(
+                              studentName: widget.studentName,
+                              percent: percent.toInt(),
+                              month: widget.selectedMonth,
+                              date: DateFormat(
+                                "dd/MM/yyyy",
+                              ).format(getLastRecordDate()),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   );
@@ -206,7 +235,7 @@ class Cell extends StatelessWidget {
   final String text;
   final bool isHeader;
 
-  const Cell({required this.text, this.isHeader = false});
+  const Cell({super.key, required this.text, this.isHeader = false});
 
   @override
   Widget build(BuildContext context) {
@@ -217,10 +246,7 @@ class Cell extends StatelessWidget {
         textAlign: TextAlign.center,
         style: isHeader
             ? AppText.boldText(fontSize: sp(16), color: AppColors.blackColor)
-            : AppText.mediumText(
-                fontSize: sp(15),
-                color: AppColors.blackColor,
-              ),
+            : AppText.mediumText(fontSize: sp(15), color: AppColors.blackColor),
       ),
     );
   }
