@@ -10,13 +10,39 @@ import '../../../utils/app_routes.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 
-class HomeParentTab extends StatelessWidget {
+class HomeParentTab extends StatefulWidget {
   const HomeParentTab({super.key});
 
   @override
+  State<HomeParentTab> createState() => _HomeParentTabState();
+}
+
+class _HomeParentTabState extends State<HomeParentTab> {
+  bool loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _initData();
+  }
+
+  Future<void> _initData() async {
+    final provider = Provider.of<ParentLoginProvider>(context, listen: false);
+    await provider.fetchChildren();
+    setState(() {
+      loading = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final parentProvider = Provider.of<ParentLoginProvider>(context);
-    final Parent? parent = parentProvider.student;
+    if (loading) {
+      return Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(color: AppColors.blackColor),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -26,133 +52,124 @@ class HomeParentTab extends StatelessWidget {
           children: [
             FittedBox(
               fit: BoxFit.scaleDown,
-              child: GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                    ),
-                    builder: (context) {
-                      return Container(
-                        decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(20),
-                            topRight: Radius.circular(20),
+              child: Consumer<ParentLoginProvider>(
+                builder: (context, provider, _) {
+                  String displayName = provider.children.isNotEmpty
+                      ? provider.children.first.nTalb ?? "اسم الطالب"
+                      : "اسم ولي الامر";
+                  return GestureDetector(
+                    onTap: () async {
+                      if (provider.children.isEmpty) {
+                        await provider.fetchChildren();
+                      }
+                      showModalBottomSheet(
+                        context: context,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20),
                           ),
                         ),
-                        child: Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: w(25),
-                            vertical: h(25),
-                          ),
-                          padding: EdgeInsets.symmetric(
-                            horizontal: w(16),
-                            vertical: h(16),
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.whiteColor,
-                            borderRadius: BorderRadius.vertical(
-                              top: Radius.circular(20),
-                            ),
-                            border: Border.all(
-                              color: AppColors.strokeBottomNavBarColor,
-                              width: 2,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: w(7),
-                                    vertical: h(5),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                    border: Border.all(
-                                      color: AppColors.strokeBottomNavBarColor,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: Icon(Icons.person),
-                                ),
-                                title: Text(
-                                  "نور احمد",
-                                  style: AppText.regularText(
-                                    color: AppColors.blackColor,
-                                    fontSize: sp(15),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  print("Switch to account 2");
-                                },
+                        builder: (context) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.whiteColor,
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(20),
                               ),
-                              DividerWidget(),
-                              ListTile(
-                                leading: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: w(7),
-                                    vertical: h(5),
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.whiteColor,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
+                            ),
+                            child: provider.loading
+                                ? Center(
+                                    child: CircularProgressIndicator(
+                                      color: AppColors.container2Color,
                                     ),
-                                    border: Border.all(
-                                      color: AppColors.strokeBottomNavBarColor,
-                                      width: 3,
+                                  )
+                                : Container(
+                                    margin: EdgeInsets.symmetric(
+                                      horizontal: w(25),
+                                      vertical: h(25),
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: w(16),
+                                      vertical: h(16),
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.whiteColor,
+                                      borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(20),
+                                      ),
+                                      border: Border.all(
+                                        color:
+                                            AppColors.strokeBottomNavBarColor,
+                                        width: 2,
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ...provider.children.map((child) {
+                                          return ListTile(
+                                            leading:
+                                                child.profilePicture != null
+                                                ? CircleAvatar(
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                          child.profilePicture!,
+                                                        ),
+                                                  )
+                                                : Icon(Icons.person),
+                                            title: Text(
+                                              child.nTalb ?? '',
+                                              style: AppText.regularText(
+                                                color: AppColors.blackColor,
+                                                fontSize: sp(15),
+                                              ),
+                                            ),
+                                            onTap: () {
+                                              Navigator.pop(context);
+                                            },
+                                          );
+                                        }).toList(),
+                                        DividerWidget(),
+                                        ListTile(
+                                          leading: Icon(Icons.add),
+                                          title: Text(
+                                            "اضف حساب جديد",
+                                            style: AppText.regularText(
+                                              color: AppColors.blackColor,
+                                              fontSize: sp(15),
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  child: Icon(Icons.add),
-                                ),
-                                title: Text(
-                                  "اضف حساب جديد",
-                                  style: AppText.regularText(
-                                    color: AppColors.blackColor,
-                                    fontSize: sp(15),
-                                  ),
-                                ),
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  print("Add new account");
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
+                          );
+                        },
                       );
                     },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: w(10),
+                      children: [
+                        Text(
+                          displayName,
+                          style: AppText.boldText(
+                            color: AppColors.blackColor,
+                            fontSize: sp(30),
+                          ),
+                        ),
+                        Icon(Icons.keyboard_arrow_down, size: w(35)),
+                      ],
+                    ),
                   );
                 },
-                child: Row(
-                  spacing: w(10),
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      parent?.name ?? "اسم ولي الامر",
-                      style: AppText.boldText(
-                        color: AppColors.blackColor,
-                        fontSize: sp(30),
-                      ),
-                    ),
-                    Icon(Icons.keyboard_arrow_down, size: w(35)),
-                  ],
-                ),
               ),
             ),
             Row(
               spacing: w(10),
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                   clipBehavior: Clip.antiAlias,
@@ -161,109 +178,53 @@ class HomeParentTab extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: parent?.profileImage != null
-                      ? Image.network(
-                          parent!.profileImage!,
+                  child: Consumer<ParentLoginProvider>(
+                    builder: (context, provider, _) {
+                      final child = provider.children.isNotEmpty
+                          ? provider.children.first
+                          : null;
+                      if (child?.profilePicture != null) {
+                        return Image.network(
+                          child!.profilePicture!,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
-                              Image.asset(AppAssets.boy, fit: BoxFit.fill),
-                        )
-                      : Image.asset(AppAssets.boy, fit: BoxFit.fill),
-                ),
-
-                SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        parent?.name ?? "اسم ولي الامر",
-                        style: AppText.boldText(
-                          color: AppColors.blackColor,
-                          fontSize: sp(24),
-                        ),
-                      ),
-                      Text(
-                        parent?.id ?? "كود ولي الامر",
-                        style: AppText.regularText(
-                          color: AppColors.greyColor,
-                          fontSize: sp(14),
-                        ),
-                      ),
-                    ],
+                              Image.asset(AppAssets.person, fit: BoxFit.fill),
+                        );
+                      } else {
+                        return Image.asset(AppAssets.boy, fit: BoxFit.fill);
+                      }
+                    },
                   ),
                 ),
-
-                // Spacer(),
-
-                // InkWell(
-                //   onTap: () {
-                //     showDialog(
-                //       context: context,
-                //       barrierDismissible: true,
-                //       builder: (context) {
-                //         return Dialog(
-                //           backgroundColor: AppColors.whiteColor,
-                //           shape: RoundedRectangleBorder(
-                //             borderRadius: BorderRadius.circular(16),
-                //           ),
-                //           child: Padding(
-                //             padding: EdgeInsets.all(w(20)),
-                //             child: Column(
-                //               crossAxisAlignment: CrossAxisAlignment.start,
-                //               spacing: h(10),
-                //               mainAxisSize: MainAxisSize.min,
-                //               children: [
-                //                 Text(
-                //                   "الاسم: ${student?.nTalb ?? "-"}",
-                //                   style: AppText.boldText(
-                //                     color: AppColors.blackColor,
-                //                     fontSize: sp(24),
-                //                   ),
-                //                 ),
-                //                 Text(
-                //                   "المرحلة التعليمية: ${student?.nSaf ?? "-"}",
-                //                   style: AppText.boldText(
-                //                     color: AppColors.blackColor,
-                //                     fontSize: sp(24),
-                //                   ),
-                //                 ),
-                //                 SizedBox(height: h(10)),
-                //                 Container(
-                //                   width: double.infinity,
-                //                   padding: EdgeInsets.all(w(20)),
-                //                   decoration: BoxDecoration(
-                //                     borderRadius: BorderRadius.circular(16),
-                //                     border: Border.all(
-                //                       color: AppColors.container1Color,
-                //                       width: 3,
-                //                     ),
-                //                   ),
-                //                   child: Column(
-                //                     children: [
-                //                       Image.asset(
-                //                         AppAssets.barcodeImage,
-                //                         fit: BoxFit.contain,
-                //                       ),
-                //                       SizedBox(height: h(8)),
-                //                       Text(
-                //                         student?.codTalb ?? "-",
-                //                         style: AppText.boldText(
-                //                           color: AppColors.blackColor,
-                //                           fontSize: sp(18),
-                //                         ),
-                //                       ),
-                //                     ],
-                //                   ),
-                //                 ),
-                //               ],
-                //             ),
-                //           ),
-                //         );
-                //       },
-                //     );
-                //   },
-                //   child: Image.asset(AppAssets.barcodeImage, fit: BoxFit.fill),
-                // ),
+                SingleChildScrollView(
+                  child: Consumer<ParentLoginProvider>(
+                    builder: (context, provider, _) {
+                      final child = provider.children.isNotEmpty
+                          ? provider.children.first
+                          : null;
+                      return Column(
+                        spacing: h(10),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            child?.codTalb ?? "كود الطالب",
+                            style: AppText.regularText(
+                              color: AppColors.greyColor,
+                              fontSize: sp(18),
+                            ),
+                          ),
+                          Text(
+                            child?.nSaf ?? "الصف",
+                            style: AppText.regularText(
+                              color: AppColors.greyColor,
+                              fontSize: sp(18),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
               ],
             ),
           ],

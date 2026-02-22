@@ -405,4 +405,24 @@ class ApiService {
         .map((e) => LessonScheduleModel.fromJson(e))
         .toList();
   }
+
+
+  Future<List<Student>> getChildren() async {
+    try {
+      final response = await dio.get(
+        "/api/v1/parents/children",
+        options: Options(validateStatus: (status) => true),
+      );
+
+      if (response.data['status'] == 'success') {
+        List childrenJson = response.data['data']['children'] ?? [];
+        return childrenJson.map((e) => Student.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print("Error fetching children: $e");
+      return [];
+    }
+  }
 }
