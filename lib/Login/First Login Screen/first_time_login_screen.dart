@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
+import '../../Model/parent_login_model.dart';
 import '../../Model/student_login_model.dart';
+import '../../provider/parent_login_provider.dart';
 import '../../provider/student_login_provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
@@ -93,34 +95,61 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                       try {
                         final api = ApiService();
 
-                        final response = await api.verifyStudent(
+                        final studentResponse = await api.verifyStudent(
                           code: code,
                           parentNumber: phoneNumber,
                         );
 
-                        final loginModel = StudentLoginModel.fromJson(response);
+                        final studentModel = StudentLoginModel.fromJson(
+                          studentResponse,
+                        );
 
-                        if (loginModel.status == 'success' &&
-                            loginModel.data?.student != null) {
-                          final loginProvider =
+                        if (studentModel.status == 'success' &&
+                            studentModel.data?.student != null) {
+                          final studentProvider =
                               Provider.of<StudentLoginProvider>(
                                 context,
                                 listen: false,
                               );
 
-                          await loginProvider.setLogin(loginModel);
-
-                          // ✅ Token already saved in provider and SharedPreferences
-                          print("Token: ${loginProvider.token}");
+                          await studentProvider.setLogin(studentModel);
 
                           Navigator.pushNamed(context, AppRoutes.detailsScreen);
-                        } else {
-                          Fluttertoast.showToast(
-                            msg: "الطالب غير موجود",
-                            backgroundColor: AppColors.wrongIconColor,
-                            textColor: Colors.white,
-                          );
+                          return;
                         }
+
+                        final parentResponse = await api.verifyParent(
+                          id: int.tryParse(code) ?? 0,
+                          parentNumber: phoneNumber,
+                        );
+
+                        final parentModel = ParentLoginModel.fromJson(
+                          parentResponse,
+                        );
+
+                        if (parentModel.status == 'success' &&
+                            parentModel.data?.parent != null) {
+                          final parentProvider =
+                              Provider.of<ParentLoginProvider>(
+                                context,
+                                listen: false,
+                              );
+
+                          await parentProvider.setLoginParent(parentModel);
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.detailsParentScreen,
+                          );
+                          return;
+                        }
+
+                        /// 3️⃣ لو الاتنين فشلوا
+                        Fluttertoast.showToast(
+                          msg: "الكود أو رقم التليفون غير صحيح",
+                          backgroundColor: AppColors.wrongIconColor,
+                          textColor: Colors.white,
+                        );
                       } catch (e) {
                         Fluttertoast.showToast(
                           msg: "حدث خطأ، حاول مرة اخرى",

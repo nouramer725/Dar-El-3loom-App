@@ -1,41 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../provider/student_login_provider.dart';
+import '../provider/parent_login_provider.dart';
 import '../utils/app_routes.dart';
 
 class AppFlow {
   static String getInitialRoute(BuildContext context) {
-    final loginProvider = Provider.of<StudentLoginProvider>(
+    final studentProvider = Provider.of<StudentLoginProvider>(
+      context,
+      listen: false,
+    );
+    final parentProvider = Provider.of<ParentLoginProvider>(
       context,
       listen: false,
     );
 
-    final student = loginProvider.student;
-    final token = loginProvider.token;
+    final student = studentProvider.student;
+    final studentToken = studentProvider.token;
 
-    /// Not logged in at all
-    if (student == null || token == null) {
-      return AppRoutes.firstTimeLoginScreenName;
+    final parent = parentProvider.loginModel?.data?.parent;
+    final parentToken = parentProvider.token;
+
+    if (student != null && studentToken != null) {
+      if (student.verified != true) {
+        return AppRoutes.detailsScreen;
+      }
+      return AppRoutes.homeScreenName;
     }
 
-    /// Logged but profile not completed
-    if (student.verified != true) {
-      return AppRoutes.detailsScreen;
+    if (parent != null && parentToken != null) {
+      if (parent.verified != true) {
+        return AppRoutes.detailsParentScreen;
+      }
+      return AppRoutes.homeParentScreenName;
     }
 
-    /// Fully logged in
-    return AppRoutes.homeScreenName;
+    return AppRoutes.firstTimeLoginScreenName;
   }
 
   static Future<void> logout(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
-
     await prefs.clear();
 
     if (context.mounted) {
       Provider.of<StudentLoginProvider>(context, listen: false).clear();
+      Provider.of<ParentLoginProvider>(context, listen: false).clear();
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -45,13 +55,27 @@ class AppFlow {
     }
   }
 
-  static Future<void> saveToken(String token) async {
+  /// Save token for Student
+  static Future<void> saveStudentToken(String token) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('token', token);
+    await prefs.setString('student_token', token);
   }
 
-  static Future<String?> getToken() async {
+  /// Get token for Student
+  static Future<String?> getStudentToken() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('token');
+    return prefs.getString('student_token');
+  }
+
+  /// Save token for Parent
+  static Future<void> saveParentToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('parent_token', token);
+  }
+
+  /// Get token for Parent
+  static Future<String?> getParentToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('parent_token');
   }
 }

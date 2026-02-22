@@ -26,11 +26,13 @@ class ProfileWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                text,
-                style: AppText.regularText(
-                  color: AppColors.blackColor,
-                  fontSize: sp(20),
+              Expanded(
+                child: Text(
+                  text,
+                  style: AppText.regularText(
+                    color: AppColors.blackColor,
+                    fontSize: sp(20),
+                  ),
                 ),
               ),
               InkWell(onTap: onTap, child: icon),

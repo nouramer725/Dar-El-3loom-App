@@ -1,5 +1,10 @@
+import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
+import 'package:dar_el_3loom/home_parent/home_parent_screen.dart';
+import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/password_parent_edit.dart';
+import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/profile_picture_parent_widget.dart';
 import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:dar_el_3loom/provider/app_theme_provider.dart';
+import 'package:dar_el_3loom/provider/parent_login_provider.dart';
 import 'package:dar_el_3loom/provider/shared_preferences_theme.dart';
 import 'package:dar_el_3loom/provider/student_login_provider.dart';
 import 'package:dar_el_3loom/utils/app_routes.dart';
@@ -36,11 +41,15 @@ Future<void> main() async {
   final studentProvider = StudentLoginProvider();
   await studentProvider.loadStudent();
 
+  final parentProvider = ParentLoginProvider();
+  await parentProvider.loadParent();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppThemeProvider()),
         ChangeNotifierProvider(create: (_) => studentProvider),
+        ChangeNotifierProvider(create: (_) => parentProvider),
       ],
       child: const MyApp(),
     ),
@@ -71,8 +80,10 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.firstTimeLoginScreenName: (_) => FirstTimeLoginScreen(),
         AppRoutes.detailsScreen: (_) => DetailsScreen(),
+        AppRoutes.detailsParentScreen: (_) => DetailsParentScreen(),
         AppRoutes.loginScreen: (_) => LoginScreen(),
         AppRoutes.homeScreenName: (_) => HomeScreen(),
+        AppRoutes.homeParentScreenName: (_) => HomeParentScreen(),
         AppRoutes.container1Press: (_) => PerformanceScreen(),
         AppRoutes.container2Press: (_) => TableTimeScreen(),
         AppRoutes.container3Press: (_) => MozakratScreen(),
@@ -80,6 +91,8 @@ class MyApp extends StatelessWidget {
         AppRoutes.container5Press: (_) => TaqreerScreen(),
         AppRoutes.passwordEdit: (_) => PasswordEdit(),
         AppRoutes.profilePictureEdit: (_) => ProfilePictureWidget(),
+        AppRoutes.passwordParentEdit: (_) => PasswordParentEdit(),
+        AppRoutes.profilePictureParentEdit: (_) => ProfilePictureParentWidget(),
       },
     );
   }

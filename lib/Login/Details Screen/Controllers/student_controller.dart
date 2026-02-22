@@ -18,6 +18,7 @@ class StudentController extends ChangeNotifier {
   final phoneStudent = TextEditingController();
   final phoneParent = TextEditingController();
   final nationalId = TextEditingController();
+  final parentId = TextEditingController();
   final password = TextEditingController();
   final confirmPassword = TextEditingController();
 
@@ -26,6 +27,7 @@ class StudentController extends ChangeNotifier {
   bool phoneStudentLocked = false;
   bool phoneParentLocked = false;
   bool nationalIdLocked = false;
+  bool parentIdLocked = false;
   bool passwordLocked = false;
   bool confirmPasswordLocked = false;
   bool levelLocked = false;
@@ -78,6 +80,9 @@ class StudentController extends ChangeNotifier {
     nationalId.text = (hasValidValue(student.personalId)
         ? student.personalId
         : '')!;
+    parentId.text = (hasValidValue(student.parentId)
+        ? student.parentId
+        : '')!;
     birthImageUrl = buildImageUrl(student.birthCertificate);
     personalImageUrl = buildImageUrl(student.profilePicture);
 
@@ -88,6 +93,7 @@ class StudentController extends ChangeNotifier {
     if (phoneStudent.text.isNotEmpty) phoneStudentLocked = true;
     if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
     if (nationalId.text.isNotEmpty) nationalIdLocked = true;
+    if (parentId.text.isNotEmpty) parentIdLocked = true;
     if (password.text.isNotEmpty) {
       passwordLocked = true;
       confirmPasswordLocked = true;
@@ -124,6 +130,7 @@ class StudentController extends ChangeNotifier {
     if (!phoneStudentLocked) data['tel'] = phoneStudent.text;
     if (!phoneParentLocked) data['tel_1'] = phoneParent.text;
     if (!nationalIdLocked) data['personal_id'] = nationalId.text;
+    if (!parentIdLocked) data['parent_id'] = parentId.text;
     if (!passwordLocked) data['password'] = password.text;
 
     if (birthImage != null) data['birth_certificate'] = birthImage;

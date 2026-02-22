@@ -51,6 +51,7 @@ class Data {
 /// n_saf : "string"
 /// tel : "string"
 /// tel_1 : "string"
+/// parent_id : "string"
 /// personal_id : "string"
 /// birth_certificate : "string"
 /// profile_picture : "string"
@@ -65,21 +66,23 @@ class Student {
     this.tel,
     this.tel1,
     this.personalId,
+    this.parentId,
     this.birthCertificate,
     this.profilePicture,
     this.verified,
   });
 
   Student.fromJson(dynamic json) {
-    codTalb = json['cod_talb'];
-    nTalb = json['n_talb'];
-    password = json['password'];
-    nSaf = json['n_saf'];
-    tel = json['tel'];
-    tel1 = json['tel_1'];
-    personalId = json['personal_id'];
-    birthCertificate = json['birth_certificate'];
-    profilePicture = json['profile_picture'];
+    codTalb = json['cod_talb']?.toString();
+    nTalb = json['n_talb']?.toString();
+    password = json['password']?.toString();
+    nSaf = json['n_saf']?.toString();
+    tel = json['tel']?.toString();
+    tel1 = json['tel_1']?.toString();
+    personalId = json['personal_id']?.toString();
+    parentId = json['parent_id']?.toString();
+    birthCertificate = json['birth_certificate']?.toString();
+    profilePicture = json['profile_picture']?.toString();
 
     verified = json['verified'] == 1 || json['verified'] == true;
   }
@@ -91,6 +94,7 @@ class Student {
   String? tel;
   String? tel1;
   String? personalId;
+  String? parentId;
   String? birthCertificate;
   String? profilePicture;
   bool? verified;
@@ -104,6 +108,7 @@ class Student {
     map['tel'] = tel;
     map['tel_1'] = tel1;
     map['personal_id'] = personalId;
+    map['parent_id'] = parentId;
     map['birth_certificate'] = birthCertificate;
     map['profile_picture'] = profilePicture;
     map['verified'] = verified;

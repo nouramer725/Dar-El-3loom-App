@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dar_el_3loom/Model/mozakrat_model.dart';
+import 'package:dar_el_3loom/Model/parent_login_model.dart';
 import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dio/dio.dart';
 import '../../Model/balance_model.dart';
@@ -28,9 +29,23 @@ class ApiService {
   }) async {
     final response = await dio.post(
       '/api/v1/students/verify',
-      data: {"cod_talb": code, "tel_1": parentNumber},
+      data: {"cod_talb": code.trim(), "tel": parentNumber.trim()},
+      options: Options(validateStatus: (status) => true),
     );
-    print(response.data);
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> verifyParent({
+    required int id,
+    required String parentNumber,
+  }) async {
+    final response = await dio.post(
+      '/api/v1/parents/verify',
+      data: {"id": id, "tel": parentNumber.trim()},
+      options: Options(validateStatus: (status) => true),
+    );
+
     return response.data;
   }
 
@@ -42,6 +57,7 @@ class ApiService {
       "tel": student.tel,
       "tel_1": student.tel1,
       "personal_id": student.personalId,
+      "parent_id": student.parentId,
       "verified": student.verified,
       "password": student.password,
     });
@@ -74,6 +90,34 @@ class ApiService {
     return response.data;
   }
 
+  Future<Map<String, dynamic>> updateParentInfo(Parent parent) async {
+    FormData formData = FormData.fromMap({
+      "id": parent.id,
+      "name": parent.name,
+      "tel": parent.tel,
+      "personal_id": parent.personalId,
+      "password": parent.password,
+      "verified": parent.verified,
+    });
+
+    if (parent.profileImage != null && parent.profileImage!.isNotEmpty) {
+      formData.files.add(
+        MapEntry(
+          "profile_image",
+          await MultipartFile.fromFile(parent.profileImage!),
+        ),
+      );
+    }
+
+    final response = await dio.patch(
+      '/api/v1/parents/${parent.id}',
+      data: formData,
+      options: Options(headers: {"Content-Type": "multipart/form-data"}),
+    );
+
+    return response.data;
+  }
+
   Future<Map<String, dynamic>> login({
     required String code,
     required String password,
@@ -81,6 +125,23 @@ class ApiService {
     final response = await dio.post(
       '/api/v1/students/login',
       data: {"cod_talb": code, "password": password},
+      options: Options(
+        validateStatus: (status) => true,
+      ),
+    );
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> loginParent({
+    required String id,
+    required String password,
+  }) async {
+    final response = await dio.post(
+      '/api/v1/parents/login',
+      data: {"id": id, "password": password},
+      options: Options(
+        validateStatus: (status) => true,
+      ),
     );
     return response.data;
   }
@@ -95,6 +156,33 @@ class ApiService {
     );
 
     return response.data;
+  }
+
+  Future<Map<String, dynamic>> changePasswordParent({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await dio.post(
+        '/api/v1/parents/change-password',
+        data: {"oldPassword": oldPassword, "newPassword": newPassword},
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          validateStatus: (status) => true,
+        ),
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Change password error data: ${e.response!.data}");
+        return e.response!.data;
+      } else {
+        return {'status': 'fail', 'message': e.message};
+      }
+    } catch (e) {
+      return {'status': 'fail', 'message': e.toString()};
+    }
   }
 
   Future<Map<String, dynamic>> uploadProfilePicture(File imageFile) async {
@@ -117,6 +205,36 @@ class ApiService {
     } on DioException catch (e) {
       if (e.response != null) {
         // لو السيرفر رجع رسالة خطأ
+        return e.response!.data;
+      } else {
+        return {'status': 'fail', 'message': e.message};
+      }
+    } catch (e) {
+      return {'status': 'fail', 'message': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadProfilePictureParent(
+    File imageFile,
+  ) async {
+    try {
+      String fileName = imageFile.path.split('/').last;
+
+      FormData formData = FormData.fromMap({
+        'profile_image': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: fileName,
+        ),
+      });
+
+      final response = await dio.post(
+        '/api/v1/parents/profile-image',
+        data: formData,
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
         return e.response!.data;
       } else {
         return {'status': 'fail', 'message': e.message};

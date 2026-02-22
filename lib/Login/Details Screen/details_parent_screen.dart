@@ -1,48 +1,48 @@
+import 'package:dar_el_3loom/Login/Details%20Screen/Controllers/parent_controller.dart';
+import 'package:dar_el_3loom/Model/parent_login_model.dart';
+import 'package:dar_el_3loom/provider/parent_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
-import '../../Model/student_login_model.dart';
 import '../../provider/app_flow.dart';
-import '../../provider/student_login_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
-import 'Controllers/student_controller.dart';
 import 'Widgets/widget.dart';
 
-class DetailsScreen extends StatefulWidget {
-  DetailsScreen({super.key});
+class DetailsParentScreen extends StatefulWidget {
+  const DetailsParentScreen({super.key});
 
   @override
-  State<DetailsScreen> createState() => _DetailsScreenState();
+  State<DetailsParentScreen> createState() => _DetailsParentScreenState();
 }
 
-class _DetailsScreenState extends State<DetailsScreen> {
+class _DetailsParentScreenState extends State<DetailsParentScreen> {
   final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    final loginProvider = Provider.of<StudentLoginProvider>(
+    final loginProvider = Provider.of<ParentLoginProvider>(
       context,
       listen: false,
     );
     final token = loginProvider.token;
-    final student = loginProvider.student;
+    final parent = loginProvider.loginModel?.data?.parent;
 
     print("Token from provider: $token");
-    print("Student: ${student?.nTalb}");
+    print("Parent ID: ${parent?.id}");
   }
 
   @override
   Widget build(BuildContext context) {
-    final studentProvider = Provider.of<StudentLoginProvider>(context);
-    final student = studentProvider.student;
+    final parentProvider = Provider.of<ParentLoginProvider>(context);
+    final parent = parentProvider.loginModel?.data?.parent;
 
-    if (student == null) {
+    if (parent == null) {
       return Scaffold(
         body: Center(
           child: Text(
@@ -57,8 +57,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
     }
 
     return ChangeNotifierProvider(
-      create: (_) => StudentController(student: student),
-      child: Consumer<StudentController>(
+      create: (_) => ParentController(parent: parent),
+      child: Consumer<ParentController>(
         builder: (context, controller, _) {
           if (controller.loading) {
             return Scaffold(
@@ -86,9 +86,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       children: [
                         buildField(
                           "الكود",
-                          controller.code,
-                          TextInputType.name,
-                          controller.codeLocked,
+                          controller.id,
+                          TextInputType.number,
+                          controller.idLocked,
                         ),
                         buildField(
                           "الاسم",
@@ -97,34 +97,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           controller.nameLocked,
                         ),
                         buildField(
-                          "الصف",
-                          controller.level,
-                          TextInputType.name,
-                          controller.levelLocked,
-                        ),
-                        buildField(
-                          "رقم الطالب",
-                          controller.phoneStudent,
+                          "الرقم القومي",
+                          controller.personalId,
                           TextInputType.number,
-                          controller.phoneStudentLocked,
-                        ),
-                        buildField(
-                          "كود الدخول الخاص ب ولي الامر",
-                          controller.parentId,
-                          TextInputType.number,
-                          controller.parentIdLocked,
+                          controller.personalIdLocked,
                         ),
                         buildField(
                           "رقم ولي الامر",
                           controller.phoneParent,
                           TextInputType.number,
                           controller.phoneParentLocked,
-                        ),
-                        buildField(
-                          "الرقم القومي",
-                          controller.nationalId,
-                          TextInputType.number,
-                          controller.nationalIdLocked,
                         ),
                         buildField(
                           "الباسورد",
@@ -137,14 +119,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           controller.confirmPassword,
                           TextInputType.visiblePassword,
                           controller.confirmPasswordLocked,
-                        ),
-
-                        buildImagePicker(
-                          context,
-                          "شهادة الميلاد",
-                          controller.birthImage,
-                          () => controller.pickImage(true),
-                          controller.birthImageUrl,
                         ),
                         buildImagePicker(
                           context,
@@ -168,17 +142,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             // Validation checks
                             if (!formKey.currentState!.validate())
                               errors.add("الرجاء ملء جميع الحقول بشكل صحيح");
-                            if (controller.level.text.trim().isEmpty)
-                              errors.add("برجاء اختيار الصف الدراسي");
                             if (controller.password.text !=
                                 controller.confirmPassword.text)
                               errors.add("كلمة المرور غير مطابقة");
                             if (controller.personalImage == null &&
                                 controller.personalImageUrl == null)
                               errors.add("برجاء اختيار صورة شخصية");
-                            if (controller.birthImage == null &&
-                                controller.birthImageUrl == null)
-                              errors.add("برجاء اختيار شهادة الميلاد");
 
                             if (errors.isNotEmpty) {
                               Fluttertoast.showToast(
@@ -193,62 +162,69 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
                             try {
                               final loginProvider =
-                                  Provider.of<StudentLoginProvider>(
+                                  Provider.of<ParentLoginProvider>(
                                     context,
                                     listen: false,
                                   );
 
                               final token = loginProvider.token;
-                              final student = loginProvider.student;
+                              final parent = loginProvider.loginModel;
 
-                              if (token == null || student == null) {
+                              if (token == null || parent == null) {
                                 throw Exception("User not logged in");
                               }
 
-                              final updatedStudent = Student(
-                                codTalb: controller.code.text,
-                                nTalb: controller.name.text,
-                                nSaf: controller.level.text,
-                                tel: controller.phoneStudent.text,
-                                tel1: controller.phoneParent.text,
-                                personalId: controller.nationalId.text,
-                                birthCertificate: controller.birthImage?.path,
-                                profilePicture: controller.personalImage?.path,
-                                verified: true,
+                              final updatedStudent = Parent(
+                                id: controller.id.text,
+                                name: controller.name.text,
+                                tel: controller.phoneParent.text,
+                                personalId: controller.personalId.text,
                                 password: controller.password.text,
-                                parentId: controller.parentId.text,
+                                profileImage: controller.personalImage?.path,
+                                verified: true,
                               );
 
                               final api = ApiService(token: token);
 
-                              final response = await api.updateStudentInfo(
+                              final response = await api.updateParentInfo(
                                 updatedStudent,
                               );
 
                               final oldLogin = loginProvider.loginModel;
 
-                              final updatedLoginModel = StudentLoginModel.fromJson(response);
+                              final updatedLoginModel =
+                                  ParentLoginModel.fromJson(response);
 
                               updatedLoginModel.token ??= oldLogin?.token;
 
-                              updatedLoginModel.data?.student?.password ??=
-                                  oldLogin?.data?.student?.password;
+                              updatedLoginModel.data?.parent?.password ??=
+                                  oldLogin?.data?.parent?.password;
 
-                              await loginProvider.setLogin(updatedLoginModel);
+                              await loginProvider.setLoginParent(
+                                updatedLoginModel,
+                              );
 
-
-                              AppFlow.getStudentToken();
+                              AppFlow.getParentToken();
 
                               print(updatedLoginModel.token);
 
-
                               if (updatedLoginModel.token != null) {
-                                await AppFlow.saveStudentToken(updatedLoginModel.token!);
+                                await AppFlow.saveParentToken(
+                                  updatedLoginModel.token!,
+                                );
                               }
 
                               print("-----------Update------------------");
                               print(updatedLoginModel.status);
                               print(updatedLoginModel.token);
+                              print(updatedLoginModel.data);
+                              print(updatedLoginModel.data?.parent);
+                              print(updatedLoginModel.data?.parent?.id);
+                              print(updatedLoginModel.data?.parent?.name);
+                              print(updatedLoginModel.data?.parent?.tel);
+                              print(updatedLoginModel.data?.parent?.personalId);
+                              print(updatedLoginModel.data?.parent?.verified);
+                              print(updatedLoginModel.data?.parent?.password);
                               print("-----------------------------");
 
                               Fluttertoast.showToast(
@@ -260,7 +236,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               // Navigate to home and remove all previous screens
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                AppRoutes.homeScreenName,
+                                AppRoutes.homeParentScreenName,
                                 (route) => false,
                               );
                             } catch (e) {

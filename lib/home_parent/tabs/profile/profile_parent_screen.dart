@@ -2,6 +2,7 @@ import 'package:dar_el_3loom/home/tabs/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../Model/student_login_model.dart';
+import '../../../home/tabs/profile/divider_widget.dart';
 import '../../../provider/app_flow.dart';
 import '../../../provider/student_login_provider.dart';
 import '../../../utils/app_assets.dart';
@@ -9,10 +10,9 @@ import '../../../utils/app_colors.dart';
 import '../../../utils/app_routes.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
-import 'divider_widget.dart';
 
-class ProfileScreen extends StatelessWidget {
-  ProfileScreen({super.key});
+class ProfileParentScreen extends StatelessWidget {
+  ProfileParentScreen({super.key});
 
   bool isSwitched = false;
 
@@ -42,7 +42,7 @@ class ProfileScreen extends StatelessWidget {
             ProfileWidget(
               text: "تعديل كلمة السر",
               onTap: () {
-                Navigator.of(context).pushNamed(AppRoutes.passwordEdit);
+                Navigator.of(context).pushNamed(AppRoutes.passwordParentEdit);
               },
               icon: Image.asset(AppAssets.arrowIcon),
             ),
@@ -50,7 +50,7 @@ class ProfileScreen extends StatelessWidget {
             ProfileWidget(
               text: "تعديل الصورة الشخصية",
               onTap: () {
-                Navigator.of(context).pushNamed(AppRoutes.profilePictureEdit);
+                Navigator.of(context).pushNamed(AppRoutes.profilePictureParentEdit);
               },
               icon: Image.asset(AppAssets.arrowIcon),
             ),
@@ -61,13 +61,6 @@ class ProfileScreen extends StatelessWidget {
                 await AppFlow.logout(context);
               },
               icon: Image.asset(AppAssets.logoutIcon),
-            ),
-            DividerWidget(),
-            ProfileWidget(
-              text:
-                  "الكود الخاص ب ولي الامر : ${student?.parentId ?? "الكود الخاص ب ولي الامر"}",
-              onTap: () async {},
-              icon: Icon(Icons.add_alert),
             ),
           ],
         ),
