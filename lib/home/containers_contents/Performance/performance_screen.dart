@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../Model/performance_model.dart';
 import '../../../provider/student_login_provider.dart';
+import '../../../provider/parent_login_provider.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
@@ -45,24 +46,42 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   ];
 
   late ApiService apiService;
+  String? token;
+  String? childId;
 
   @override
   void initState() {
     super.initState();
-    final loginProvider = Provider.of<StudentLoginProvider>(
-      context,
-      listen: false,
-    );
-    final token = loginProvider.token;
-    apiService = ApiService(token: token);
-    fetchSubjects();
+
+    // تحديد مصدر الـ token و childId
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final parentProvider = Provider.of<ParentLoginProvider>(
+        context,
+        listen: false,
+      );
+      final studentProvider = Provider.of<StudentLoginProvider>(
+        context,
+        listen: false,
+      );
+
+      token = parentProvider.selectedChild != null
+          ? parentProvider.token
+          : studentProvider.token;
+
+      childId =
+          parentProvider.selectedChild?.codTalb ??
+          studentProvider.student?.codTalb;
+
+      apiService = ApiService(token: token);
+      fetchSubjects();
+    });
   }
 
   /// Fetch subjects from API
   void fetchSubjects() async {
     setState(() => isLoading = true);
 
-    subjects = await apiService.fetchSubjects();
+    subjects = await apiService.fetchSubjects(childId: childId);
 
     setState(() => isLoading = false);
   }
@@ -76,9 +95,8 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
 
       teachers = List<String>.from(
         subjectData['teachers'].map((t) => t['teacher_name']),
-      ).toSet().toList(); // إزالة التكرارات
+      ).toSet().toList();
 
-      // هنا المشكلة: إعادة تعيين selectedTeacher
       if (selectedTeacher != null && !teachers.contains(selectedTeacher)) {
         selectedTeacher = null;
       }
@@ -123,9 +141,9 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
         teacher: selectedTeacher!,
         month: month,
         year: year,
+        childId: childId,
       );
 
-      // Convert sessions to SessionModel list
       final sessionsJson = response!['sessions'] as List<dynamic>;
       final sessionsList = sessionsJson
           .map((s) => SessionModel.fromJson(s as Map<String, dynamic>))
@@ -134,7 +152,6 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
       setState(() {
         isLoading = false;
         scheduleDetails = response;
-        // store sessions list somewhere accessible
         fetchedSessions = sessionsList;
       });
     }
@@ -161,12 +178,18 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppColors.container1Color,
+              ),
+            )
+          : Padding(
               padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
               child: SingleChildScrollView(
                 child: Column(
+                  spacing: h(10),
                   children: [
-                    /// Subject Dropdown
                     FilterWidget(
                       type: FilterType.dropdown,
                       color: AppColors.container1Color,
@@ -182,22 +205,14 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                       onChanged: (value) {
                         setState(() {
                           selectedSubject = value;
-
-                          // إعادة تعيين المختار للمدرس والشهر
                           selectedTeacher = null;
                           selectedMonth = null;
                           scheduleDetails = null;
-
-                          // تحديث قائمة المدرسين
                           updateTeachers();
-
-                          // إعادة تعيين قائمة الشهور المتاحة
                           availableMonths = [];
                         });
                       },
                     ),
-
-                    /// Teacher Dropdown
                     FilterWidget(
                       type: FilterType.dropdown,
                       color: AppColors.container1Color,
@@ -220,8 +235,6 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                         });
                       },
                     ),
-
-                    /// Month Dropdown (only if months exist)
                     if (availableMonths.isNotEmpty)
                       FilterWidget(
                         text: 'الشهر',
@@ -231,7 +244,6 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                         items: availableMonths.map<DropdownMenuItem<String>>((
                           m,
                         ) {
-                          // Safely handle month & year
                           final month = m['month'] is int
                               ? m['month'] as int
                               : int.parse(m['month'].toString());
@@ -252,7 +264,6 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                           });
                         },
                       ),
-
                     scheduleDetails != null && fetchedSessions.isNotEmpty
                         ? PerformanceTableWidget(
                             tableTitleColor: AppColors.container1Color,

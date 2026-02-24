@@ -12,6 +12,9 @@ class ParentLoginProvider with ChangeNotifier {
   List<Student> children = [];
   bool loading = false;
 
+  // ✅ Selected child
+  Student? selectedChild;
+
   ParentLoginModel? get loginModel => _loginModel;
 
   Parent? get student => _loginModel?.data?.parent;
@@ -22,7 +25,6 @@ class ParentLoginProvider with ChangeNotifier {
     _loginModel = model;
 
     final prefs = await SharedPreferences.getInstance();
-
     await prefs.setString("parent_login", jsonEncode(model.toJson()));
 
     // ✅ Save token separately for easier access
@@ -45,14 +47,14 @@ class ParentLoginProvider with ChangeNotifier {
 
   Future<void> clear() async {
     final prefs = await SharedPreferences.getInstance();
-
     await prefs.remove("parent_login");
 
     _loginModel = null;
+    selectedChild = null;
+    children = [];
 
     notifyListeners();
   }
-
 
   Future<void> fetchChildren() async {
     loading = true;
@@ -61,7 +63,18 @@ class ParentLoginProvider with ChangeNotifier {
     final api = ApiService(token: token);
     children = await api.getChildren();
 
+    // ✅ Set default selected child if not set
+    if (children.isNotEmpty && selectedChild == null) {
+      selectedChild = children.first;
+    }
+
     loading = false;
+    notifyListeners();
+  }
+
+  // ✅ Helper to change selected child manually
+  void changeSelectedChild(Student child) {
+    selectedChild = child;
     notifyListeners();
   }
 }

@@ -125,9 +125,7 @@ class ApiService {
     final response = await dio.post(
       '/api/v1/students/login',
       data: {"cod_talb": code, "password": password},
-      options: Options(
-        validateStatus: (status) => true,
-      ),
+      options: Options(validateStatus: (status) => true),
     );
     return response.data;
   }
@@ -139,9 +137,7 @@ class ApiService {
     final response = await dio.post(
       '/api/v1/parents/login',
       data: {"id": id, "password": password},
-      options: Options(
-        validateStatus: (status) => true,
-      ),
+      options: Options(validateStatus: (status) => true),
     );
     return response.data;
   }
@@ -244,19 +240,30 @@ class ApiService {
     }
   }
 
-  Future<List<Mozakrat>> fetchMozakrat({String filter = 'all'}) async {
+  Future<List<Mozakrat>> fetchMozakrat({
+    String filter = 'all',
+    String? childId,
+  }) async {
     try {
       final response = await dio.get(
         '/api/v1/mozakrat',
-        options: Options(headers: {'filter': filter}),
+        options: Options(
+          headers: {'filter': filter}
+        ),
+        queryParameters: {
+          if (childId != null) "child_id": childId
+        }
       );
 
-      if (response.data['status'] == 'success') {
-        List mozakratList = response.data['data']['mozakrat'] ?? [];
-        return mozakratList.map((e) => Mozakrat.fromJson(e)).toList();
-      } else {
-        return [];
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data['data'] ?? {};
+        final mozakratList = data['mozakrat'] ?? [];
+        if (mozakratList is List) {
+          return mozakratList.map((e) => Mozakrat.fromJson(e)).toList();
+        }
       }
+
+      return [];
     } catch (e) {
       print("Error fetching mozakrat: $e");
       return [];
@@ -264,9 +271,12 @@ class ApiService {
   }
 
   // Fetch subjects and teachers for the student
-  Future<List<Map<String, dynamic>>> fetchSubjects() async {
+  Future<List<Map<String, dynamic>>> fetchSubjects({String? childId}) async {
     try {
-      final response = await dio.get('/api/v1/schedule/subjects');
+      final response = await dio.get(
+        '/api/v1/schedule/subjects',
+        queryParameters: {if (childId != null) "child_id": childId},
+      );
       if (response.data['status'] == 'success') {
         List subjects = response.data['data']['subjects'] ?? [];
         return List<Map<String, dynamic>>.from(subjects);
@@ -285,6 +295,7 @@ class ApiService {
     required String teacher,
     required int month,
     int? year,
+    String? childId,
   }) async {
     try {
       final response = await dio.get(
@@ -294,6 +305,7 @@ class ApiService {
           'teacher': teacher,
           'month': month,
           'year': year ?? DateTime.now().year,
+          if (childId != null) "child_id": childId,
         },
       );
       if (response.data['status'] == 'success') {
@@ -307,8 +319,13 @@ class ApiService {
     }
   }
 
-  Future<List<Map<String, dynamic>>> fetchBalanceFilters() async {
-    final response = await dio.get("/api/v1/madfoaat/teachers");
+  Future<List<Map<String, dynamic>>> fetchBalanceFilters({
+    String? childId,
+  }) async {
+    final response = await dio.get(
+      "/api/v1/madfoaat/teachers",
+      queryParameters: {if (childId != null) "child_id": childId},
+    );
 
     return List<Map<String, dynamic>>.from(response.data['data']);
   }
@@ -317,6 +334,7 @@ class ApiService {
     String? subject,
     String? teacher,
     String? status,
+    String? childId,
   }) async {
     final response = await dio.get(
       "/api/v1/madfoaat",
@@ -324,6 +342,7 @@ class ApiService {
         if (subject != null) "subject": subject,
         if (teacher != null) "teacher": teacher,
         if (status != null) "status": status,
+        if (childId != null) "child_id": childId,
       },
     );
 
@@ -332,11 +351,17 @@ class ApiService {
     return data.map((e) => BalanceModel.fromJson(e)).toList();
   }
 
-  Future<Map<String, dynamic>?> fetchTakiim({required int month}) async {
+  Future<Map<String, dynamic>?> fetchTakiim({
+    required int month,
+    String? childId,
+  }) async {
     try {
       final response = await dio.get(
         "/api/v1/takrer",
-        queryParameters: {"month": month},
+        queryParameters: {
+          "month": month,
+          if (childId != null) "child_id": childId,
+        },
       );
 
       if (response.data['status'] == 'success') {
@@ -357,8 +382,11 @@ class ApiService {
     }
   }
 
-  Future<List<String>> fetchScheduleSubjects() async {
-    final response = await dio.get("/api/v1/schedule-dates");
+  Future<List<String>> fetchScheduleSubjects({String? childId}) async {
+    final response = await dio.get(
+      "/api/v1/schedule-dates",
+      queryParameters: {if (childId != null) "child_id": childId},
+    );
 
     final data = response.data['data'] as List;
 
@@ -368,10 +396,15 @@ class ApiService {
   Future<List<StudentDateModel>> fetchScheduleDatesDetails({
     required String subject,
     required String type,
+    String? childId,
   }) async {
     final response = await dio.get(
       "/api/v1/schedule-dates/details",
-      queryParameters: {"subject": subject, "type": type},
+      queryParameters: {
+        "subject": subject,
+        "type": type,
+        if (childId != null) "child_id": childId,
+      },
     );
 
     final list = response.data['data'] as List;
@@ -379,8 +412,13 @@ class ApiService {
     return list.map((e) => StudentDateModel.fromJson(e)).toList();
   }
 
-  Future<List<Map<String, dynamic>>> fetchLessonsFilters() async {
-    final response = await dio.get('/api/v1/schedule-dates/subjects-list');
+  Future<List<Map<String, dynamic>>> fetchLessonsFilters({
+    String? childId,
+  }) async {
+    final response = await dio.get(
+      '/api/v1/schedule-dates/subjects-list',
+      queryParameters: {if (childId != null) "child_id": childId},
+    );
 
     return List<Map<String, dynamic>>.from(response.data['data']['subjects']);
   }
@@ -390,6 +428,7 @@ class ApiService {
     required String teacher,
     required int month,
     required int year,
+    String? childId,
   }) async {
     final response = await dio.get(
       '/api/v1/schedule-dates/grade-details',
@@ -398,6 +437,7 @@ class ApiService {
         "teacher": teacher,
         "month": month,
         "year": year,
+        if (childId != null) "child_id": childId,
       },
     );
 
@@ -405,7 +445,6 @@ class ApiService {
         .map((e) => LessonScheduleModel.fromJson(e))
         .toList();
   }
-
 
   Future<List<Student>> getChildren() async {
     try {

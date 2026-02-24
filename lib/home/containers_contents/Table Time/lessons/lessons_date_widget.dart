@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../../../BackendSetup Data/Api/api_service.dart';
 import '../../../../Model/lessons_date_model.dart';
 import '../../../../provider/student_login_provider.dart';
+import '../../../../provider/parent_login_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/responsive.dart';
@@ -31,19 +32,36 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
 
   bool isLoading = true;
 
+  String? childId;
+
   @override
   void initState() {
     super.initState();
 
-    final login = Provider.of<StudentLoginProvider>(context, listen: false);
-    apiService = ApiService(token: login.token);
+    final parentProvider = Provider.of<ParentLoginProvider>(
+      context,
+      listen: false,
+    );
+    final studentProvider = Provider.of<StudentLoginProvider>(
+      context,
+      listen: false,
+    );
 
+    String? token;
+    if (parentProvider.selectedChild != null) {
+      token = parentProvider.token;
+      childId = parentProvider.selectedChild!.codTalb;
+    } else {
+      token = studentProvider.token;
+      childId = studentProvider.student?.codTalb;
+    }
+
+    apiService = ApiService(token: token);
     fetchFilters();
   }
 
   Future<void> fetchFilters() async {
-    subjects = await apiService.fetchLessonsFilters();
-
+    subjects = await apiService.fetchLessonsFilters(childId: childId);
     setState(() => isLoading = false);
   }
 
@@ -90,6 +108,7 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
       teacher: selectedTeacher!,
       month: month,
       year: year,
+      childId: childId,
     );
 
     setState(() => isLoading = false);
@@ -97,79 +116,83 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      spacing: h(10),
-      children: [
-        /// SUBJECT
-        FilterWidget(
-          type: FilterType.dropdown,
-          color: AppColors.container2Color,
-          selectedValue: selectedSubject,
-          text: "المادة",
-          items: subjects.map<DropdownMenuItem<String>>((s) {
-            return DropdownMenuItem<String>(
-              value: s['subject_name'].toString(),
-              child: Text(s['subject_name'].toString()),
-            );
-          }).toList(),
-          onChanged: (value) {
-            setState(() {
-              selectedSubject = value;
-              updateTeachers();
-            });
-          },
-        ),
-
-        /// TEACHER
-        FilterWidget(
-          type: FilterType.dropdown,
-          color: AppColors.container2Color,
-          selectedValue: selectedTeacher,
-          text: "المدرس",
-          items: teachers.map<DropdownMenuItem<String>>((t) {
-            return DropdownMenuItem<String>(value: t, child: Text(t));
-          }).toList(),
-
-          onChanged: (value) {
-            setState(() {
-              selectedTeacher = value;
-              updateMonths();
-            });
-          },
-        ),
-
-        /// MONTH
-        FilterWidget(
-          type: FilterType.dropdown,
-          color: AppColors.container2Color,
-          selectedValue: selectedMonth,
-          text: "الشهر",
-          items: months.map<DropdownMenuItem<String>>((m) {
-            return DropdownMenuItem<String>(
-              value: "${m['month']}/${m['year']}",
-              child: Text("${m['month']} / ${m['year']}"),
-            );
-          }).toList(),
-
-          onChanged: (value) {
-            setState(() {
-              selectedMonth = value;
-              fetchLessons();
-            });
-          },
-        ),
-
-        SizedBox(height: h(20)),
-
-        /// TABLE OR EMPTY
-        if (lessons.isNotEmpty)
-          LessonsTableWidget(
-            tableTitleColor: AppColors.container2Color,
-            lessons: lessons,
+    return isLoading
+        ? const Center(
+            child: CircularProgressIndicator(color: AppColors.container2Color),
           )
-        else
-          Image.asset(AppAssets.container2Image),
-      ],
-    );
+        : Column(
+            spacing: h(10),
+            children: [
+              /// SUBJECT
+              FilterWidget(
+                type: FilterType.dropdown,
+                color: AppColors.container2Color,
+                selectedValue: selectedSubject,
+                text: "المادة",
+                items: subjects.map<DropdownMenuItem<String>>((s) {
+                  return DropdownMenuItem<String>(
+                    value: s['subject_name'].toString(),
+                    child: Text(s['subject_name'].toString()),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  setState(() {
+                    selectedSubject = value;
+                    updateTeachers();
+                  });
+                },
+              ),
+
+              /// TEACHER
+              FilterWidget(
+                type: FilterType.dropdown,
+                color: AppColors.container2Color,
+                selectedValue: selectedTeacher,
+                text: "المدرس",
+                items: teachers.map<DropdownMenuItem<String>>((t) {
+                  return DropdownMenuItem<String>(value: t, child: Text(t));
+                }).toList(),
+
+                onChanged: (value) {
+                  setState(() {
+                    selectedTeacher = value;
+                    updateMonths();
+                  });
+                },
+              ),
+
+              /// MONTH
+              FilterWidget(
+                type: FilterType.dropdown,
+                color: AppColors.container2Color,
+                selectedValue: selectedMonth,
+                text: "الشهر",
+                items: months.map<DropdownMenuItem<String>>((m) {
+                  return DropdownMenuItem<String>(
+                    value: "${m['month']}/${m['year']}",
+                    child: Text("${m['month']} / ${m['year']}"),
+                  );
+                }).toList(),
+
+                onChanged: (value) {
+                  setState(() {
+                    selectedMonth = value;
+                    fetchLessons();
+                  });
+                },
+              ),
+
+              SizedBox(height: h(20)),
+
+              /// TABLE OR EMPTY
+              if (lessons.isNotEmpty)
+                LessonsTableWidget(
+                  tableTitleColor: AppColors.container2Color,
+                  lessons: lessons,
+                )
+              else
+                Image.asset(AppAssets.container2Image),
+            ],
+          );
   }
 }

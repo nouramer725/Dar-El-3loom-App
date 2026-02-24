@@ -1,13 +1,14 @@
-import 'package:dar_el_3loom/home/containers_contents/Table%20Time/student/student_table_time_table_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../BackendSetup Data/Api/api_service.dart';
 import '../../../../Model/student_time_model.dart';
 import '../../../../provider/student_login_provider.dart';
+import '../../../../provider/parent_login_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/responsive.dart';
 import '../../Mozakrat/filter_widget.dart';
+import 'student_table_time_table_widget.dart';
 
 class StudentDateWidget extends StatefulWidget {
   const StudentDateWidget({super.key});
@@ -26,19 +27,35 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
   bool isLoading = true;
 
   late ApiService apiService;
+  String? childId;
 
   @override
   void initState() {
     super.initState();
+    final parentProvider = Provider.of<ParentLoginProvider>(
+      context,
+      listen: false,
+    );
+    final studentProvider = Provider.of<StudentLoginProvider>(
+      context,
+      listen: false,
+    );
 
-    final login = Provider.of<StudentLoginProvider>(context, listen: false);
-    apiService = ApiService(token: login.token);
+    String? token;
+    if (parentProvider.selectedChild != null) {
+      token = parentProvider.token;
+      childId = parentProvider.selectedChild!.codTalb;
+    } else {
+      token = studentProvider.token;
+      childId = studentProvider.student?.codTalb;
+    }
 
+    apiService = ApiService(token: token);
     fetchSubjects();
   }
 
   Future<void> fetchSubjects() async {
-    subjects = await apiService.fetchScheduleSubjects();
+    subjects = await apiService.fetchScheduleSubjects(childId: childId);
     setState(() => isLoading = false);
   }
 
@@ -50,6 +67,7 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
     sessions = await apiService.fetchScheduleDatesDetails(
       subject: selectedSubject!,
       type: selectedType!,
+      childId: childId,
     );
 
     setState(() => isLoading = false);
@@ -58,7 +76,15 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
+      child:
+      isLoading
+          ? const Center(
+        child: CircularProgressIndicator(
+          color: AppColors.container2Color,
+        ),
+      )
+          :
+      Column(
         spacing: h(10),
         children: [
           /// المادة
@@ -96,6 +122,9 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
             },
           ),
 
+          SizedBox(height: h(20)),
+
+          /// جدول أو صورة فارغة
           if (sessions.isNotEmpty)
             StudentDatesTableWidget(
               tableTitleColor: AppColors.container2Color,
