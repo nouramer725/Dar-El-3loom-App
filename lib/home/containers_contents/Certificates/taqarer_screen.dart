@@ -31,6 +31,7 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
   @override
   void initState() {
     super.initState();
+    selectedMonth = DateTime.now().month;
     fetchData();
   }
 
@@ -46,28 +47,31 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
       listen: false,
     );
 
-    String? token;
-    String? childId;
+    String? token = parentProvider.selectedChild != null
+        ? parentProvider.token
+        : studentProvider.token;
 
-    if (parentProvider.selectedChild != null) {
-      token = parentProvider.token;
-      childId = parentProvider.selectedChild!.codTalb;
-    } else {
-      token = studentProvider.token;
+    String? childId = parentProvider.selectedChild?.codTalb;
+
+    if (token == null) {
+      print("Token is null");
+      setState(() => isLoading = false);
+      return;
     }
-
-    if (token == null) throw Exception("لم يتم تسجيل الدخول");
 
     apiService = ApiService(token: token);
 
     final response = await apiService.fetchTakiim(
-      month: selectedMonth ?? 0,
+      month: selectedMonth!,
       childId: childId,
     );
 
     if (response != null) {
+      List<TakiimModel> fetchedList = response["takiim"] ?? [];
+      print("Fetched ${fetchedList.length} items");
+
       setState(() {
-        takiimList = response["takiim"] ?? [];
+        takiimList = fetchedList;
         final totals = response["totals"] ?? {};
         totalGrades = totals["totalgrades"] ?? 0;
         totalMax = totals["totalmax"] ?? 0;
