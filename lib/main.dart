@@ -1,7 +1,11 @@
 import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
-import 'package:dar_el_3loom/home_parent/home_parent_screen.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/password_parent_edit.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/profile_picture_parent_widget.dart';
+import 'package:dar_el_3loom/home_teacher/containers/groups/groups.dart';
+import 'package:dar_el_3loom/home_teacher/containers/taqarer_student/taqarer.dart';
+import 'package:dar_el_3loom/home_teacher/home_teacher_screen.dart';
+import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/password_teacher_edit.dart';
+import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/profile_picture_teacher_widget.dart';
 import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:dar_el_3loom/provider/app_theme_provider.dart';
 import 'package:dar_el_3loom/provider/parent_login_provider.dart';
@@ -24,6 +28,7 @@ import 'home/containers_contents/Table Time/table_time_screen.dart';
 import 'home/home_screen.dart';
 import 'home/tabs/profile/profile_tabs/password_edit.dart';
 import 'home/tabs/profile/profile_tabs/profile_picture_widget.dart';
+import 'home_parent/home_parent_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -84,15 +89,21 @@ class MyApp extends StatelessWidget {
         AppRoutes.loginScreen: (_) => LoginScreen(),
         AppRoutes.homeScreenName: (_) => HomeScreen(),
         AppRoutes.homeParentScreenName: (_) => HomeParentScreen(),
+        AppRoutes.homeTeacherScreenName: (_) => HomeTeacherScreen(),
         AppRoutes.container1Press: (_) => PerformanceScreen(),
         AppRoutes.container2Press: (_) => TableTimeScreen(),
         AppRoutes.container3Press: (_) => MozakratScreen(),
         AppRoutes.container4Press: (_) => BalanceScreen(),
         AppRoutes.container5Press: (_) => TaqreerScreen(),
+        AppRoutes.taqrerStudentPress: (_) => TaqarerTeacherScreen(),
+        AppRoutes.groupsPress: (_) => GroupsScreen(),
         AppRoutes.passwordEdit: (_) => PasswordEdit(),
         AppRoutes.profilePictureEdit: (_) => ProfilePictureWidget(),
         AppRoutes.passwordParentEdit: (_) => PasswordParentEdit(),
         AppRoutes.profilePictureParentEdit: (_) => ProfilePictureParentWidget(),
+        AppRoutes.passwordTeacherEdit: (_) => PasswordTeacherEdit(),
+        AppRoutes.profilePictureTeacherEdit: (_) =>
+            ProfilePictureTeacherWidget(),
       },
     );
   }

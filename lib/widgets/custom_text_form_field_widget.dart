@@ -29,6 +29,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
   final Color cursorColor;
   final bool enabled;
   final bool obscureText;
+  final TextInputAction? textInputAction;
 
   const CustomTextFormFieldWidget({
     this.suffixIcon,
@@ -52,9 +53,10 @@ class CustomTextFormFieldWidget extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.keyboardType,
-    this.cursorColor=Colors.black,
+    this.cursorColor = Colors.black,
     this.shadowColor = Colors.black,
     this.enabled = true,
+    this.textInputAction,
     super.key,
   });
 
@@ -63,6 +65,8 @@ class CustomTextFormFieldWidget extends StatelessWidget {
     var themeProvider = Provider.of<AppThemeProvider>(context);
 
     return Container(
+      padding: EdgeInsets.zero,
+      margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color:
             fillColor ??
@@ -70,7 +74,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
-            color: shadowColor.withValues(alpha: 0.3),
+            color: shadowColor.withValues(alpha: 0.2),
             blurRadius: 30,
             spreadRadius: -5,
             offset: Offset(0, 15),
@@ -85,6 +89,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
         obscureText: obscureText,
         onChanged: onChanged,
         maxLines: maxLines,
+        textInputAction: textInputAction ?? TextInputAction.done,
         cursorColor: cursorColor,
         style: GoogleFonts.poppins(
           color: themeProvider.isDarkTheme() ? Colors.white : Colors.black,
