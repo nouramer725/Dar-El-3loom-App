@@ -37,10 +37,10 @@ class FilterWidget extends StatelessWidget {
 
   Widget _buildDropdown(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: w(10)),
+      padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
       margin: EdgeInsets.symmetric(vertical: h(5)),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color, width: 2),
       ),
       child: DropdownButtonFormField<String>(

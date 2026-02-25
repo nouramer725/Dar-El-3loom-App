@@ -1,4 +1,9 @@
 import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
+import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance.dart';
+import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance_table_widget.dart';
+import 'package:dar_el_3loom/home_assistant/home_assistant_screen.dart';
+import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_assistant_screen.dart';
+import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/password_assistant_edit.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/password_parent_edit.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/profile_picture_parent_widget.dart';
 import 'package:dar_el_3loom/home_teacher/containers/groups/groups.dart';
@@ -104,6 +109,11 @@ class MyApp extends StatelessWidget {
         AppRoutes.passwordTeacherEdit: (_) => PasswordTeacherEdit(),
         AppRoutes.profilePictureTeacherEdit: (_) =>
             ProfilePictureTeacherWidget(),
+        AppRoutes.passwordAssistantEdit: (_) => PasswordAssistantEdit(),
+        AppRoutes.studentPerformanceAssistant: (_) => StudentPerformance(),
+        AppRoutes.studentPerformanceAssistantDtaScreen: (_) => StudentPerformanceWidget(),
+        AppRoutes.profilePictureAssistantEdit: (_) => ProfileAssistantScreen(),
+        AppRoutes.homeAssistantScreenName: (_) => HomeAssistantScreen(),
       },
     );
   }

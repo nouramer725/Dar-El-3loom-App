@@ -9,6 +9,8 @@ class AppRoutes {
   static const container5Press = "container5_press";
   static const taqrerStudentPress = "taqreer_student_press";
   static const groupsPress = "groups_press";
+  static const studentPerformanceAssistant = "student_performance_assistant";
+  static const studentPerformanceAssistantDtaScreen = "student_performance_assistant_data_screen";
   static const passwordEdit = "password_edit";
   static const profilePictureEdit = "profile_picture_edit";
   static const passwordParentEdit = "password_parent_edit";
@@ -20,4 +22,7 @@ class AppRoutes {
   static const homeTeacherScreenName = "home_teacher_screen";
   static const passwordTeacherEdit = "password_teacher_edit";
   static const profilePictureTeacherEdit = "profile_picture_teacher_edit";
+  static const homeAssistantScreenName = "home_assistant_screen";
+  static const passwordAssistantEdit = "password_assistant_edit";
+  static const profilePictureAssistantEdit = "profile_picture_assistant_edit";
 }
