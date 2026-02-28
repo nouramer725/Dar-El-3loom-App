@@ -1,5 +1,7 @@
 import 'package:dar_el_3loom/Model/student_login_model.dart';
+import 'package:dar_el_3loom/Model/teacher_login_model.dart';
 import 'package:dar_el_3loom/provider/student_login_provider.dart';
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -107,12 +109,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           code: code,
                           password: password,
                         );
-                        final studentModel = StudentLoginModel.fromJson(studentResponse);
+                        final studentModel = StudentLoginModel.fromJson(
+                          studentResponse,
+                        );
 
                         if (studentModel.status == 'success' &&
                             studentModel.data?.student != null) {
-                          Provider.of<StudentLoginProvider>(context, listen: false)
-                              .setLogin(studentModel);
+                          Provider.of<StudentLoginProvider>(
+                            context,
+                            listen: false,
+                          ).setLogin(studentModel);
 
                           if (studentModel.token != null) {
                             await AppFlow.saveStudentToken(studentModel.token!);
@@ -127,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             AppRoutes.homeScreenName,
-                                (route) => false,
+                            (route) => false,
                           );
                           return;
                         }
@@ -137,12 +143,16 @@ class _LoginScreenState extends State<LoginScreen> {
                           id: code,
                           password: password,
                         );
-                        final parentModel = ParentLoginModel.fromJson(parentResponse);
+                        final parentModel = ParentLoginModel.fromJson(
+                          parentResponse,
+                        );
 
                         if (parentModel.status == 'success' &&
                             parentModel.data?.parent != null) {
-                          Provider.of<ParentLoginProvider>(context, listen: false)
-                              .setLoginParent(parentModel);
+                          Provider.of<ParentLoginProvider>(
+                            context,
+                            listen: false,
+                          ).setLoginParent(parentModel);
 
                           if (parentModel.token != null) {
                             await AppFlow.saveParentToken(parentModel.token!);
@@ -157,7 +167,41 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             AppRoutes.homeParentScreenName,
-                                (route) => false,
+                            (route) => false,
+                          );
+                          return;
+                        }
+
+                        ///  تسجيل دخول teacher
+                        final teacherResponse = await api.loginTeacher(
+                          code: code,
+                          password: password,
+                        );
+                        final teacherModel = TeacherLoginModel.fromJson(
+                          teacherResponse,
+                        );
+
+                        if (teacherModel.status == 'success' &&
+                            teacherModel.data?.teacher != null) {
+                          Provider.of<TeacherLoginProvider>(
+                            context,
+                            listen: false,
+                          ).setLoginTeacher(teacherModel);
+
+                          if (teacherModel.token != null) {
+                            await AppFlow.saveTeacherToken(teacherModel.token!);
+                          }
+
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول المدرس بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                          );
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.homeTeacherScreenName,
+                            (route) => false,
                           );
                           return;
                         }

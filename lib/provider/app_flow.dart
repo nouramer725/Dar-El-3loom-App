@@ -1,3 +1,4 @@
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -15,12 +16,19 @@ class AppFlow {
       context,
       listen: false,
     );
+    final teacherProvider = Provider.of<TeacherLoginProvider>(
+      context,
+      listen: false,
+    );
 
     final student = studentProvider.student;
     final studentToken = studentProvider.token;
 
     final parent = parentProvider.loginModel?.data?.parent;
     final parentToken = parentProvider.token;
+
+    final teacher = teacherProvider.loginModel?.data?.teacher;
+    final teacherToken = teacherProvider.token;
 
     if (student != null && studentToken != null) {
       if (student.verified != true) {
@@ -36,6 +44,13 @@ class AppFlow {
       return AppRoutes.homeParentScreenName;
     }
 
+    if (teacher != null && teacherToken != null) {
+      if (teacher.verified != true) {
+        return AppRoutes.detailsTeacherScreen;
+      }
+      return AppRoutes.homeTeacherScreenName;
+    }
+
     return AppRoutes.firstTimeLoginScreenName;
   }
 
@@ -46,6 +61,7 @@ class AppFlow {
     if (context.mounted) {
       Provider.of<StudentLoginProvider>(context, listen: false).clear();
       Provider.of<ParentLoginProvider>(context, listen: false).clear();
+      Provider.of<TeacherLoginProvider>(context, listen: false).clear();
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -73,9 +89,21 @@ class AppFlow {
     await prefs.setString('parent_token', token);
   }
 
+  /// Save token for Teacher
+  static Future<void> saveTeacherToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('teacher_token', token);
+  }
+
   /// Get token for Parent
   static Future<String?> getParentToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('parent_token');
+  }
+
+  /// Get token for Teacher
+  static Future<String?> getTeacherToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('teacher_token');
   }
 }

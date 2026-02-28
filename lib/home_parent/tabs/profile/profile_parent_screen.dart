@@ -20,8 +20,6 @@ class ProfileParentScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final studentProvider = Provider.of<StudentLoginProvider>(context);
-    final Student? student = studentProvider.student;
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,

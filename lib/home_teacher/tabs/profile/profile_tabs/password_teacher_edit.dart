@@ -1,8 +1,8 @@
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../../../BackendSetup Data/Api/api_service.dart';
-import '../../../../provider/parent_login_provider.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_text.dart';
 import '../../../../utils/responsive.dart';
@@ -170,73 +170,73 @@ class _PasswordTeacherEditState extends State<PasswordTeacherEdit> {
                   ),
                   colorContainer: AppColors.whiteColor,
                   onPressed: () async {
-                    // if (!formKey.currentState!.validate()) return;
-                    //
-                    // if (newPassword != confirmPassword) {
-                    //   Fluttertoast.showToast(
-                    //     msg: "كلمة المرور الجديدة غير متطابقة",
-                    //     backgroundColor: AppColors.wrongIconColor,
-                    //     textColor: Colors.white,
-                    //     gravity: ToastGravity.TOP,
-                    //   );
-                    //   return;
-                    // }
-                    //
-                    // try {
-                    //   final loginProvider = Provider.of<ParentLoginProvider>(
-                    //     context,
-                    //     listen: false,
-                    //   );
-                    //   final token = loginProvider.token;
-                    //   final parent = loginProvider.loginModel?.data?.parent;
-                    //
-                    //   if (token == null || parent == null) {
-                    //     Fluttertoast.showToast(msg: "لم يتم تسجيل الدخول");
-                    //     return;
-                    //   }
-                    //
-                    //   print("Parent token: $token");
-                    //   print("Old password sent: $pastPassword");
-                    //   print("Parent ID: ${parent.id}");
-                    //
-                    //   final api = ApiService(token: token);
-                    //   final response = await api.changePasswordParent(
-                    //     oldPassword: pastPassword,
-                    //     newPassword: newPassword,
-                    //   );
-                    //
-                    //   print("Change password response: $response");
-                    //
-                    //   if (response['status'] == 'success') {
-                    //     // update local password in provider
-                    //     parent.password = newPassword;
-                    //     await loginProvider.setLoginParent(
-                    //       loginProvider.loginModel!,
-                    //     );
-                    //
-                    //     Fluttertoast.showToast(
-                    //       msg: "تم تغيير كلمة المرور بنجاح",
-                    //       backgroundColor: AppColors.blackColor,
-                    //       textColor: Colors.white,
-                    //     );
-                    //     Navigator.pop(context);
-                    //   } else {
-                    //     Fluttertoast.showToast(
-                    //       msg:
-                    //           response['message'] ??
-                    //           "حدث خطأ غير معروف من السيرفر",
-                    //       backgroundColor: AppColors.wrongIconColor,
-                    //       textColor: Colors.white,
-                    //     );
-                    //   }
-                    // } catch (e) {
-                    //   print("Change password error: $e");
-                    //   Fluttertoast.showToast(
-                    //     msg: "حدث خطأ أثناء تغيير كلمة المرور",
-                    //     backgroundColor: AppColors.wrongIconColor,
-                    //     textColor: Colors.white,
-                    //   );
-                    // }
+                    if (!formKey.currentState!.validate()) return;
+
+                    if (newPassword != confirmPassword) {
+                      Fluttertoast.showToast(
+                        msg: "كلمة المرور الجديدة غير متطابقة",
+                        backgroundColor: AppColors.wrongIconColor,
+                        textColor: Colors.white,
+                        gravity: ToastGravity.TOP,
+                      );
+                      return;
+                    }
+
+                    try {
+                      final loginProvider = Provider.of<TeacherLoginProvider>(
+                        context,
+                        listen: false,
+                      );
+                      final token = loginProvider.token;
+                      final teacher = loginProvider.loginModel?.data?.teacher;
+
+                      if (token == null || teacher == null) {
+                        Fluttertoast.showToast(msg: "لم يتم تسجيل الدخول");
+                        return;
+                      }
+
+                      print("teacher token: $token");
+                      print("Old password sent: $pastPassword");
+                      print("teacher ID: ${teacher.code}");
+
+                      final api = ApiService(token: token);
+                      final response = await api.changePasswordTeacher(
+                        oldPassword: pastPassword,
+                        newPassword: newPassword,
+                      );
+
+                      print("Change password response: $response");
+
+                      if (response['status'] == 'success') {
+                        // update local password in provider
+                        teacher.password = newPassword;
+                        await loginProvider.setLoginTeacher(
+                          loginProvider.loginModel!,
+                        );
+
+                        Fluttertoast.showToast(
+                          msg: "تم تغيير كلمة المرور بنجاح",
+                          backgroundColor: AppColors.blackColor,
+                          textColor: Colors.white,
+                        );
+                        Navigator.pop(context);
+                      } else {
+                        Fluttertoast.showToast(
+                          msg:
+                              response['message'] ??
+                              "حدث خطأ غير معروف من السيرفر",
+                          backgroundColor: AppColors.wrongIconColor,
+                          textColor: Colors.white,
+                        );
+                      }
+                    } catch (e) {
+                      print("Change password error: $e");
+                      Fluttertoast.showToast(
+                        msg: "حدث خطأ أثناء تغيير كلمة المرور",
+                        backgroundColor: AppColors.wrongIconColor,
+                        textColor: Colors.white,
+                      );
+                    }
                   },
                 ),
               ],

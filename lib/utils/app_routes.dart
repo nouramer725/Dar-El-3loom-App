@@ -18,6 +18,8 @@ class AppRoutes {
   static const firstTimeLoginScreenName = "first_time_login_screen";
   static const detailsScreen = "details_screen";
   static const detailsParentScreen = "details_parent_screen";
+  static const detailsTeacherScreen = "details_teacher_screen";
+  static const addAssistantScreen = "add_assistant_screen";
   static const loginScreen = "login_screen";
   static const homeTeacherScreenName = "home_teacher_screen";
   static const passwordTeacherEdit = "password_teacher_edit";

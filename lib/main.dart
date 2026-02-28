@@ -1,4 +1,5 @@
 import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
+import 'package:dar_el_3loom/Login/Details%20Screen/details_teacher_screen.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance_table_widget.dart';
 import 'package:dar_el_3loom/home_assistant/home_assistant_screen.dart';
@@ -9,6 +10,7 @@ import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/profile_pictu
 import 'package:dar_el_3loom/home_teacher/containers/groups/groups.dart';
 import 'package:dar_el_3loom/home_teacher/containers/taqarer_student/taqarer.dart';
 import 'package:dar_el_3loom/home_teacher/home_teacher_screen.dart';
+import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/add_assistant_screen.dart';
 import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/password_teacher_edit.dart';
 import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/profile_picture_teacher_widget.dart';
 import 'package:dar_el_3loom/provider/app_flow.dart';
@@ -16,6 +18,7 @@ import 'package:dar_el_3loom/provider/app_theme_provider.dart';
 import 'package:dar_el_3loom/provider/parent_login_provider.dart';
 import 'package:dar_el_3loom/provider/shared_preferences_theme.dart';
 import 'package:dar_el_3loom/provider/student_login_provider.dart';
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:dar_el_3loom/utils/app_routes.dart';
 import 'package:dar_el_3loom/utils/app_theme.dart';
 import 'package:dar_el_3loom/utils/size_config.dart';
@@ -54,12 +57,16 @@ Future<void> main() async {
   final parentProvider = ParentLoginProvider();
   await parentProvider.loadParent();
 
+  final teacherProvider = TeacherLoginProvider();
+  await teacherProvider.loadTeacher();
+
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AppThemeProvider()),
         ChangeNotifierProvider(create: (_) => studentProvider),
         ChangeNotifierProvider(create: (_) => parentProvider),
+        ChangeNotifierProvider(create: (_) => teacherProvider),
       ],
       child: const MyApp(),
     ),
@@ -91,6 +98,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.firstTimeLoginScreenName: (_) => FirstTimeLoginScreen(),
         AppRoutes.detailsScreen: (_) => DetailsScreen(),
         AppRoutes.detailsParentScreen: (_) => DetailsParentScreen(),
+        AppRoutes.detailsTeacherScreen: (_) => DetailsTeacherScreen(),
         AppRoutes.loginScreen: (_) => LoginScreen(),
         AppRoutes.homeScreenName: (_) => HomeScreen(),
         AppRoutes.homeParentScreenName: (_) => HomeParentScreen(),
@@ -114,6 +122,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.studentPerformanceAssistantDtaScreen: (_) => StudentPerformanceWidget(),
         AppRoutes.profilePictureAssistantEdit: (_) => ProfileAssistantScreen(),
         AppRoutes.homeAssistantScreenName: (_) => HomeAssistantScreen(),
+        AppRoutes.addAssistantScreen: (_) => AddAssistantScreen(),
       },
     );
   }

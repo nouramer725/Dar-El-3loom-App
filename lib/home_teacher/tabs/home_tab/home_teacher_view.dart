@@ -1,6 +1,6 @@
+import 'package:dar_el_3loom/Model/teacher_login_model.dart';
 import 'package:dar_el_3loom/home/tabs/home_tab/widget_container.dart';
-import 'package:dar_el_3loom/home/tabs/profile/divider_widget.dart';
-import 'package:dar_el_3loom/provider/parent_login_provider.dart';
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/app_assets.dart';
@@ -14,6 +14,8 @@ class HomeTeacherView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final teacherProvider = Provider.of<TeacherLoginProvider>(context);
+    final Teacher? teacher = teacherProvider.teachers;
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: h(120),
@@ -28,7 +30,14 @@ class HomeTeacherView extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Image.asset(AppAssets.boy, fit: BoxFit.fill),
+              child: teacher?.personalImage != null
+                  ? Image.network(
+                      teacher!.personalImage!,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                    )
+                  : Image.asset(AppAssets.boy, fit: BoxFit.fill),
             ),
 
             SingleChildScrollView(
@@ -36,14 +45,14 @@ class HomeTeacherView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "كود المدرس",
+                    teacher?.code ?? "كود المدرس",
                     style: AppText.regularText(
                       color: AppColors.greyColor,
                       fontSize: sp(14),
                     ),
                   ),
                   Text(
-                    "اسم المدرس",
+                    teacher?.nMod ?? "اسم المدرس",
                     style: AppText.boldText(
                       color: AppColors.greyColor,
                       fontSize: sp(24),

@@ -1,3 +1,5 @@
+import 'package:dar_el_3loom/Model/teacher_login_model.dart';
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +70,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     fillColor: AppColors.transparentColor,
                     borderColor: AppColors.container2Color,
                     borderWidth: 2,
-                    hintText: "رقم تليفون ولي الامر",
+                    hintText: "رقم الهاتف",
                     hintStyle: AppText.boldText(
                       color: AppColors.textColorLogin,
                       fontSize: sp(16),
@@ -76,7 +78,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                     onChanged: (value) => phoneNumber = value,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return "برجاء ادخال رقم تليفون ولي الامر";
+                        return "برجاء ادخال رقم الهاتف";
                       }
                       return null;
                     },
@@ -140,6 +142,32 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                           Navigator.pushNamed(
                             context,
                             AppRoutes.detailsParentScreen,
+                          );
+                          return;
+                        }
+
+                        final teacherResponse = await api.verifyTeacher(
+                          id: code,
+                          parentNumber: phoneNumber,
+                        );
+
+                        final teacherModel = TeacherLoginModel.fromJson(
+                          teacherResponse,
+                        );
+
+                        if (teacherModel.status == 'success' &&
+                            teacherModel.data?.teacher != null) {
+                          final teacherProvider =
+                              Provider.of<TeacherLoginProvider>(
+                                context,
+                                listen: false,
+                              );
+
+                          await teacherProvider.setLoginTeacher(teacherModel);
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.detailsTeacherScreen,
                           );
                           return;
                         }

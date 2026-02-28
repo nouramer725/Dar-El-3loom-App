@@ -1,9 +1,9 @@
-import 'package:dar_el_3loom/Login/Details%20Screen/Controllers/parent_controller.dart';
-import 'package:dar_el_3loom/Model/parent_login_model.dart';
-import 'package:dar_el_3loom/provider/parent_login_provider.dart';
+import 'package:dar_el_3loom/Model/teacher_login_model.dart';
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+
 import '../../BackendSetup Data/Api/api_service.dart';
 import '../../provider/app_flow.dart';
 import '../../utils/app_colors.dart';
@@ -11,38 +11,39 @@ import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
+import 'Controllers/teacher_controller.dart';
 import 'Widgets/widget.dart';
 
-class DetailsParentScreen extends StatefulWidget {
-  const DetailsParentScreen({super.key});
+class DetailsTeacherScreen extends StatefulWidget {
+  const DetailsTeacherScreen({super.key});
 
   @override
-  State<DetailsParentScreen> createState() => _DetailsParentScreenState();
+  State<DetailsTeacherScreen> createState() => _DetailsTeacherScreenState();
 }
 
-class _DetailsParentScreenState extends State<DetailsParentScreen> {
+class _DetailsTeacherScreenState extends State<DetailsTeacherScreen> {
   final formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     super.initState();
-    final loginProvider = Provider.of<ParentLoginProvider>(
+    final loginProvider = Provider.of<TeacherLoginProvider>(
       context,
       listen: false,
     );
     final token = loginProvider.token;
-    final parent = loginProvider.loginModel?.data?.parent;
+    final teacher = loginProvider.loginModel?.data?.teacher;
 
     print("Token from provider: $token");
-    print("Parent ID: ${parent?.id}");
+    print("Teacher ID: ${teacher?.code}");
   }
 
   @override
   Widget build(BuildContext context) {
-    final parentProvider = Provider.of<ParentLoginProvider>(context);
-    final parent = parentProvider.loginModel?.data?.parent;
+    final teacherProvider = Provider.of<TeacherLoginProvider>(context);
+    final teacher = teacherProvider.loginModel?.data?.teacher;
 
-    if (parent == null) {
+    if (teacher == null) {
       return Scaffold(
         body: Center(
           child: Text(
@@ -57,8 +58,8 @@ class _DetailsParentScreenState extends State<DetailsParentScreen> {
     }
 
     return ChangeNotifierProvider(
-      create: (_) => ParentController(parent: parent),
-      child: Consumer<ParentController>(
+      create: (_) => TeacherController(teacher: teacher),
+      child: Consumer<TeacherController>(
         builder: (context, controller, _) {
           if (controller.loading) {
             return Scaffold(
@@ -97,13 +98,19 @@ class _DetailsParentScreenState extends State<DetailsParentScreen> {
                           controller.nameLocked,
                         ),
                         buildField(
+                          "اسم المادة",
+                          controller.nameMada,
+                          TextInputType.name,
+                          controller.nameMadaLocked,
+                        ),
+                        buildField(
                           "الرقم القومي",
                           controller.personalId,
                           TextInputType.number,
                           controller.personalIdLocked,
                         ),
                         buildField(
-                          "رقم ولي الامر",
+                          "رقم المدرس",
                           controller.phoneParent,
                           TextInputType.number,
                           controller.phoneParentLocked,
@@ -162,70 +169,71 @@ class _DetailsParentScreenState extends State<DetailsParentScreen> {
 
                             try {
                               final loginProvider =
-                                  Provider.of<ParentLoginProvider>(
+                                  Provider.of<TeacherLoginProvider>(
                                     context,
                                     listen: false,
                                   );
 
                               final token = loginProvider.token;
-                              final parent = loginProvider.loginModel;
+                              final teacher = loginProvider.loginModel;
 
-                              if (token == null || parent == null) {
+                              if (token == null || teacher == null) {
                                 throw Exception("User not logged in");
                               }
 
-                              final updatedStudent = Parent(
-                                id: controller.id.text,
-                                name: controller.name.text,
-                                tel: controller.phoneParent.text,
+                              final updatedTeacher = Teacher(
+                                code: controller.id.text,
+                                nMod: controller.name.text,
+                                nMada: controller.nameMada.text,
+                                phonenumber: controller.phoneParent.text,
                                 personalId: controller.personalId.text,
                                 password: controller.password.text,
-                                profileImage: controller.personalImage?.path,
+                                personalImage: controller.personalImage?.path,
                                 verified: true,
                               );
 
                               final api = ApiService(token: token);
 
-                              final response = await api.updateParentInfo(
-                                updatedStudent,
+                              final response = await api.updateTeacherInfo(
+                                updatedTeacher,
                               );
 
                               final oldLogin = loginProvider.loginModel;
 
                               final updatedLoginModel =
-                                  ParentLoginModel.fromJson(response);
+                                  TeacherLoginModel.fromJson(response);
 
                               updatedLoginModel.token ??= oldLogin?.token;
 
-                              updatedLoginModel.data?.parent?.password ??=
-                                  oldLogin?.data?.parent?.password;
+                              updatedLoginModel.data?.teacher?.password ??=
+                                  oldLogin?.data?.teacher?.password;
 
-                              await loginProvider.setLoginParent(
+                              await loginProvider.setLoginTeacher(
                                 updatedLoginModel,
                               );
 
-                              AppFlow.getParentToken();
+                              AppFlow.getTeacherToken();
 
                               print(updatedLoginModel.token);
 
                               if (updatedLoginModel.token != null) {
-                                await AppFlow.saveParentToken(
+                                await AppFlow.saveTeacherToken(
                                   updatedLoginModel.token!,
                                 );
                               }
 
-                              print("-----------Update------------------");
-                              print(updatedLoginModel.status);
-                              print(updatedLoginModel.token);
-                              print(updatedLoginModel.data);
-                              print(updatedLoginModel.data?.parent);
-                              print(updatedLoginModel.data?.parent?.id);
-                              print(updatedLoginModel.data?.parent?.name);
-                              print(updatedLoginModel.data?.parent?.tel);
-                              print(updatedLoginModel.data?.parent?.personalId);
-                              print(updatedLoginModel.data?.parent?.verified);
-                              print(updatedLoginModel.data?.parent?.password);
-                              print("-----------------------------");
+                              // print("-----------Update------------------");
+                              // print(updatedLoginModel.status);
+                              // print(updatedLoginModel.token);
+                              // print(updatedLoginModel.data);
+                              // print(updatedLoginModel.data?.teacher);
+                              // print(updatedLoginModel.data?.teacher?.code);
+                              // print(updatedLoginModel.data?.teacher?.name);
+                              // print(updatedLoginModel.data?.teacher?.tel);
+                              // print(updatedLoginModel.data?.teacher?.personalId);
+                              // print(updatedLoginModel.data?.teacher?.verified);
+                              // print(updatedLoginModel.data?.teacher?.password);
+                              // print("-----------------------------");
 
                               Fluttertoast.showToast(
                                 msg: "تم تحديث بيانات الطالب بنجاح",
@@ -236,7 +244,7 @@ class _DetailsParentScreenState extends State<DetailsParentScreen> {
                               // Navigate to home and remove all previous screens
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                AppRoutes.homeParentScreenName,
+                                AppRoutes.homeTeacherScreenName,
                                 (route) => false,
                               );
                             } catch (e) {
