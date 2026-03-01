@@ -89,6 +89,14 @@ class HomeTeacherView extends StatelessWidget {
                   text: "المجاميع",
                   containerColor: AppColors.container2Color,
                 ),
+                WidgetContainer(
+                  onTap: () {
+                    Navigator.of(context).pushNamed(AppRoutes.addAssistantTeacherScreen);
+                  },
+                  verticalPadding: h(36),
+                  text: "اضافة مساعد",
+                  containerColor: AppColors.container3Color,
+                ),
               ],
             ),
           ),

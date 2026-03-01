@@ -8,6 +8,7 @@ import '../../Model/balance_model.dart';
 import '../../Model/lessons_date_model.dart';
 import '../../Model/student_time_model.dart';
 import '../../Model/takim_model.dart';
+import '../../home_teacher/tabs/profile/profile_tabs/get_assistant/assistant_model.dart';
 
 class ApiService {
   late Dio dio;
@@ -571,5 +572,37 @@ class ApiService {
       print("Error fetching children: $e");
       return [];
     }
+  }
+
+  Future<Map<String, dynamic>> addAssistant({
+    required String name,
+    required String phone,
+  }) async {
+    try {
+      final response = await dio.post(
+        '/api/v1/teachers/assistant',
+        data: {"name": name.trim(), "phonenumber": phone.trim()},
+        options: Options(validateStatus: (status) => true),
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!.data;
+      }
+      return {"status": "fail", "message": e.message};
+    }
+  }
+
+  Future<List<AssistantModel>> getAssistants() async {
+    print("🪪 AUTH HEADER = ${dio.options.headers['Authorization']}");
+
+    final response = await dio.get("/api/v1/teachers/assistant");
+
+    print("✅ RESPONSE = ${response.data}");
+
+    final List assistantsJson = response.data['data']['assistants'];
+
+    return assistantsJson.map((e) => AssistantModel.fromJson(e)).toList();
   }
 }

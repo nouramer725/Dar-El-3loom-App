@@ -7,10 +7,11 @@ import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_assistant_scree
 import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/password_assistant_edit.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/password_parent_edit.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/profile_picture_parent_widget.dart';
+import 'package:dar_el_3loom/home_teacher/containers/assistantAddition/add_new_assistant_screen.dart';
 import 'package:dar_el_3loom/home_teacher/containers/groups/groups.dart';
 import 'package:dar_el_3loom/home_teacher/containers/taqarer_student/taqarer.dart';
 import 'package:dar_el_3loom/home_teacher/home_teacher_screen.dart';
-import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/add_assistant_screen.dart';
+import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/get_assistant/get_assistant_screen.dart';
 import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/password_teacher_edit.dart';
 import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/profile_picture_teacher_widget.dart';
 import 'package:dar_el_3loom/provider/app_flow.dart';
@@ -25,6 +26,7 @@ import 'package:dar_el_3loom/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'BackendSetup Data/Api/api_service.dart';
 import 'Login/Details Screen/details_screen.dart';
 import 'Login/First Login Screen/first_time_login_screen.dart';
 import 'Login/login/login_screen.dart';
@@ -37,6 +39,7 @@ import 'home/home_screen.dart';
 import 'home/tabs/profile/profile_tabs/password_edit.dart';
 import 'home/tabs/profile/profile_tabs/profile_picture_widget.dart';
 import 'home_parent/home_parent_screen.dart';
+import 'home_teacher/tabs/profile/profile_tabs/get_assistant/assistant_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -67,6 +70,9 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => studentProvider),
         ChangeNotifierProvider(create: (_) => parentProvider),
         ChangeNotifierProvider(create: (_) => teacherProvider),
+        ChangeNotifierProvider(
+          create: (_) => AssistantProvider(ApiService())..fetchAssistants(),
+        ),
       ],
       child: const MyApp(),
     ),
@@ -103,6 +109,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.homeScreenName: (_) => HomeScreen(),
         AppRoutes.homeParentScreenName: (_) => HomeParentScreen(),
         AppRoutes.homeTeacherScreenName: (_) => HomeTeacherScreen(),
+        AppRoutes.addAssistantTeacherScreen: (_) => AddNewAssistantScreen(),
         AppRoutes.container1Press: (_) => PerformanceScreen(),
         AppRoutes.container2Press: (_) => TableTimeScreen(),
         AppRoutes.container3Press: (_) => MozakratScreen(),
@@ -119,10 +126,11 @@ class MyApp extends StatelessWidget {
             ProfilePictureTeacherWidget(),
         AppRoutes.passwordAssistantEdit: (_) => PasswordAssistantEdit(),
         AppRoutes.studentPerformanceAssistant: (_) => StudentPerformance(),
-        AppRoutes.studentPerformanceAssistantDtaScreen: (_) => StudentPerformanceWidget(),
+        AppRoutes.studentPerformanceAssistantDtaScreen: (_) =>
+            StudentPerformanceWidget(),
         AppRoutes.profilePictureAssistantEdit: (_) => ProfileAssistantScreen(),
         AppRoutes.homeAssistantScreenName: (_) => HomeAssistantScreen(),
-        AppRoutes.addAssistantScreen: (_) => AddAssistantScreen(),
+        AppRoutes.addAssistantScreen: (_) => GetAssistantScreen(),
       },
     );
   }

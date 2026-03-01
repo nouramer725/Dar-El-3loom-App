@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../../../utils/responsive.dart';
-import '../../../Model/balance_model.dart';
 import '../../../home/containers_contents/Certificates/taqarer_table_widget.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';

@@ -57,7 +57,7 @@ class ProfileTeacherScreen extends StatelessWidget {
               onTap: () async {
                 Navigator.of(context).pushNamed(AppRoutes.addAssistantScreen);
               },
-              icon: Image.asset(AppAssets.logoutIcon),
+              icon: Image.asset(AppAssets.arrowIcon),
             ),
             DividerWidget(),
             ProfileWidget(
