@@ -5,6 +5,7 @@ import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dar_el_3loom/Model/teacher_login_model.dart';
 import 'package:dio/dio.dart';
 import '../../Model/balance_model.dart';
+import '../../Model/group_model.dart';
 import '../../Model/lessons_date_model.dart';
 import '../../Model/student_time_model.dart';
 import '../../Model/takim_model.dart';
@@ -604,5 +605,58 @@ class ApiService {
     final List assistantsJson = response.data['data']['assistants'];
 
     return assistantsJson.map((e) => AssistantModel.fromJson(e)).toList();
+  }
+
+  Future<List<String>> fetchTeacherGroups() async {
+    try {
+      final response = await dio.get("/api/v1/teachers/groups");
+      if (response.data['status'] == 'success') {
+        final groups = response.data['data']['groups'] as List<dynamic>;
+        return groups.map((e) => e.toString()).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      print("Error fetching teacher groups: $e");
+      return [];
+    }
+  }
+
+  Future<GroupModel?> fetchGroupDetailsAsGroup({
+    required String groupNo,
+    int page = 1,
+    int limit = 100,
+  }) async {
+    try {
+      final response = await dio.get(
+        "/api/v1/teachers/groups/$groupNo",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.data['status'] == 'success') {
+        final data = response.data['data'];
+
+        final studentsList = (data['students'] as List<dynamic>)
+            .map((e) => StudentModel.fromJson(e))
+            .toList();
+
+        final group = GroupModel(
+          groupNo: data['no_group'] ?? groupNo,
+          students: studentsList,
+          className: data['n_saf'] ?? '',
+          date: data['date_h1'] ?? '',
+          time: data['time_h1'] ?? '',
+          day: data['day_h1'] ?? '',
+          totalStudents: data['totalStudents'] ?? 0,
+        );
+
+        return group;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print("Error fetching group details: $e");
+      return null;
+    }
   }
 }

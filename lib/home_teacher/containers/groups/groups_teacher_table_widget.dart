@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import '../../../../../utils/responsive.dart';
-import '../../../Model/balance_model.dart';
-import '../../../home/containers_contents/Certificates/taqarer_table_widget.dart';
+import '../../../Model/group_model.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 
 class GroupsTeacherTableWidget extends StatelessWidget {
   final Color tableTitleColor;
-  // final List<BalanceModel> balances;
+  final GroupModel group;
 
   const GroupsTeacherTableWidget({
     required this.tableTitleColor,
-    // required this.balances,
+    required this.group,
     super.key,
   });
 
@@ -22,23 +21,23 @@ class GroupsTeacherTableWidget extends StatelessWidget {
       spacing: h(15),
       children: [
         Text(
-          "الصف : الثاني الثانوي",
+          "الصف : ${group.className}",
           style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
         ),
         Text(
-          "اليوم : الاربع",
+          "اليوم : ${group.day}",
           style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
         ),
         Text(
-          "المعاد : 6:00",
+          "المعاد : ${group.time}",
           style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
         ),
         Text(
-          "عدد الطلاب : 115",
+          "عدد الطلاب : ${group.totalStudents}",
           style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
         ),
         Table(
-          columnWidths: const {0: FlexColumnWidth(2), 1: FlexColumnWidth(10)},
+          columnWidths: const {0: FlexColumnWidth(5), 1: FlexColumnWidth(10)},
           children: [
             TableRow(
               decoration: BoxDecoration(
@@ -52,18 +51,16 @@ class GroupsTeacherTableWidget extends StatelessWidget {
             ),
           ],
         ),
-
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 5,
+          itemCount: group.students.length,
           separatorBuilder: (_, __) => SizedBox(height: h(15)),
           itemBuilder: (context, index) {
-            // final b = balances[index];
-
+            final student = group.students[index];
             return Table(
               columnWidths: const {
-                0: FlexColumnWidth(2),
+                0: FlexColumnWidth(5),
                 1: FlexColumnWidth(10),
               },
               children: [
@@ -74,8 +71,8 @@ class GroupsTeacherTableWidget extends StatelessWidget {
                     border: Border.all(color: tableTitleColor, width: 2),
                   ),
                   children: [
-                    CustomTableCell(text: "1001"),
-                    CustomTableCell(text: "نور محمد محمود حسن عامر"),
+                    CustomTableCell(text: student.code),
+                    CustomTableCell(text: student.name),
                   ],
                 ),
               ],
