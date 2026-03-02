@@ -1,5 +1,7 @@
+import 'package:dar_el_3loom/Model/assistant_login_model.dart';
 import 'package:dar_el_3loom/Model/student_login_model.dart';
 import 'package:dar_el_3loom/Model/teacher_login_model.dart';
+import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
 import 'package:dar_el_3loom/provider/student_login_provider.dart';
 import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
@@ -201,6 +203,42 @@ class _LoginScreenState extends State<LoginScreen> {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
                             AppRoutes.homeTeacherScreenName,
+                            (route) => false,
+                          );
+                          return;
+                        }
+
+                        ///  تسجيل دخول assistant
+                        final assistantResponse = await api.loginAssistant(
+                          code: code,
+                          password: password,
+                        );
+                        final assistantModel = AssistantLoginModel.fromJson(
+                          assistantResponse,
+                        );
+
+                        if (assistantModel.status == 'success' &&
+                            assistantModel.data?.assistant != null) {
+                          Provider.of<AssistantLoginProvider>(
+                            context,
+                            listen: false,
+                          ).setLoginAssistant(assistantModel);
+
+                          if (assistantModel.token != null) {
+                            await AppFlow.saveAssistantToken(
+                              assistantModel.token!,
+                            );
+                          }
+
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول المساعد بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                          );
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.homeAssistantScreenName,
                             (route) => false,
                           );
                           return;

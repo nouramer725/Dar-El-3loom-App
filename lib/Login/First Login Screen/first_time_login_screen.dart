@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../../BackendSetup Data/Api/api_service.dart';
+import '../../Model/assistant_login_model.dart';
 import '../../Model/parent_login_model.dart';
 import '../../Model/student_login_model.dart';
+import '../../provider/assistant_login_provider.dart';
 import '../../provider/parent_login_provider.dart';
 import '../../provider/student_login_provider.dart';
 import '../../utils/app_assets.dart';
@@ -168,6 +170,32 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                           Navigator.pushNamed(
                             context,
                             AppRoutes.detailsTeacherScreen,
+                          );
+                          return;
+                        }
+
+                        final assistantResponse = await api.verifyAssistant(
+                          id: code,
+                          parentNumber: phoneNumber,
+                        );
+
+                        final assistantModel = AssistantLoginModel.fromJson(
+                          assistantResponse,
+                        );
+
+                        if (assistantModel.status == 'success' &&
+                            assistantModel.data?.assistant != null) {
+                          final assistantProvider =
+                          Provider.of<AssistantLoginProvider>(
+                            context,
+                            listen: false,
+                          );
+
+                          await assistantProvider.setLoginAssistant(assistantModel);
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.detailsAssistantScreen,
                           );
                           return;
                         }

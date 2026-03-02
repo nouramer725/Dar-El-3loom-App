@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:dar_el_3loom/Model/parent_login_model.dart';
-import 'package:dar_el_3loom/provider/parent_login_provider.dart';
+import 'package:dar_el_3loom/Model/assistant_login_model.dart';
+import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -37,56 +37,57 @@ class _ProfilePictureAssistantWidgetState
     }
   }
 
-  // Future<void> uploadProfilePicture() async {
-  //   if (selectedImage == null) return;
-  //
-  //   try {
-  //     final parentProvider = Provider.of<ParentLoginProvider>(
-  //       context,
-  //       listen: false,
-  //     );
-  //     final token = parentProvider.token;
-  //
-  //     if (token == null) throw Exception("لم يتم تسجيل الدخول");
-  //
-  //     final api = ApiService(token: token);
-  //
-  //     final response = await api.uploadProfilePictureParent(selectedImage!);
-  //
-  //     if (response['status'] == 'success') {
-  //       final parentData = response['data']['parent'];
-  //       parentProvider.student?.profileImage = parentData['profile_image'];
-  //
-  //       Fluttertoast.showToast(
-  //         msg: "تم تحديث الصورة الشخصية بنجاح",
-  //         backgroundColor: AppColors.blackColor,
-  //         textColor: Colors.white,
-  //         gravity: ToastGravity.TOP,
-  //       );
-  //       Navigator.pop(context);
-  //     } else {
-  //       Fluttertoast.showToast(
-  //         msg: response['message'] ?? "حدث خطأ",
-  //         backgroundColor: AppColors.wrongIconColor,
-  //         textColor: Colors.white,
-  //         gravity: ToastGravity.TOP,
-  //       );
-  //     }
-  //   } catch (e) {
-  //     print(e);
-  //     Fluttertoast.showToast(
-  //       msg: "حدث خطأ",
-  //       backgroundColor: AppColors.wrongIconColor,
-  //       textColor: Colors.white,
-  //       gravity: ToastGravity.TOP,
-  //     );
-  //   }
-  // }
+  Future<void> uploadProfilePicture() async {
+    if (selectedImage == null) return;
+
+    try {
+      final assistantProvider = Provider.of<AssistantLoginProvider>(
+        context,
+        listen: false,
+      );
+      final token = assistantProvider.token;
+
+      if (token == null) throw Exception("لم يتم تسجيل الدخول");
+
+      final api = ApiService(token: token);
+
+      final response = await api.uploadProfilePictureAssistant(selectedImage!);
+
+      if (response['status'] == 'success') {
+        final assistantData = response['data']['assistant'];
+        assistantProvider.assistants?.personalImage =
+            assistantData['profile_image'];
+
+        Fluttertoast.showToast(
+          msg: "تم تحديث الصورة الشخصية بنجاح",
+          backgroundColor: AppColors.blackColor,
+          textColor: Colors.white,
+          gravity: ToastGravity.TOP,
+        );
+        Navigator.pop(context);
+      } else {
+        Fluttertoast.showToast(
+          msg: response['message'] ?? "حدث خطأ",
+          backgroundColor: AppColors.wrongIconColor,
+          textColor: Colors.white,
+          gravity: ToastGravity.TOP,
+        );
+      }
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: "حدث خطأ",
+        backgroundColor: AppColors.wrongIconColor,
+        textColor: Colors.white,
+        gravity: ToastGravity.TOP,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final parentProvider = Provider.of<ParentLoginProvider>(context);
-    final Parent? parent = parentProvider.student;
+    final assistantProvider = Provider.of<AssistantLoginProvider>(context);
+    final Assistant? assistant = assistantProvider.assistants;
 
     return Scaffold(
       appBar: AppBar(
@@ -125,7 +126,16 @@ class _ProfilePictureAssistantWidgetState
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                      child: selectedImage != null
+                          ? Image.file(selectedImage!, fit: BoxFit.cover)
+                          : assistant?.personalImage != null
+                          ? Image.network(
+                              assistant!.personalImage!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                            )
+                          : Image.asset(AppAssets.boy, fit: BoxFit.fill),
                     ),
                     CircleAvatar(
                       radius: sp(25),
@@ -149,7 +159,7 @@ class _ProfilePictureAssistantWidgetState
                   EdgeInsets.symmetric(horizontal: w(40), vertical: h(10)),
                 ),
                 colorContainer: AppColors.whiteColor,
-                // onPressed: uploadProfilePicture,
+                onPressed: uploadProfilePicture,
               ),
             ],
           ),

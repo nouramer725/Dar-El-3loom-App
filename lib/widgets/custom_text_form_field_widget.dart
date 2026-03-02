@@ -30,6 +30,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
   final bool enabled;
   final bool obscureText;
   final TextInputAction? textInputAction;
+  final void Function(String)? onFieldSubmitted;
 
   const CustomTextFormFieldWidget({
     this.suffixIcon,
@@ -57,6 +58,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
     this.shadowColor = Colors.black,
     this.enabled = true,
     this.textInputAction,
+    this.onFieldSubmitted,
     super.key,
   });
 
@@ -83,6 +85,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
       ),
       child: TextFormField(
         enabled: enabled,
+        onFieldSubmitted:onFieldSubmitted ,
         keyboardType: keyboardType,
         validator: validator,
         controller: controller,

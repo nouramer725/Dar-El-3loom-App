@@ -1,41 +1,58 @@
 import 'package:flutter/material.dart';
-import '../../../../../utils/responsive.dart';
-import '../../../home/containers_contents/Certificates/taqarer_table_widget.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
+import '../../../utils/responsive.dart';
 
 class TaqrerStudentTableWidget extends StatelessWidget {
   final Color tableTitleColor;
-  // final List<BalanceModel> balances;
+  final Map<String, dynamic> studentData;
 
   const TaqrerStudentTableWidget({
     required this.tableTitleColor,
-    // required this.balances,
+    required this.studentData,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    final takiimList = studentData['takiim'] as List<dynamic>? ?? [];
+    final totals = studentData['totals'] ?? {};
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: h(15),
       children: [
-        Text(
-          "الاسم : احمد محمد",
-          style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
-        ),
-        Text(
-          "الصف : الاول الثانوي",
-          style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
-        ),
-        Text(
-          "الكود : 1001",
-          style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
-        ),
-        Text(
-          "المجموعة: 44",
-          style: AppText.boldText(color: AppColors.greyColor, fontSize: sp(19)),
-        ),
+        if (takiimList.isNotEmpty) ...[
+          Text(
+            "الاسم: ${takiimList[0]['n_talb'] ?? ''}",
+            style: AppText.boldText(
+              color: AppColors.greyColor,
+              fontSize: sp(19),
+            ),
+          ),
+          Text(
+            "الصف: ${takiimList[0]['n_saf'] ?? ''}",
+            style: AppText.boldText(
+              color: AppColors.greyColor,
+              fontSize: sp(19),
+            ),
+          ),
+          Text(
+            "الكود: ${takiimList[0]['cod_talb'] ?? ''}",
+            style: AppText.boldText(
+              color: AppColors.greyColor,
+              fontSize: sp(19),
+            ),
+          ),
+          Text(
+            "المجموعة: ${takiimList[0]['no_group'] ?? ''}",
+            style: AppText.boldText(
+              color: AppColors.greyColor,
+              fontSize: sp(19),
+            ),
+          ),
+        ],
+
         Table(
           columnWidths: const {
             0: FlexColumnWidth(1),
@@ -50,10 +67,10 @@ class TaqrerStudentTableWidget extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10),
               ),
               children: const [
-                CustomTableCell(text: "الحصة", isHeader: true),
+                CustomTableCell(text: "المادة", isHeader: true),
                 CustomTableCell(text: "التاريخ", isHeader: true),
-                CustomTableCell(text: "الساعه", isHeader: true),
-                CustomTableCell(text: "الواجب", isHeader: true),
+                CustomTableCell(text: "الدرجة", isHeader: true),
+                CustomTableCell(text: "النسبة", isHeader: true),
               ],
             ),
           ],
@@ -62,11 +79,10 @@ class TaqrerStudentTableWidget extends StatelessWidget {
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: 5,
-          separatorBuilder: (_, __) => SizedBox(height: h(15)),
+          itemCount: takiimList.length,
+          separatorBuilder: (_, __) => SizedBox(height: h(10)),
           itemBuilder: (context, index) {
-            // final b = balances[index];
-
+            final t = takiimList[index];
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(1),
@@ -78,14 +94,14 @@ class TaqrerStudentTableWidget extends StatelessWidget {
                 TableRow(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(color: tableTitleColor, width: 2),
                   ),
                   children: [
-                    CustomTableCell(text: "الحصة"),
-                    CustomTableCell(text: "التاريخ"),
-                    CustomTableCell(text: "الساعه"),
-                    CustomTableCell(text: "الواجب"),
+                    CustomTableCell(text: t['n_mada'] ?? ''),
+                    CustomTableCell(text: t['dates'] ?? ''),
+                    CustomTableCell(text: t['gadestudent'].toString()),
+                    CustomTableCell(text: t['perstangestudent'].toString()),
                   ],
                 ),
               ],
@@ -102,11 +118,12 @@ class TaqrerStudentTableWidget extends StatelessWidget {
                 border: Border.all(color: tableTitleColor, width: 2),
               ),
               children: [
-                const Cell(
-                  text: "درجة الامتحان الشامل لشهر 9:",
+                const Cell(text: "إجمالي الدرجة:", isHeader: true),
+                Cell(
+                  text:
+                      "${totals['totalgrades'] ?? 0}/${totals['totalmax'] ?? 0}",
                   isHeader: true,
                 ),
-                Cell(text: "65/100", isHeader: true),
               ],
             ),
           ],
@@ -119,35 +136,41 @@ class TaqrerStudentTableWidget extends StatelessWidget {
 class CustomTableCell extends StatelessWidget {
   final String? text;
   final bool isHeader;
-  final Widget? icon;
-
-  const CustomTableCell({
-    this.text,
-    this.icon,
-    this.isHeader = false,
-    super.key,
-  });
+  const CustomTableCell({this.text, this.isHeader = false, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(14)),
       child: Center(
-        child:
-            icon ??
-            Text(
-              textAlign: TextAlign.center,
-              text ?? '',
-              style: isHeader
-                  ? AppText.boldText(
-                      color: AppColors.blackColor,
-                      fontSize: sp(18),
-                    )
-                  : AppText.mediumText(
-                      color: AppColors.blackColor,
-                      fontSize: sp(17),
-                    ),
-            ),
+        child: Text(
+          text ?? '',
+          style: isHeader
+              ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(18))
+              : AppText.mediumText(
+                  color: AppColors.blackColor,
+                  fontSize: sp(17),
+                ),
+        ),
+      ),
+    );
+  }
+}
+
+class Cell extends StatelessWidget {
+  final String text;
+  final bool isHeader;
+  const Cell({required this.text, this.isHeader = false, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(h(10)),
+      child: Text(
+        text,
+        style: isHeader
+            ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(16))
+            : AppText.mediumText(color: AppColors.blackColor, fontSize: sp(15)),
       ),
     );
   }

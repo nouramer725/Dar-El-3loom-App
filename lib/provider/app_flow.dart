@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../provider/student_login_provider.dart';
 import '../provider/parent_login_provider.dart';
 import '../utils/app_routes.dart';
+import 'assistant_login_provider.dart';
 
 class AppFlow {
   static String getInitialRoute(BuildContext context) {
@@ -20,6 +21,10 @@ class AppFlow {
       context,
       listen: false,
     );
+    final assistantProvider = Provider.of<AssistantLoginProvider>(
+      context,
+      listen: false,
+    );
 
     final student = studentProvider.student;
     final studentToken = studentProvider.token;
@@ -29,6 +34,9 @@ class AppFlow {
 
     final teacher = teacherProvider.loginModel?.data?.teacher;
     final teacherToken = teacherProvider.token;
+
+    final assistant = assistantProvider.loginModel?.data?.assistant;
+    final assistantToken = assistantProvider.token;
 
     if (student != null && studentToken != null) {
       if (student.verified != true) {
@@ -50,6 +58,12 @@ class AppFlow {
       }
       return AppRoutes.homeTeacherScreenName;
     }
+    if (assistant != null && assistantToken != null) {
+      if (assistant.verified != true) {
+        return AppRoutes.detailsAssistantScreen;
+      }
+      return AppRoutes.homeAssistantScreenName;
+    }
 
     return AppRoutes.firstTimeLoginScreenName;
   }
@@ -62,6 +76,7 @@ class AppFlow {
       Provider.of<StudentLoginProvider>(context, listen: false).clear();
       Provider.of<ParentLoginProvider>(context, listen: false).clear();
       Provider.of<TeacherLoginProvider>(context, listen: false).clear();
+      Provider.of<AssistantLoginProvider>(context, listen: false).clear();
 
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -95,6 +110,12 @@ class AppFlow {
     await prefs.setString('teacher_token', token);
   }
 
+  /// Save token for Assistant
+  static Future<void> saveAssistantToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('assistant_token', token);
+  }
+
   /// Get token for Parent
   static Future<String?> getParentToken() async {
     final prefs = await SharedPreferences.getInstance();
@@ -105,5 +126,11 @@ class AppFlow {
   static Future<String?> getTeacherToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString('teacher_token');
+  }
+
+  /// Get token for Assistant
+  static Future<String?> getAssistantToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('assistant_token');
   }
 }

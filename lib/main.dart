@@ -1,3 +1,4 @@
+import 'package:dar_el_3loom/Login/Details%20Screen/details_assistant_screen.dart';
 import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
 import 'package:dar_el_3loom/Login/Details%20Screen/details_teacher_screen.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance.dart';
@@ -16,6 +17,7 @@ import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/password_tea
 import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_tabs/profile_picture_teacher_widget.dart';
 import 'package:dar_el_3loom/provider/app_flow.dart';
 import 'package:dar_el_3loom/provider/app_theme_provider.dart';
+import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
 import 'package:dar_el_3loom/provider/parent_login_provider.dart';
 import 'package:dar_el_3loom/provider/shared_preferences_theme.dart';
 import 'package:dar_el_3loom/provider/student_login_provider.dart';
@@ -63,6 +65,9 @@ Future<void> main() async {
   final teacherProvider = TeacherLoginProvider();
   await teacherProvider.loadTeacher();
 
+  final assistantProvider = AssistantLoginProvider();
+  await assistantProvider.loadAssistant();
+
   runApp(
     MultiProvider(
       providers: [
@@ -70,6 +75,7 @@ Future<void> main() async {
         ChangeNotifierProvider(create: (_) => studentProvider),
         ChangeNotifierProvider(create: (_) => parentProvider),
         ChangeNotifierProvider(create: (_) => teacherProvider),
+        ChangeNotifierProvider(create: (_) => assistantProvider),
         ChangeNotifierProvider(
           create: (_) => AssistantProvider(ApiService())..fetchAssistants(),
         ),
@@ -105,6 +111,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.detailsScreen: (_) => DetailsScreen(),
         AppRoutes.detailsParentScreen: (_) => DetailsParentScreen(),
         AppRoutes.detailsTeacherScreen: (_) => DetailsTeacherScreen(),
+        AppRoutes.detailsAssistantScreen: (_) => DetailsAssistantScreen(),
         AppRoutes.loginScreen: (_) => LoginScreen(),
         AppRoutes.homeScreenName: (_) => HomeScreen(),
         AppRoutes.homeParentScreenName: (_) => HomeParentScreen(),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dar_el_3loom/Model/assistant_login_model.dart';
 import 'package:dar_el_3loom/Model/mozakrat_model.dart';
 import 'package:dar_el_3loom/Model/parent_login_model.dart';
 import 'package:dar_el_3loom/Model/student_login_model.dart';
@@ -58,6 +59,19 @@ class ApiService {
   }) async {
     final response = await dio.post(
       '/api/v1/teachers/verify',
+      data: {"code": id, "phonenumber": parentNumber.trim()},
+      options: Options(validateStatus: (status) => true),
+    );
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> verifyAssistant({
+    required String id,
+    required String parentNumber,
+  }) async {
+    final response = await dio.post(
+      '/api/v1/assistants/verify',
       data: {"code": id, "phonenumber": parentNumber.trim()},
       options: Options(validateStatus: (status) => true),
     );
@@ -142,7 +156,7 @@ class ApiService {
       "phonenumber": teacher.phonenumber,
       "personal_id": teacher.personalId,
       "password": teacher.password,
-      // "verified": teacher.verified,
+      "verified": teacher.verified,
     });
 
     if (teacher.personalImage != null && teacher.personalImage!.isNotEmpty) {
@@ -156,6 +170,47 @@ class ApiService {
 
     final response = await dio.patch(
       '/api/v1/teachers/${teacher.code}',
+      data: formData,
+      options: Options(headers: {"Content-Type": "multipart/form-data"}),
+    );
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> updateAssistantInfo(Assistant assistant) async {
+    FormData formData = FormData.fromMap({
+      "code": assistant.code,
+      "teacher_name": assistant.nMod,
+      "name": assistant.name,
+      "n_mada": assistant.nMada,
+      "phonenumber": assistant.phonenumber,
+      "personal_id": assistant.personalId,
+      "password": assistant.password,
+      "verified": assistant.verified,
+    });
+
+    if (assistant.birthdayCertificate != null &&
+        assistant.birthdayCertificate!.isNotEmpty) {
+      formData.files.add(
+        MapEntry(
+          "birthday_certificate",
+          await MultipartFile.fromFile(assistant.birthdayCertificate!),
+        ),
+      );
+    }
+
+    if (assistant.personalImage != null &&
+        assistant.personalImage!.isNotEmpty) {
+      formData.files.add(
+        MapEntry(
+          "personal_image",
+          await MultipartFile.fromFile(assistant.personalImage!),
+        ),
+      );
+    }
+
+    final response = await dio.patch(
+      '/api/v1/teachers/${assistant.code}',
       data: formData,
       options: Options(headers: {"Content-Type": "multipart/form-data"}),
     );
@@ -181,6 +236,18 @@ class ApiService {
   }) async {
     final response = await dio.post(
       '/api/v1/teachers/login',
+      data: {"code": code, "password": password},
+      options: Options(validateStatus: (status) => true),
+    );
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> loginAssistant({
+    required String code,
+    required String password,
+  }) async {
+    final response = await dio.post(
+      '/api/v1/assistants/login',
       data: {"code": code, "password": password},
       options: Options(validateStatus: (status) => true),
     );
@@ -265,6 +332,33 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> changePasswordAssistant({
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      final response = await dio.post(
+        '/api/v1/assistants/change-password',
+        data: {"oldPassword": oldPassword, "newPassword": newPassword},
+        options: Options(
+          headers: {'Content-Type': 'application/json'},
+          validateStatus: (status) => true,
+        ),
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        print("Change password error data: ${e.response!.data}");
+        return e.response!.data;
+      } else {
+        return {'status': 'fail', 'message': e.message};
+      }
+    } catch (e) {
+      return {'status': 'fail', 'message': e.toString()};
+    }
+  }
+
   Future<Map<String, dynamic>> uploadProfilePicture(File imageFile) async {
     try {
       String fileName = imageFile.path.split('/').last;
@@ -309,6 +403,36 @@ class ApiService {
 
       final response = await dio.post(
         '/api/v1/parents/profile-image',
+        data: formData,
+      );
+
+      return response.data;
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return e.response!.data;
+      } else {
+        return {'status': 'fail', 'message': e.message};
+      }
+    } catch (e) {
+      return {'status': 'fail', 'message': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> uploadProfilePictureAssistant(
+    File imageFile,
+  ) async {
+    try {
+      String fileName = imageFile.path.split('/').last;
+
+      FormData formData = FormData.fromMap({
+        'profile_image': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: fileName,
+        ),
+      });
+
+      final response = await dio.post(
+        '/api/v1/assistants/profile-image',
         data: formData,
       );
 
@@ -656,6 +780,25 @@ class ApiService {
       }
     } catch (e) {
       print("Error fetching group details: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchTeacherTakiim(String studentCode) async {
+    try {
+      final response = await dio.get(
+        '/api/v1/teachers/takrer',
+        queryParameters: {'cod_talb': studentCode},
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['data'];
+      } else {
+        print('Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception fetching Takiim: $e');
       return null;
     }
   }
