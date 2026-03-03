@@ -30,6 +30,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
   final bool enabled;
   final bool obscureText;
   final TextInputAction? textInputAction;
+  final bool readOnly;
   final void Function(String)? onFieldSubmitted;
 
   const CustomTextFormFieldWidget({
@@ -59,6 +60,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
     this.enabled = true,
     this.textInputAction,
     this.onFieldSubmitted,
+    this.readOnly = false,
     super.key,
   });
 
@@ -85,6 +87,7 @@ class CustomTextFormFieldWidget extends StatelessWidget {
       ),
       child: TextFormField(
         enabled: enabled,
+        readOnly: readOnly,
         onFieldSubmitted:onFieldSubmitted ,
         keyboardType: keyboardType,
         validator: validator,

@@ -10,11 +10,14 @@ class AppRoutes {
   static const taqrerStudentPress = "taqreer_student_press";
   static const groupsPress = "groups_press";
   static const studentPerformanceAssistant = "student_performance_assistant";
-  static const studentPerformanceAssistantDtaScreen = "student_performance_assistant_data_screen";
+  static const studentPerformanceAssistantDtaScreen =
+      "student_performance_assistant_data_screen";
   static const passwordEdit = "password_edit";
   static const profilePictureEdit = "profile_picture_edit";
   static const passwordParentEdit = "password_parent_edit";
   static const profilePictureParentEdit = "profile_picture_parent_edit";
+  static const profilePictureAssistantWidget =
+      "profile_picture_assistant_widget";
   static const firstTimeLoginScreenName = "first_time_login_screen";
   static const detailsScreen = "details_screen";
   static const detailsParentScreen = "details_parent_screen";
@@ -28,5 +31,7 @@ class AppRoutes {
   static const profilePictureTeacherEdit = "profile_picture_teacher_edit";
   static const homeAssistantScreenName = "home_assistant_screen";
   static const passwordAssistantEdit = "password_assistant_edit";
-  static const profilePictureAssistantEdit = "profile_picture_assistant_edit";
+  static const taqarerAssistant =
+      "taqarer_assistant";
+
 }

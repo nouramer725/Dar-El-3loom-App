@@ -72,7 +72,7 @@ class Teacher {
     nMada = json['n_mada'];
     phonenumber = json['phonenumber'];
     personalId = json['personal_id'];
-    personalImage = json['personal_image'];
+    personalImage = json['personal_image'] as String?;
     password = json['password'];
     verified = json['verified'] == 1 || json['verified'] == true;
   }

@@ -19,6 +19,17 @@ class ParentLoginProvider with ChangeNotifier {
 
   Parent? get student => _loginModel?.data?.parent;
 
+  void updatePersonalImage(String imageUrl) async {
+    if (_loginModel?.data?.parent != null) {
+      _loginModel!.data!.parent!.profileImage = imageUrl;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("parent_login", jsonEncode(_loginModel!.toJson()));
+
+      notifyListeners();
+    }
+  }
+
   String? get token => _loginModel?.token;
 
   Future<void> setLoginParent(ParentLoginModel model) async {

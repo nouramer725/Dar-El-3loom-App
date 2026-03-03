@@ -55,7 +55,7 @@ class _ProfilePictureParentWidgetState
 
       if (response['status'] == 'success') {
         final parentData = response['data']['parent'];
-        parentProvider.student?.profileImage = parentData['profile_image'];
+        parentProvider.updatePersonalImage(parentData['profile_image']);
 
         Fluttertoast.showToast(
           msg: "تم تحديث الصورة الشخصية بنجاح",

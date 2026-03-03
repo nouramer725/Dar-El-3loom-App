@@ -6,10 +6,15 @@ import '../../../utils/app_text.dart';
 import '../../../widgets/custom_text_form_field_widget.dart';
 
 class StudentPerformanceWidget extends StatelessWidget {
-  const StudentPerformanceWidget({super.key});
+  final Map<String, dynamic> studentData;
+
+  const StudentPerformanceWidget({super.key, required this.studentData});
 
   @override
   Widget build(BuildContext context) {
+    final student = studentData['data']['student'];
+    final codeController = TextEditingController(text: student['cod_talb']);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -31,33 +36,39 @@ class StudentPerformanceWidget extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: w(16), vertical: h(100)),
+          padding: EdgeInsets.symmetric(horizontal: w(16), vertical: h(30)),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             spacing: h(10),
             children: [
+              CustomTextFormFieldWidget(
+                controller: codeController,
+                readOnly: true,
+                keyboardType: TextInputType.number,
+                cursorColor: AppColors.container2Color,
+                borderColor: AppColors.container2Color,
+                borderWidth: 2,
+                hintStyle: AppText.boldText(
+                  color: AppColors.greyColor,
+                  fontSize: sp(16),
+                ),
+              ),
+              SizedBox(height: h(60)),
               Text(
-                "الاسم : احمد محمد",
+                "الاسم : ${studentData['data']['student']['n_talb'] ?? ''}",
                 style: AppText.boldText(
                   color: AppColors.greyColor,
                   fontSize: sp(19),
                 ),
               ),
               Text(
-                "الصف : الاول الثانوي",
+                "الصف : ${studentData['data']['student']['n_saf'] ?? ''}",
                 style: AppText.boldText(
                   color: AppColors.greyColor,
                   fontSize: sp(19),
                 ),
               ),
-              Text(
-                "الكود : 1001",
-                style: AppText.boldText(
-                  color: AppColors.greyColor,
-                  fontSize: sp(19),
-                ),
-              ),
-              SizedBox(height: h(100)),
+              SizedBox(height: h(30)),
               FilterWidget(
                 text: "الواجب",
                 type: FilterType.dropdown,
@@ -85,7 +96,7 @@ class StudentPerformanceWidget extends StatelessWidget {
                   ),
                 ),
                 hintStyle: AppText.boldText(
-                  color: AppColors.blackColor,
+                  color: AppColors.greyColor,
                   fontSize: sp(18),
                 ),
                 hintText: "درجة الامتحان",

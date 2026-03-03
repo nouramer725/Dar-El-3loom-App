@@ -1,23 +1,23 @@
 import 'package:dar_el_3loom/BackendSetup%20Data/Api/api_service.dart';
+import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
 import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../../provider/teacher_login_provider.dart';
+import '../../../home_teacher/containers/taqarer_student/taqrer_student_table_widget.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 import '../../../widgets/custom_text_form_field_widget.dart';
-import 'taqrer_student_table_widget.dart';
 
-class TaqarerTeacherScreen extends StatefulWidget {
-  const TaqarerTeacherScreen({super.key});
+class TaqarerAssistant extends StatefulWidget {
+  const TaqarerAssistant({super.key});
 
   @override
-  State<TaqarerTeacherScreen> createState() => _TaqarerTeacherScreenState();
+  State<TaqarerAssistant> createState() => _TaqarerAssistantState();
 }
 
-class _TaqarerTeacherScreenState extends State<TaqarerTeacherScreen> {
+class _TaqarerAssistantState extends State<TaqarerAssistant> {
   final TextEditingController _codeController = TextEditingController();
   bool isLoading = false;
   Map<String, dynamic>? studentData;
@@ -27,11 +27,11 @@ class _TaqarerTeacherScreenState extends State<TaqarerTeacherScreen> {
   @override
   void initState() {
     super.initState();
-    final teacherProvider = Provider.of<TeacherLoginProvider>(
+    final assistantProvider = Provider.of<AssistantLoginProvider>(
       context,
       listen: false,
     );
-    final token = teacherProvider.token ?? '';
+    final token = assistantProvider.token ?? '';
     apiService = ApiService(token: token);
   }
 
@@ -54,7 +54,7 @@ class _TaqarerTeacherScreenState extends State<TaqarerTeacherScreen> {
       studentData = null;
     });
 
-    final data = await apiService.fetchTeacherTakiim(code);
+    final data = await apiService.fetchAssistantTakiim(code);
 
     setState(() {
       studentData = data;

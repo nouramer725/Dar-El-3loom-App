@@ -18,6 +18,23 @@ class TaqrerStudentTableWidget extends StatelessWidget {
     final takiimList = studentData['takiim'] as List<dynamic>? ?? [];
     final totals = studentData['totals'] ?? {};
 
+    String rawDate = '';
+
+    if (takiimList.isNotEmpty) {
+      rawDate = takiimList[0]['dates']?.toString() ?? '';
+    }
+
+    String month = '';
+
+    try {
+      if (rawDate.isNotEmpty) {
+        DateTime parsedDate = DateTime.parse(rawDate);
+        month = parsedDate.month.toString();
+      }
+    } catch (e) {
+      month = '';
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: h(15),
@@ -118,7 +135,7 @@ class TaqrerStudentTableWidget extends StatelessWidget {
                 border: Border.all(color: tableTitleColor, width: 2),
               ),
               children: [
-                const Cell(text: "إجمالي الدرجة:", isHeader: true),
+                Cell(text: " درجة الامتحان الشامل لشهر $month", isHeader: true),
                 Cell(
                   text:
                       "${totals['totalgrades'] ?? 0}/${totals['totalmax'] ?? 0}",

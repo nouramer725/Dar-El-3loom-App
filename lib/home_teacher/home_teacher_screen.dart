@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dar_el_3loom/home_teacher/tabs/home_tab/home_teacher_tab.dart';
+import 'package:dar_el_3loom/home_teacher/tabs/notif_tab/notification_teacher_screen.dart';
 import 'package:dar_el_3loom/home_teacher/tabs/profile/profile_teacher_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_shadow/flutter_inner_shadow.dart';
@@ -16,7 +17,11 @@ class HomeTeacherScreen extends StatefulWidget {
 class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
   int selectedIndex = 1;
 
-  List<Widget> screens = [ProfileTeacherScreen(), HomeTeacherTab()];
+  List<Widget> screens = [
+    ProfileTeacherScreen(),
+    HomeTeacherTab(),
+    NotificationTeacherScreen(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,11 @@ class _HomeTeacherScreenState extends State<HomeTeacherScreen> {
             Icon(Icons.menu, size: h(35), color: AppColors.bottomNavBarIcon),
             Icon(
               Icons.home_filled,
+              size: h(35),
+              color: AppColors.bottomNavBarIcon,
+            ),
+            Icon(
+              Icons.notifications,
               size: h(35),
               color: AppColors.bottomNavBarIcon,
             ),

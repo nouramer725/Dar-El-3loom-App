@@ -140,14 +140,6 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                           controller.personalImageUrl,
                         ),
 
-                        buildImagePicker(
-                          context,
-                          "صورة شهاده الميلاد",
-                          controller.birthdayCertificate,
-                          () => controller.pickImage(true),
-                          controller.birthdayCertificateUrl,
-                        ),
-
                         CustomElevatedButtonWidget(
                           sideColor: AppColors.transparentColor,
                           textStyle: AppText.boldText(
@@ -170,10 +162,6 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                             if (controller.personalImage == null &&
                                 controller.personalImageUrl == null) {
                               errors.add("برجاء اختيار صورة شخصية");
-                            }
-                            if (controller.birthdayCertificate == null &&
-                                controller.birthdayCertificateUrl == null) {
-                              errors.add("برجاء اختيار صورة شهادة الميلاد");
                             }
 
                             if (errors.isNotEmpty) {
@@ -210,8 +198,6 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                                 personalId: controller.personalId.text,
                                 password: controller.password.text,
                                 personalImage: controller.personalImage?.path,
-                                birthdayCertificate:
-                                    controller.birthdayCertificate?.path,
                                 verified: true,
                               );
 

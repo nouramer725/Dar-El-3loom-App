@@ -15,6 +15,20 @@ class AssistantLoginProvider with ChangeNotifier {
 
   Assistant? get assistants => _loginModel?.data?.assistant;
 
+  void updatePersonalImage(String imageUrl) async {
+    if (_loginModel?.data?.assistant != null) {
+      _loginModel!.data!.assistant!.personalImage = imageUrl;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(
+        "assistant_login",
+        jsonEncode(_loginModel!.toJson()),
+      );
+
+      notifyListeners();
+    }
+  }
+
   String? get token => _loginModel?.token;
 
   Future<void> setLoginAssistant(AssistantLoginModel model) async {

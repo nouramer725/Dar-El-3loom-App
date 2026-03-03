@@ -31,16 +31,12 @@ class AssistantController extends ChangeNotifier {
   bool confirmPasswordLocked = false;
 
   File? personalImage;
-  File? birthdayCertificate;
 
   String? personalImageUrl;
-  String? birthdayCertificateUrl;
 
   bool get hasPersonalImage =>
       personalImage != null || personalImageUrl != null;
 
-  bool get hasBirthdayCertificate =>
-      birthdayCertificate != null || birthdayCertificateUrl != null;
 
   bool hasValidValue(String? v) {
     if (v == null) return false;
@@ -77,7 +73,6 @@ class AssistantController extends ChangeNotifier {
         ? assistant.personalId
         : '')!;
     personalImageUrl = buildImageUrl(assistant.personalImage);
-    birthdayCertificateUrl = buildImageUrl(assistant.birthdayCertificate);
 
     // Lock fields if already have data
     if (id.text.isNotEmpty) idLocked = true;
@@ -96,13 +91,8 @@ class AssistantController extends ChangeNotifier {
     final picker = ImagePicker();
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      if (isBirth) {
-        birthdayCertificate = File(image.path);
-        birthdayCertificateUrl = null;
-      } else {
-        personalImage = File(image.path);
-        personalImageUrl = null;
-      }
+      personalImage = File(image.path);
+      personalImageUrl = null;
       notifyListeners();
     }
   }
@@ -117,7 +107,6 @@ class AssistantController extends ChangeNotifier {
     if (!phoneParentLocked) data['phonenumber'] = phoneParent.text;
     if (!personalIdLocked) data['personal_id'] = personalId.text;
     if (!passwordLocked) data['password'] = password.text;
-    if (birthdayCertificate != null) data['birthday_certificate'] = birthdayCertificate;
     if (personalImage != null) data['personal_image'] = personalImage;
 
     return data;

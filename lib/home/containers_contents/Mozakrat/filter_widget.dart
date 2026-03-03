@@ -52,7 +52,7 @@ class FilterWidget extends StatelessWidget {
           text,
           style: AppText.boldText(
             fontSize: sp(18),
-            color: AppColors.blackColor,
+            color: AppColors.greyColor,
           ),
         ),
         items: items,

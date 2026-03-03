@@ -55,7 +55,7 @@ class _ProfilePictureTeacherWidgetState
 
       if (response['status'] == 'success') {
         final teacherData = response['data']['teacher'];
-        teacherProvider.teachers!.personalImage = teacherData['personal_image'];
+        teacherProvider.updatePersonalImage(teacherData['personal_image']);
 
         Fluttertoast.showToast(
           msg: "تم تحديث الصورة الشخصية بنجاح",

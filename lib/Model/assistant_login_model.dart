@@ -63,7 +63,6 @@ class Assistant {
     this.phonenumber,
     this.personalId,
     this.personalImage,
-    this.birthdayCertificate,
     this.verified,
     this.password,
   });
@@ -75,8 +74,7 @@ class Assistant {
     nMada = json['n_mada'];
     phonenumber = json['phonenumber'];
     personalId = json['personal_id'];
-    personalImage = json['personal_image'];
-    birthdayCertificate = json['birthday_certificate'];
+    personalImage = json['personal_image'] as String?;
     password = json['password'];
     verified = json['verified'] == 1 || json['verified'] == true;
   }
@@ -89,8 +87,6 @@ class Assistant {
   String? personalImage;
   String? password;
   bool? verified;
-  String? birthdayCertificate;
-
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -101,7 +97,6 @@ class Assistant {
     map['phonenumber'] = phonenumber;
     map['personal_id'] = personalId;
     map['personal_image'] = personalImage;
-    map['birthday_certificate'] = birthdayCertificate;
     map['password'] = password;
     map['verified'] = verified;
     return map;

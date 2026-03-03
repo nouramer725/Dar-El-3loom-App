@@ -3,9 +3,11 @@ import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
 import 'package:dar_el_3loom/Login/Details%20Screen/details_teacher_screen.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance_table_widget.dart';
+import 'package:dar_el_3loom/home_assistant/containers/taqarer_student_assistant/taqarer_assistant.dart';
 import 'package:dar_el_3loom/home_assistant/home_assistant_screen.dart';
 import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_assistant_screen.dart';
 import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/password_assistant_edit.dart';
+import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/profile_picture_assistant_widget.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/password_parent_edit.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/profile_picture_parent_widget.dart';
 import 'package:dar_el_3loom/home_teacher/containers/assistantAddition/add_new_assistant_screen.dart';
@@ -96,11 +98,9 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       themeMode: themeProvider.appTheme,
       theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
+      darkTheme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
-
       initialRoute: AppFlow.getInitialRoute(context),
-
       builder: (context, child) {
         SizeConfig.init(context);
         return Directionality(textDirection: TextDirection.rtl, child: child!);
@@ -134,10 +134,12 @@ class MyApp extends StatelessWidget {
         AppRoutes.passwordAssistantEdit: (_) => PasswordAssistantEdit(),
         AppRoutes.studentPerformanceAssistant: (_) => StudentPerformance(),
         AppRoutes.studentPerformanceAssistantDtaScreen: (_) =>
-            StudentPerformanceWidget(),
-        AppRoutes.profilePictureAssistantEdit: (_) => ProfileAssistantScreen(),
+            StudentPerformanceWidget(studentData: {},),
+        AppRoutes.profilePictureAssistantWidget: (_) =>
+            ProfilePictureAssistantWidget(),
         AppRoutes.homeAssistantScreenName: (_) => HomeAssistantScreen(),
         AppRoutes.addAssistantScreen: (_) => GetAssistantScreen(),
+        AppRoutes.taqarerAssistant: (_) => TaqarerAssistant(),
       },
     );
   }

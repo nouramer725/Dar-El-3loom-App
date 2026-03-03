@@ -15,6 +15,17 @@ class TeacherLoginProvider with ChangeNotifier {
 
   Teacher? get teachers => _loginModel?.data?.teacher;
 
+  void updatePersonalImage(String imageUrl) async {
+    if (_loginModel?.data?.teacher != null) {
+      _loginModel!.data!.teacher!.personalImage = imageUrl;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString("teacher_login", jsonEncode(_loginModel!.toJson()));
+
+      notifyListeners();
+    }
+  }
+
   String? get token => _loginModel?.token;
 
   Future<void> setLoginTeacher(TeacherLoginModel model) async {

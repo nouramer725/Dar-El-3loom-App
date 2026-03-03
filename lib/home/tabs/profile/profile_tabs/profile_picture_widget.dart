@@ -53,9 +53,7 @@ class _ProfilePictureWidgetState extends State<ProfilePictureWidget> {
 
       if (response['status'] == 'success') {
         final studentData = response['data']['student'];
-        studentProvider.student?.profilePicture =
-            studentData['profile_picture'];
-        studentProvider.notifyListeners();
+        studentProvider.updatePersonalImage(studentData['profile_picture']);
 
         Fluttertoast.showToast(
           msg: "تم تحديث الصورة الشخصية بنجاح",

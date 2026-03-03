@@ -55,8 +55,7 @@ class _ProfilePictureAssistantWidgetState
 
       if (response['status'] == 'success') {
         final assistantData = response['data']['assistant'];
-        assistantProvider.assistants?.personalImage =
-            assistantData['profile_image'];
+        assistantProvider.updatePersonalImage(assistantData['personal_image']);
 
         Fluttertoast.showToast(
           msg: "تم تحديث الصورة الشخصية بنجاح",

@@ -1,4 +1,5 @@
 import 'package:dar_el_3loom/home/tabs/profile/profile_widget.dart';
+import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/profile_picture_assistant_widget.dart';
 import 'package:flutter/material.dart';
 import '../../../home/tabs/profile/divider_widget.dart';
 import '../../../provider/app_flow.dart';
@@ -45,7 +46,7 @@ class ProfileAssistantScreen extends StatelessWidget {
             ProfileWidget(
               text: "تعديل الصورة الشخصية",
               onTap: () {
-                Navigator.of(context).pushNamed(AppRoutes.profilePictureAssistantEdit);
+                Navigator.of(context).pushNamed(AppRoutes.profilePictureAssistantWidget);
               },
               icon: Image.asset(AppAssets.arrowIcon),
             ),

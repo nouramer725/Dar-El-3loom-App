@@ -188,17 +188,6 @@ class ApiService {
       "password": assistant.password,
       "verified": assistant.verified,
     });
-
-    if (assistant.birthdayCertificate != null &&
-        assistant.birthdayCertificate!.isNotEmpty) {
-      formData.files.add(
-        MapEntry(
-          "birthday_certificate",
-          await MultipartFile.fromFile(assistant.birthdayCertificate!),
-        ),
-      );
-    }
-
     if (assistant.personalImage != null &&
         assistant.personalImage!.isNotEmpty) {
       formData.files.add(
@@ -210,7 +199,7 @@ class ApiService {
     }
 
     final response = await dio.patch(
-      '/api/v1/teachers/${assistant.code}',
+      '/api/v1/assistants/${assistant.code}',
       data: formData,
       options: Options(headers: {"Content-Type": "multipart/form-data"}),
     );
@@ -799,6 +788,36 @@ class ApiService {
       }
     } catch (e) {
       print('Exception fetching Takiim: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> fetchAssistantTakiim(String studentCode) async {
+    try {
+      final response = await dio.get(
+        '/api/v1/assistants/takrer',
+        queryParameters: {'cod_talb': studentCode},
+      );
+
+      if (response.statusCode == 200) {
+        return response.data['data'];
+      } else {
+        print('Error: ${response.statusCode}');
+        return null;
+      }
+    } catch (e) {
+      print('Exception fetching Takiim: $e');
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>?> getStudentInfo(String code) async {
+    try {
+      final response = await dio.get("/api/v1/assistants/student-info/$code");
+
+      return response.data;
+    } catch (e) {
+      print("Error: $e");
       return null;
     }
   }

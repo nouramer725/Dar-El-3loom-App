@@ -67,7 +67,7 @@ class Parent {
     tel = json['tel'];
     password = json['password'];
     personalId = json['personal_id'];
-    profileImage = json['profile_image'];
+    profileImage = json['profile_image'] as String?;
     verified = json['verified'] == 1 || json['verified'] == true;
   }
   String? id;

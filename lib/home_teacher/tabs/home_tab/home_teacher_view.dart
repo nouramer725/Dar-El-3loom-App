@@ -19,47 +19,51 @@ class HomeTeacherView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: h(120),
-        title: Row(
-          spacing: w(10),
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        title: Column(
           children: [
-            Container(
-              clipBehavior: Clip.antiAlias,
-              width: w(65),
-              height: h(65),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+            Text(
+              teacher?.nMod ?? "اسم المدرس",
+              style: AppText.boldText(
+                color: AppColors.blackColor,
+                fontSize: sp(35),
               ),
-              child: teacher?.personalImage != null
-                  ? Image.network(
-                      teacher!.personalImage!,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) =>
-                          Image.asset(AppAssets.boy, fit: BoxFit.fill),
-                    )
-                  : Image.asset(AppAssets.boy, fit: BoxFit.fill),
             ),
+            Row(
+              spacing: w(10),
+              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  clipBehavior: Clip.antiAlias,
+                  width: w(65),
+                  height: h(65),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: teacher?.personalImage != null
+                      ? Image.network(
+                          teacher!.personalImage!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                        )
+                      : Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                ),
 
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    teacher?.code ?? "كود المدرس",
-                    style: AppText.regularText(
-                      color: AppColors.greyColor,
-                      fontSize: sp(14),
-                    ),
+                SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        teacher?.code ?? "كود المدرس",
+                        style: AppText.regularText(
+                          color: AppColors.greyColor,
+                          fontSize: sp(19),
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    teacher?.nMod ?? "اسم المدرس",
-                    style: AppText.boldText(
-                      color: AppColors.greyColor,
-                      fontSize: sp(24),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),
@@ -91,7 +95,9 @@ class HomeTeacherView extends StatelessWidget {
                 ),
                 WidgetContainer(
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.addAssistantTeacherScreen);
+                    Navigator.of(
+                      context,
+                    ).pushNamed(AppRoutes.addAssistantTeacherScreen);
                   },
                   verticalPadding: h(36),
                   text: "اضافة مساعد",
