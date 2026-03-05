@@ -49,6 +49,9 @@ dependencies:
   dio: ^5.9.1
   dotted_line: ^3.2.3
   image_gallery_saver_plus: ^4.0.1
+  connectivity_plus: ^7.0.0
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
 
 dev_dependencies:
   flutter_test:

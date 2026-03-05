@@ -11,6 +11,7 @@ import '../../Model/lessons_date_model.dart';
 import '../../Model/student_time_model.dart';
 import '../../Model/takim_model.dart';
 import '../../home_teacher/tabs/profile/profile_tabs/get_assistant/assistant_model.dart';
+import '../cache_service.dart';
 
 class ApiService {
   late Dio dio;
@@ -22,6 +23,32 @@ class ApiService {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
+        },
+      ),
+    );
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (error, handler) {
+          if (error.type == DioExceptionType.connectionError) {
+            var cache = CacheService.getData(error.requestOptions.path);
+
+            if (cache != null) {
+              return handler.resolve(
+                Response(
+                  requestOptions: error.requestOptions,
+                  data: cache,
+                  statusCode: 200,
+                ),
+              );
+            }
+          }
+
+          return handler.next(error);
+        },
+        onResponse: (response, handler) {
+          CacheService.saveData(response.requestOptions.path, response.data);
+
+          return handler.next(response);
         },
       ),
     );
@@ -792,19 +819,24 @@ class ApiService {
     }
   }
 
-  Future<Map<String, dynamic>?> fetchAssistantTakiim(String studentCode) async {
+  Future<Map<String, dynamic>?> fetchAssistantTakiim(
+    String studentCode, {
+    int? month,
+  }) async {
     try {
       final response = await dio.get(
         '/api/v1/assistants/takrer',
-        queryParameters: {'cod_talb': studentCode},
+        queryParameters: {
+          'cod_talb': studentCode,
+          if (month != null) 'month': month,
+        },
       );
 
       if (response.statusCode == 200) {
         return response.data['data'];
-      } else {
-        print('Error: ${response.statusCode}');
-        return null;
       }
+
+      return null;
     } catch (e) {
       print('Exception fetching Takiim: $e');
       return null;

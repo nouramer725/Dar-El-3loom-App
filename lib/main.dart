@@ -29,6 +29,8 @@ import 'package:dar_el_3loom/utils/app_theme.dart';
 import 'package:dar_el_3loom/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'BackendSetup Data/Api/api_service.dart';
 import 'Login/Details Screen/details_screen.dart';
@@ -47,6 +49,9 @@ import 'home_teacher/tabs/profile/profile_tabs/get_assistant/assistant_provider.
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Hive.initFlutter();
+  await Hive.openBox('cacheBox');
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
@@ -134,7 +139,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.passwordAssistantEdit: (_) => PasswordAssistantEdit(),
         AppRoutes.studentPerformanceAssistant: (_) => StudentPerformance(),
         AppRoutes.studentPerformanceAssistantDtaScreen: (_) =>
-            StudentPerformanceWidget(studentData: {},),
+            StudentPerformanceWidget(studentData: {}),
         AppRoutes.profilePictureAssistantWidget: (_) =>
             ProfilePictureAssistantWidget(),
         AppRoutes.homeAssistantScreenName: (_) => HomeAssistantScreen(),

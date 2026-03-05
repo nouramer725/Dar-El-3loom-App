@@ -1,10 +1,11 @@
 import 'package:dar_el_3loom/BackendSetup%20Data/Api/api_service.dart';
+import 'package:dar_el_3loom/home/containers_contents/Mozakrat/filter_widget.dart';
+import 'package:dar_el_3loom/home_assistant/containers/taqarer_student_assistant/taqrer_student_table_assistant_widget.dart';
 import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
 import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../../home_teacher/containers/taqarer_student/taqrer_student_table_widget.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
@@ -20,6 +21,7 @@ class TaqarerAssistant extends StatefulWidget {
 class _TaqarerAssistantState extends State<TaqarerAssistant> {
   final TextEditingController _codeController = TextEditingController();
   bool isLoading = false;
+  int? selectedMonth;
   Map<String, dynamic>? studentData;
 
   late ApiService apiService;
@@ -54,7 +56,10 @@ class _TaqarerAssistantState extends State<TaqarerAssistant> {
       studentData = null;
     });
 
-    final data = await apiService.fetchAssistantTakiim(code);
+    final data = await apiService.fetchAssistantTakiim(
+      code,
+      month: selectedMonth,
+    );
 
     setState(() {
       studentData = data;
@@ -113,9 +118,30 @@ class _TaqarerAssistantState extends State<TaqarerAssistant> {
                   onPressed: _onSearch,
                 ),
                 hintStyle: AppText.boldText(
-                  color: AppColors.blackColor,
+                  color: AppColors.greyColor,
                   fontSize: sp(16),
                 ),
+              ),
+              FilterWidget(
+                text: "الشهر",
+                type: FilterType.dropdown,
+                color: AppColors.container1Color,
+                items: List.generate(
+                  12,
+                  (index) => DropdownMenuItem<String>(
+                    value: (index + 1).toString(),
+                    child: Text("شهر ${index + 1}"),
+                  ),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    selectedMonth = int.tryParse(value ?? '');
+                  });
+
+                  if (_codeController.text.isNotEmpty) {
+                    _onSearch();
+                  }
+                },
               ),
               if (!isLoading && studentData == null)
                 Image.asset(AppAssets.container1Image),
@@ -127,7 +153,7 @@ class _TaqarerAssistantState extends State<TaqarerAssistant> {
                 ),
 
               if (!isLoading && studentData != null)
-                TaqrerStudentTableWidget(
+                TaqrerStudentTableAssistantWidget(
                   tableTitleColor: AppColors.container1Color,
                   studentData: studentData!,
                 ),
