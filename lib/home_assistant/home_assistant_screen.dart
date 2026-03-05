@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:dar_el_3loom/home_assistant/tabs/home_tab/home_assistant_tab.dart';
+import 'package:dar_el_3loom/home_assistant/tabs/notification_tab/assistant_notification.dart';
 import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_assistant_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_shadow/flutter_inner_shadow.dart';
@@ -16,7 +17,11 @@ class HomeAssistantScreen extends StatefulWidget {
 class _HomeAssistantScreenState extends State<HomeAssistantScreen> {
   int selectedIndex = 1;
 
-  List<Widget> screens = [ProfileAssistantScreen(), HomeAssistantTab()];
+  List<Widget> screens = [
+    ProfileAssistantScreen(),
+    HomeAssistantTab(),
+    AssistantNotification(),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +49,11 @@ class _HomeAssistantScreenState extends State<HomeAssistantScreen> {
             Icon(Icons.menu, size: h(35), color: AppColors.bottomNavBarIcon),
             Icon(
               Icons.home_filled,
+              size: h(35),
+              color: AppColors.bottomNavBarIcon,
+            ),
+            Icon(
+              Icons.notifications,
               size: h(35),
               color: AppColors.bottomNavBarIcon,
             ),
