@@ -42,7 +42,7 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
               child: Column(
                 spacing: h(35),
                 children: [
-                  Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                  Image.asset(AppAssets.darEl3loomLogo, fit: BoxFit.fill),
                   CustomTextFormFieldWidget(
                     shadowColor: AppColors.container2Color,
                     filled: false,
@@ -118,6 +118,14 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
 
                           await studentProvider.setLogin(studentModel);
 
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
+
                           Navigator.pushNamed(context, AppRoutes.detailsScreen);
                           return;
                         }
@@ -140,6 +148,14 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                               );
 
                           await parentProvider.setLoginParent(parentModel);
+
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
 
                           Navigator.pushNamed(
                             context,
@@ -167,6 +183,14 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
 
                           await teacherProvider.setLoginTeacher(teacherModel);
 
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
+
                           Navigator.pushNamed(
                             context,
                             AppRoutes.detailsTeacherScreen,
@@ -193,6 +217,14 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
 
                           await assistantProvider.setLoginAssistant(assistantModel);
 
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
+
                           Navigator.pushNamed(
                             context,
                             AppRoutes.detailsAssistantScreen,
@@ -205,12 +237,16 @@ class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
                           msg: "الكود أو رقم التليفون غير صحيح",
                           backgroundColor: AppColors.wrongIconColor,
                           textColor: Colors.white,
+                          fontSize: sp(16),
+                          gravity: ToastGravity.TOP,
                         );
                       } catch (e) {
                         Fluttertoast.showToast(
                           msg: "حدث خطأ، حاول مرة اخرى",
                           backgroundColor: AppColors.wrongIconColor,
                           textColor: Colors.white,
+                          fontSize: sp(16),
+                          gravity: ToastGravity.TOP,
                         );
                         debugPrint("Verify error: $e");
                       }

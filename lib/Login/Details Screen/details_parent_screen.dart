@@ -228,11 +228,12 @@ class _DetailsParentScreenState extends State<DetailsParentScreen> {
                               print("-----------------------------");
 
                               Fluttertoast.showToast(
-                                msg: "تم تحديث بيانات الطالب بنجاح",
-                                backgroundColor: Colors.green,
+                                msg: "تم تحديث بيانات ولي الامر بنجاح",
+                                backgroundColor: AppColors.container1Color,
                                 textColor: Colors.white,
+                                fontSize: sp(16),
+                                gravity: ToastGravity.TOP,
                               );
-
                               // Navigate to home and remove all previous screens
                               Navigator.pushNamedAndRemoveUntil(
                                 context,

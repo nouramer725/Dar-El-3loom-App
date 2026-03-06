@@ -255,6 +255,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 msg: "تم تحديث بيانات الطالب بنجاح",
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
+                                fontSize: sp(16),
+                                gravity: ToastGravity.TOP,
                               );
 
                               // Navigate to home and remove all previous screens

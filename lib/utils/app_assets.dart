@@ -1,5 +1,5 @@
 class AppAssets {
-  // static const String darEl3loomLogo = 'assets/images/dar.png';
+  static const String darEl3loomLogo = 'assets/images/app_logo.png';
   static const String person = 'assets/images/person.png';
   static const String boy = 'assets/images/boy 1.png';
   static const String barcodeImage = 'assets/images/barcode.png';
@@ -12,7 +12,7 @@ class AppAssets {
   static const String container5Image =
       'assets/images/Certification-cuate (1) 1.png';
   static const String notificationImage =
-      'assets/images/Push notifications-pana 1.png.png';
+      'assets/images/Push notifications-pana 1.png';
   static const String arrowIcon = 'assets/images/arrow.png';
   static const String logoutIcon = 'assets/images/logout.png';
   static const String certificate = 'assets/images/cer.png';

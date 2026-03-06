@@ -20,6 +20,7 @@ class StudentPerformance extends StatefulWidget {
 
 class _StudentPerformanceState extends State<StudentPerformance> {
   final TextEditingController codeController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -46,62 +47,75 @@ class _StudentPerformanceState extends State<StudentPerformance> {
         padding: EdgeInsets.symmetric(horizontal: w(16), vertical: h(16)),
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              spacing: h(30),
-              children: [
-                CustomTextFormFieldWidget(
-                  controller: codeController,
-                  keyboardType: TextInputType.number,
-                  hintText: "كود الطالب",
-                  cursorColor: AppColors.container2Color,
-                  borderColor: AppColors.container2Color,
-                  borderWidth: 2,
-                  hintStyle: AppText.boldText(
-                    color: AppColors.greyColor,
-                    fontSize: sp(16),
+            child: Form(
+              key: formKey,
+              child: Column(
+                spacing: h(30),
+                children: [
+                  CustomTextFormFieldWidget(
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return "الرجاء إدخال كود الطالب";
+                      }
+                      return null;
+                    },
+                    controller: codeController,
+                    keyboardType: TextInputType.number,
+                    hintText: "كود الطالب",
+                    cursorColor: AppColors.container2Color,
+                    borderColor: AppColors.container2Color,
+                    borderWidth: 2,
+                    hintStyle: AppText.boldText(
+                      color: AppColors.greyColor,
+                      fontSize: sp(16),
+                    ),
                   ),
-                ),
-                CustomElevatedButtonWidget(
-                  text: "ارسال",
-                  textStyle: AppText.boldText(
-                    color: AppColors.blackColor,
-                    fontSize: sp(14),
-                  ),
-                  padding: WidgetStateProperty.all(
-                    EdgeInsets.symmetric(horizontal: w(40)),
-                  ),
-                  colorContainer: AppColors.container2Color,
-                  sideColor: AppColors.container2Color,
-                  onPressed: () async {
-                    final enteredCode = codeController.text.trim();
+                  CustomElevatedButtonWidget(
+                    text: "ارسال",
+                    textStyle: AppText.boldText(
+                      color: AppColors.blackColor,
+                      fontSize: sp(14),
+                    ),
+                    padding: WidgetStateProperty.all(
+                      EdgeInsets.symmetric(horizontal: w(40)),
+                    ),
+                    colorContainer: AppColors.container2Color,
+                    sideColor: AppColors.container2Color,
+                    onPressed: () async {
+                      if (!formKey.currentState!.validate()) {
+                        return;
+                      } else {
+                        final enteredCode = codeController.text.trim();
 
-                    if (enteredCode.isEmpty) return;
+                        if (enteredCode.isEmpty) return;
 
-                    final assistantProvider =
+                        final assistantProvider =
                         Provider.of<AssistantLoginProvider>(
                           context,
                           listen: false,
                         );
 
-                    final api = ApiService(
-                      token: assistantProvider.token ?? '',
-                    );
+                        final api = ApiService(
+                          token: assistantProvider.token ?? '',
+                        );
 
-                    final data = await api.getStudentInfo(enteredCode);
+                        final data = await api.getStudentInfo(enteredCode);
 
-                    print(data);
-                    if (data != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) =>
-                              StudentPerformanceWidget(studentData: data),
-                        ),
-                      );
-                    }
-                  },
-                ),
-              ],
+                        print(data);
+                        if (data != null) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                                  StudentPerformanceWidget(studentData: data),
+                            ),
+                          );
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),

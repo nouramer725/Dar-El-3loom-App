@@ -245,12 +245,12 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                               // print("-----------------------------");
 
                               Fluttertoast.showToast(
-                                msg: "تم تحديث بيانات الطالب بنجاح",
+                                msg: "تم تحديث بيانات المساعد بنجاح",
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
+                                fontSize: sp(16),
+                                gravity: ToastGravity.TOP,
                               );
-
-                              // Navigate to home and remove all previous screens
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
                                 AppRoutes.homeAssistantScreenName,

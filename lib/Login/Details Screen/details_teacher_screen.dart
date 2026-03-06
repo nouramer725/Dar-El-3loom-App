@@ -236,9 +236,11 @@ class _DetailsTeacherScreenState extends State<DetailsTeacherScreen> {
                               // print("-----------------------------");
 
                               Fluttertoast.showToast(
-                                msg: "تم تحديث بيانات الطالب بنجاح",
+                                msg: "تم تحديث بيانات المدرس بنجاح",
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
+                                fontSize: sp(16),
+                                gravity: ToastGravity.TOP,
                               );
 
                               // Navigate to home and remove all previous screens

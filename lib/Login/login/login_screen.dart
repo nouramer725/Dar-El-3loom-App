@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Column(
                 spacing: h(35),
                 children: [
-                  Image.asset(AppAssets.boy, fit: BoxFit.fill),
+                  Image.asset(AppAssets.darEl3loomLogo, fit: BoxFit.fill),
                   CustomTextFormFieldWidget(
                     shadowColor: AppColors.container1Color,
                     filled: false,
@@ -130,6 +130,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             msg: "تم تسجيل الدخول كطالب بنجاح",
                             backgroundColor: Colors.green,
                             textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
                           );
 
                           Navigator.pushNamedAndRemoveUntil(
@@ -161,9 +163,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
 
                           Fluttertoast.showToast(
-                            msg: "تم تسجيل الدخول كولي أمر بنجاح",
+                            msg: "تم تسجيل الدخول ل ولي الامر بنجاح",
                             backgroundColor: Colors.green,
                             textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
                           );
 
                           Navigator.pushNamedAndRemoveUntil(
@@ -195,9 +199,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
 
                           Fluttertoast.showToast(
-                            msg: "تم تسجيل الدخول المدرس بنجاح",
+                            msg: "تم تسجيل الدخول ل المدرس بنجاح",
                             backgroundColor: Colors.green,
                             textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
                           );
 
                           Navigator.pushNamedAndRemoveUntil(
@@ -231,9 +237,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           }
 
                           Fluttertoast.showToast(
-                            msg: "تم تسجيل الدخول المساعد بنجاح",
+                            msg: "تم تسجيل الدخول بنجاح",
                             backgroundColor: Colors.green,
                             textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
                           );
 
                           Navigator.pushNamedAndRemoveUntil(

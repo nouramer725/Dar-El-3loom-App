@@ -11,7 +11,7 @@ class DividerWidget extends StatelessWidget {
     return Divider(
       color: AppColors.strokeBottomNavBarColor,
       thickness: 1,
-      height: h(30),
+      height: h(15),
     );
   }
 }

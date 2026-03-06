@@ -74,66 +74,40 @@ class HomeParentView extends StatelessWidget {
                                         width: 2,
                                       ),
                                     ),
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        ...provider.children.map((c) {
-                                          return ListTile(
-                                            leading: c.profilePicture != null
-                                                ? CircleAvatar(
-                                                    backgroundImage:
-                                                        NetworkImage(
-                                                          c.profilePicture!,
-                                                        ),
-                                                  )
-                                                : const Icon(Icons.person),
-                                            title: Text(
-                                              c.nTalb ?? '',
-                                              style: AppText.regularText(
-                                                color: AppColors.blackColor,
-                                                fontSize: sp(15),
-                                              ),
+                                    child: ListView.separated(
+                                      shrinkWrap: true,
+                                      itemCount: provider.children.length,
+                                      separatorBuilder: (context, index) =>
+                                          Divider(
+                                            color: AppColors.greyColor
+                                                .withOpacity(0.5),
+                                            thickness: 1,
+                                          ),
+                                      itemBuilder: (context, index) {
+                                        final c = provider.children[index];
+                                        return ListTile(
+                                          leading: c.profilePicture != null
+                                              ? CircleAvatar(
+                                                  backgroundImage:
+                                                      NetworkImage(
+                                                        c.profilePicture!,
+                                                      ),
+                                                )
+                                              : const Icon(Icons.person),
+                                          title: Text(
+                                            c.nTalb ?? '',
+                                            style: AppText.regularText(
+                                              color: AppColors.blackColor,
+                                              fontSize: sp(15),
                                             ),
-                                            onTap: () {
-                                              provider.changeSelectedChild(c);
-                                              Navigator.pop(context);
-                                            },
-                                          );
-                                        }).toList(),
-                                      ],
+                                          ),
+                                          onTap: () {
+                                            provider.changeSelectedChild(c);
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      },
                                     ),
-                              //child: SizedBox(
-                              //   height: h(300),
-                              //   child: ListView.separated(
-                              //     shrinkWrap: true,
-                              //     itemCount: provider.children.length,
-                              //     separatorBuilder: (context, index) => Divider(
-                              //       color: AppColors.greyColor.withOpacity(0.5),
-                              //       thickness: 1,
-                              //     ),
-                              //     itemBuilder: (context, index) {
-                              //       final c = provider.children[index];
-                              //       return ListTile(
-                              //         leading: c.profilePicture != null
-                              //             ? CircleAvatar(
-                              //                 backgroundImage: NetworkImage(c.profilePicture!),
-                              //               )
-                              //             : const Icon(Icons.person),
-                              //         title: Text(
-                              //           c.nTalb ?? '',
-                              //           style: AppText.regularText(
-                              //             color: AppColors.blackColor,
-                              //             fontSize: sp(15),
-                              //           ),
-                              //         ),
-                              //         onTap: () {
-                              //           provider.changeSelectedChild(c);
-                              //           Navigator.pop(context);
-                              //         },
-                              //       );
-                              //     },
-                              //   ),
-                              // ),
                                   ),
                           );
                         },

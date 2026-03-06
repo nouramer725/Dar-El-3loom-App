@@ -19,7 +19,9 @@ class ApiService {
   ApiService({String? token}) {
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://10.0.2.2:3000',
+        //mobile : 192.168.1.12
+        //emulator : 10.0.2.2
+        baseUrl: 'http://192.168.1.12:3000',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
@@ -852,5 +854,32 @@ class ApiService {
       print("Error: $e");
       return null;
     }
+  }
+
+  Future<Map<String, dynamic>> addStudentPerformance({
+    required String studentCode,
+    required String hwScore,
+    required String examScore,
+    required int maxGrade,
+  }) async {
+    final response = await dio.post(
+      "/api/v1/assistants/student-performance",
+      data: {
+        "cod_talb": studentCode,
+        "hw_score": hwScore,
+        "exam_score": examScore,
+        "max_grade": maxGrade,
+      },
+    );
+
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>> getNotifications() async {
+    final response = await dio.get(
+      "/api/v1/assistants/notifications",
+    );
+
+    return response.data;
   }
 }
