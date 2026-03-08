@@ -55,11 +55,13 @@ dependencies:
   socket_io_client: ^3.1.4
   flutter_launcher_icons: ^0.14.4
 flutter_launcher_icons:
-    android: true
-    ios: true
-    image_path: "assets/images/app_logo.png"
-    adaptive_icon_background: "#FFFFFF"
-    adaptive_icon_foreground: "assets/images/app_logo.png"
+  android: true
+  ios: true
+  image_path: "assets/images/app_logo.png"
+  adaptive_icon_foreground: "assets/images/app_logo.png"
+  adaptive_icon_background: "#FFFFFF"  # Background color matching your theme
+  remove_alpha_ios: true
+
 
 dev_dependencies:
   flutter_test:
