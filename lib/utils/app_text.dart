@@ -40,7 +40,7 @@ class AppText {
     return GoogleFonts.castoro(
       color: color,
       fontSize: sp(fontSize),
-      fontWeight: FontWeight.bold,
+      fontWeight: FontWeight.w900,
     );
   }
 }

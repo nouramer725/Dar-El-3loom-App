@@ -15,6 +15,7 @@ class FilterWidget extends StatelessWidget {
   final Function(String?)? onChanged;
   final Function(DateTime)? onDateSelected;
   final Color color;
+  final Color textColor;
 
   const FilterWidget({
     super.key,
@@ -26,6 +27,7 @@ class FilterWidget extends StatelessWidget {
     this.onChanged,
     this.onDateSelected,
     this.onMonthSelected,
+    this.textColor = AppColors.greyColor,
   });
 
   @override
@@ -37,7 +39,7 @@ class FilterWidget extends StatelessWidget {
 
   Widget _buildDropdown(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(10)),
+      padding: EdgeInsets.symmetric(horizontal: w(10), vertical: h(5)),
       margin: EdgeInsets.symmetric(vertical: h(5)),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
@@ -50,10 +52,7 @@ class FilterWidget extends StatelessWidget {
         hint: Text(
           textAlign: TextAlign.center,
           text,
-          style: AppText.boldText(
-            fontSize: sp(18),
-            color: AppColors.greyColor,
-          ),
+          style: AppText.boldText(fontSize: sp(18), color: textColor),
         ),
         items: items,
         onChanged: onChanged,

@@ -17,7 +17,10 @@ class _HomeParentTabState extends State<HomeParentTab> {
   @override
   void initState() {
     super.initState();
-    _initData();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initData();
+    });
   }
 
   Future<void> _initData() async {
@@ -28,9 +31,11 @@ class _HomeParentTabState extends State<HomeParentTab> {
       provider.selectedChild = provider.children.first;
     }
 
-    setState(() {
-      loading = false;
-    });
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override

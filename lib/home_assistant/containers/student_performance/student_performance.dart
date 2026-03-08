@@ -1,9 +1,8 @@
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance_table_widget.dart';
-import 'package:dar_el_3loom/utils/app_routes.dart';
+import 'package:dar_el_3loom/utils/global_dialogs.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../BackendSetup Data/Api/api_service.dart';
-import '../../../home/containers_contents/Mozakrat/filter_widget.dart';
 import '../../../provider/assistant_login_provider.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
@@ -90,10 +89,10 @@ class _StudentPerformanceState extends State<StudentPerformance> {
                         if (enteredCode.isEmpty) return;
 
                         final assistantProvider =
-                        Provider.of<AssistantLoginProvider>(
-                          context,
-                          listen: false,
-                        );
+                            Provider.of<AssistantLoginProvider>(
+                              context,
+                              listen: false,
+                            );
 
                         final api = ApiService(
                           token: assistantProvider.token ?? '',
@@ -101,8 +100,23 @@ class _StudentPerformanceState extends State<StudentPerformance> {
 
                         final data = await api.getStudentInfo(enteredCode);
 
-                        print(data);
                         if (data != null) {
+                          // showGlobalNotificationDialog(data);
+                          // showDialog(
+                          //   context: context,
+                          //   builder: (ctx) => AlertDialog(
+                          //     title: Text("تم تسجيل الأداء"),
+                          //     content: Text(
+                          //       "تم تسجيل أداء الطالب ${data['student_name']} بنجاح",
+                          //     ),
+                          //     actions: [
+                          //       TextButton(
+                          //         onPressed: () => Navigator.of(ctx).pop(),
+                          //         child: const Text("حسناً"),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // );
                           Navigator.push(
                             context,
                             MaterialPageRoute(

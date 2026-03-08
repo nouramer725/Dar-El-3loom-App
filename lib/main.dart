@@ -1,11 +1,11 @@
 import 'package:dar_el_3loom/Login/Details%20Screen/details_assistant_screen.dart';
 import 'package:dar_el_3loom/Login/Details%20Screen/details_parent_screen.dart';
 import 'package:dar_el_3loom/Login/Details%20Screen/details_teacher_screen.dart';
+import 'package:dar_el_3loom/home_assistant/containers/groups/group_performance.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance.dart';
 import 'package:dar_el_3loom/home_assistant/containers/student_performance/student_performance_table_widget.dart';
 import 'package:dar_el_3loom/home_assistant/containers/taqarer_student_assistant/taqarer_assistant.dart';
 import 'package:dar_el_3loom/home_assistant/home_assistant_screen.dart';
-import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_assistant_screen.dart';
 import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/password_assistant_edit.dart';
 import 'package:dar_el_3loom/home_assistant/tabs/profile/profile_tabs/profile_picture_assistant_widget.dart';
 import 'package:dar_el_3loom/home_parent/tabs/profile/profile_tabs/password_parent_edit.dart';
@@ -29,7 +29,6 @@ import 'package:dar_el_3loom/utils/app_theme.dart';
 import 'package:dar_el_3loom/utils/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'BackendSetup Data/Api/api_service.dart';
@@ -46,6 +45,8 @@ import 'home/tabs/profile/profile_tabs/password_edit.dart';
 import 'home/tabs/profile/profile_tabs/profile_picture_widget.dart';
 import 'home_parent/home_parent_screen.dart';
 import 'home_teacher/tabs/profile/profile_tabs/get_assistant/assistant_provider.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -110,7 +111,7 @@ class MyApp extends StatelessWidget {
         SizeConfig.init(context);
         return Directionality(textDirection: TextDirection.rtl, child: child!);
       },
-
+      navigatorKey: navigatorKey,
       routes: {
         AppRoutes.firstTimeLoginScreenName: (_) => FirstTimeLoginScreen(),
         AppRoutes.detailsScreen: (_) => DetailsScreen(),
@@ -145,6 +146,7 @@ class MyApp extends StatelessWidget {
         AppRoutes.homeAssistantScreenName: (_) => HomeAssistantScreen(),
         AppRoutes.addAssistantScreen: (_) => GetAssistantScreen(),
         AppRoutes.taqarerAssistant: (_) => TaqarerAssistant(),
+        AppRoutes.groupPerformance: (_) => GroupPerformanceScreen(),
       },
     );
   }

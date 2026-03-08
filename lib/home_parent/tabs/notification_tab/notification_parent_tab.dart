@@ -1,13 +1,14 @@
 import 'package:dar_el_3loom/home/tabs/profile/divider_widget.dart';
 import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart';
 import '../../../BackendSetup Data/Api/api_service.dart';
 import '../../../provider/parent_login_provider.dart';
 import '../../../socket/socket_service.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
+import '../../../utils/global_dialogs.dart';
 import '../../../utils/responsive.dart';
 
 class NotificationParentTab extends StatefulWidget {
@@ -19,37 +20,53 @@ class NotificationParentTab extends StatefulWidget {
 
 class _NotificationParentTabState extends State<NotificationParentTab> {
   bool isLoading = true;
-
   List notifications = [];
+  late SocketService socketService;
 
   @override
   void initState() {
     super.initState();
 
-    loadNotifications();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadNotifications();
 
-    final socketService = SocketService();
-    socketService.connect();
+      socketService = SocketService();
+      socketService.connect();
 
-    socketService.socket.on("new_notification", (data) {
-      print("Realtime notification received: $data");
-
-      setState(() {
-        notifications.insert(0, data);
+      socketService.socket.onConnect((_) {
+        print("SOCKET CONNECTED");
       });
 
-      Fluttertoast.showToast(
-        msg: "وصل اشعار جديد",
-        backgroundColor: AppColors.container2Color,
-        textColor: AppColors.whiteColor,
-        fontSize: 16,
+      final parentProvider = Provider.of<ParentLoginProvider>(
+        context,
+        listen: false,
       );
+
+      final parentId = parentProvider.student?.id;
+
+      print("PARENT ID: $parentId");
+
+      socketService.socket.emit('join_parent_room', {'parent_id': parentId});
+
+      print("JOINED PARENT ROOM");
+
+      socketService.socket.on('parent_notification', (data) {
+        print("PARENT EVENT RECEIVED: $data");
+
+        if (!mounted) return;
+
+        setState(() {
+          notifications.insert(0, data);
+        });
+
+        showGlobalNotificationDialog(data);
+      });
     });
   }
 
   @override
   void dispose() {
-    SocketService().socket.dispose();
+    socketService.disconnect();
     super.dispose();
   }
 
@@ -61,7 +78,9 @@ class _NotificationParentTabState extends State<NotificationParentTab> {
     final token = loginProvider.token;
 
     if (token == null) {
-      Fluttertoast.showToast(msg: "لم يتم تسجيل الدخول");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("لم يتم تسجيل الدخول")));
       return;
     }
 

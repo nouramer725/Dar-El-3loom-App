@@ -100,6 +100,16 @@ class HomeAssistantView extends StatelessWidget {
                   text: "تسجيل اداء الطالب",
                   containerColor: AppColors.container2Color,
                 ),
+                WidgetContainer(
+                  onTap: () {
+                    Navigator.of(
+                      context,
+                    ).pushNamed(AppRoutes.groupPerformance);
+                  },
+                  verticalPadding: h(36),
+                  text: "تسجيل حضور المجموعة",
+                  containerColor: AppColors.container3Color,
+                ),
               ],
             ),
           ),

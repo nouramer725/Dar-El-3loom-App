@@ -53,6 +53,13 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   socket_io_client: ^3.1.4
+  flutter_launcher_icons: ^0.14.4
+flutter_launcher_icons:
+    android: true
+    ios: true
+    image_path: "assets/images/app_logo.png"
+    adaptive_icon_background: "#FFFFFF"
+    adaptive_icon_foreground: "assets/images/app_logo.png"
 
 dev_dependencies:
   flutter_test:

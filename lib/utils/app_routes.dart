@@ -31,7 +31,6 @@ class AppRoutes {
   static const profilePictureTeacherEdit = "profile_picture_teacher_edit";
   static const homeAssistantScreenName = "home_assistant_screen";
   static const passwordAssistantEdit = "password_assistant_edit";
-  static const taqarerAssistant =
-      "taqarer_assistant";
-
+  static const groupPerformance = "group_performance";
+  static const taqarerAssistant = "taqarer_assistant";
 }

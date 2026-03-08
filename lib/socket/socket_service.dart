@@ -1,12 +1,9 @@
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import '../utils/global_dialogs.dart';
 
 class SocketService {
   static final SocketService _instance = SocketService._internal();
-  static String? token;
-
-  factory SocketService() {
-    return _instance;
-  }
+  factory SocketService() => _instance;
 
   SocketService._internal();
 
@@ -14,20 +11,12 @@ class SocketService {
 
   void connect() {
     socket = IO.io(
-      "http://192.168.1.12:3000", // ضع هنا عنوان السيرفر بتاعك
+      "http://192.168.1.12:3000",
       IO.OptionBuilder()
           .setTransports(['websocket'])
-          .disableAutoConnect()
+          .enableReconnection()
           .build(),
     );
-
-    socket.connect();
-
-    socket.onConnect((_) => print("Socket connected"));
-    socket.onDisconnect((_) => print("Socket disconnected"));
-    socket.onError((err) => print("Socket error: $err"));
-
-    socket.connect();
 
     socket.onConnect((_) {
       print("Socket connected");
@@ -36,5 +25,15 @@ class SocketService {
     socket.onDisconnect((_) {
       print("Socket disconnected");
     });
+
+    socket.on('parent_notification', (data) {
+      print("New parent notification: $data");
+
+      showGlobalNotificationDialog(data);
+    });
+  }
+
+  void disconnect() {
+    socket.dispose();
   }
 }

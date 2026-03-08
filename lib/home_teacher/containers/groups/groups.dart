@@ -117,9 +117,11 @@ class _GroupsScreenState extends State<GroupsScreen> {
                 },
               ),
               if (loadingGroups || loadingStudents)
-                Center(child: CircularProgressIndicator(
-                  color: AppColors.container2Color,
-                ))
+                Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.container2Color,
+                  ),
+                )
               else if (selectedGroupModel == null ||
                   selectedGroupModel!.students.isEmpty)
                 Image.asset(AppAssets.container2Image)

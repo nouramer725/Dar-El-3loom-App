@@ -767,7 +767,7 @@ class ApiService {
   Future<GroupModel?> fetchGroupDetailsAsGroup({
     required String groupNo,
     int page = 1,
-    int limit = 100,
+    int limit = 500,
   }) async {
     try {
       final response = await dio.get(
@@ -876,10 +876,75 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> getNotifications() async {
-    final response = await dio.get(
-      "/api/v1/assistants/notifications",
-    );
+    final response = await dio.get("/api/v1/assistants/notifications");
 
     return response.data;
+  }
+
+  Future<List<String>> fetchAssistantGroups() async {
+    try {
+      final response = await dio.get("/api/v1/assistants/groups");
+
+      if (response.data['status'] == 'success') {
+        final groups = response.data['data']['groups'] as List;
+        return groups.map((e) => e.toString()).toList();
+      }
+
+      return [];
+    } catch (e) {
+      print("Error fetching assistant groups: $e");
+      return [];
+    }
+  }
+
+  Future<GroupModel?> fetchAssistantGroupDetails({
+    required String groupNo,
+    int page = 1,
+    int limit = 500,
+  }) async {
+    try {
+      final response = await dio.get(
+        "/api/v1/assistants/groups/$groupNo",
+        queryParameters: {"page": page, "limit": limit},
+      );
+
+      if (response.data['status'] == 'success') {
+        final data = response.data['data'];
+
+        final students = (data['students'] as List)
+            .map((e) => StudentModel.fromJson(e))
+            .toList();
+
+        return GroupModel(
+          groupNo: data['no_group'],
+          students: students,
+          className: data['n_saf'] ?? '',
+          date: '',
+          time: '',
+          day: '',
+          totalStudents: data['totalStudents'] ?? 0,
+        );
+      }
+
+      return null;
+    } catch (e) {
+      print("Error fetching assistant group details: $e");
+      return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> submitGroupPerformance({
+    required List<Map<String, dynamic>> students,
+  }) async {
+    try {
+      final response = await dio.post(
+        '/api/v1/assistants/group-performance',
+        data: {"students": students},
+      );
+      return response.data;
+    } catch (e) {
+      print("Error submitting group performance: $e");
+      return {"status": "fail", "message": e.toString()};
+    }
   }
 }
