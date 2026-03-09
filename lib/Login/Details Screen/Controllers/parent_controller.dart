@@ -69,7 +69,7 @@ class ParentController extends ChangeNotifier {
     if (id.text.isNotEmpty) idLocked = true;
     if (name.text.isNotEmpty) nameLocked = true;
     if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
-    if (personalId.text.isNotEmpty) personalIdLocked = true;
+    personalIdLocked = false;
     if (password.text.isNotEmpty) {
       passwordLocked = true;
       confirmPasswordLocked = true;
