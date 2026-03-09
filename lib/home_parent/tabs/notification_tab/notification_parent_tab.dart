@@ -110,28 +110,38 @@ class _NotificationParentTabState extends State<NotificationParentTab> {
         ),
       ),
       body: isLoading
-          ? SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Image.asset(AppAssets.notificationImage),
-                  Text(
-                    "لا توجد اشعارات حتي الان",
-                    textAlign: TextAlign.center,
-                    style: AppText.boldText(
-                      color: AppColors.blackColor,
-                      fontSize: sp(35),
+          ? Center(
+              child: CircularProgressIndicator(
+                color: AppColors.blackColor,
+                strokeWidth: h(7),
+              ),
+            )
+          : notifications.isEmpty
+          ? Padding(
+              padding: EdgeInsets.symmetric(horizontal: w(16), vertical: h(10)),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Image.asset(AppAssets.notificationImage),
+                    Text(
+                      "لا توجد اشعارات حتي الان",
+                      textAlign: TextAlign.center,
+                      style: AppText.boldText(
+                        color: AppColors.blackColor,
+                        fontSize: sp(35),
+                      ),
                     ),
-                  ),
-                  Text(
-                    "الاشعارات ستظهر بمجرد ان ترسل لك",
-                    textAlign: TextAlign.center,
-                    style: AppText.semiBoldText(
-                      color: AppColors.greyColor,
-                      fontSize: sp(20),
+                    Text(
+                      "الاشعارات ستظهر بمجرد ان ترسل لك",
+                      textAlign: TextAlign.center,
+                      style: AppText.semiBoldText(
+                        color: AppColors.greyColor,
+                        fontSize: sp(20),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
           : ListView.builder(

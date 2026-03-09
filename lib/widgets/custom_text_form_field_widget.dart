@@ -88,13 +88,13 @@ class CustomTextFormFieldWidget extends StatelessWidget {
       child: TextFormField(
         enabled: enabled,
         readOnly: readOnly,
-        onFieldSubmitted:onFieldSubmitted ,
+        onFieldSubmitted: onFieldSubmitted,
         keyboardType: keyboardType,
         validator: validator,
         controller: controller,
         obscureText: obscureText,
         onChanged: onChanged,
-        maxLines: maxLines,
+        maxLines: obscureText ? 1 : maxLines,
         textInputAction: textInputAction ?? TextInputAction.done,
         cursorColor: cursorColor,
         style: GoogleFonts.poppins(

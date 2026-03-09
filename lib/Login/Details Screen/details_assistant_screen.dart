@@ -10,6 +10,7 @@ import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
+import '../../utils/validators.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import 'Widgets/widget.dart';
 
@@ -22,6 +23,8 @@ class DetailsAssistantScreen extends StatefulWidget {
 
 class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
   final formKey = GlobalKey<FormState>();
+  bool showPassword = false;
+  bool showConfirmPassword = false;
 
   @override
   void initState() {
@@ -89,48 +92,78 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                           controller.id,
                           TextInputType.number,
                           controller.idLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "الكود"),
                         ),
                         buildField(
                           "الاسم",
                           controller.name,
                           TextInputType.name,
                           controller.nameLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "الاسم"),
                         ),
                         buildField(
                           "اسم المدرس",
                           controller.nameTeacher,
                           TextInputType.name,
                           controller.nameTeacherLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "اسم المدرس"),
                         ),
                         buildField(
                           "اسم المادة",
                           controller.nameMada,
                           TextInputType.name,
                           controller.nameMadaLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "اسم المادة"),
                         ),
                         buildField(
                           "الرقم القومي",
                           controller.personalId,
                           TextInputType.number,
                           controller.personalIdLocked,
+                          validator: AppValidators.nationalId,
                         ),
                         buildField(
                           "رقم المساعد",
                           controller.phoneParent,
                           TextInputType.number,
                           controller.phoneParentLocked,
+                          validator: (v) =>
+                              AppValidators.phone(v, "رقم المساعد"),
                         ),
                         buildField(
                           "الباسورد",
                           controller.password,
                           TextInputType.visiblePassword,
                           controller.passwordLocked,
+                          isPassword: true,
+                          validator: AppValidators.password,
+                          isPasswordVisible: showPassword,
+                          onTogglePassword: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
                         ),
                         buildField(
                           "تاكيد الباسورد",
                           controller.confirmPassword,
                           TextInputType.visiblePassword,
                           controller.confirmPasswordLocked,
+                          isPassword: true,
+                          isPasswordVisible: showConfirmPassword,
+                          validator: (v) => AppValidators.confirmPassword(
+                            v,
+                            controller.password.text,
+                          ),
+                          onTogglePassword: () {
+                            setState(() {
+                              showConfirmPassword = !showConfirmPassword;
+                            });
+                          },
                         ),
                         buildImagePicker(
                           context,

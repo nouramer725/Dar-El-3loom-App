@@ -53,7 +53,6 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
   void initState() {
     super.initState();
 
-    // تحديد مصدر الـ token و childId
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final parentProvider = Provider.of<ParentLoginProvider>(
         context,
@@ -191,6 +190,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                   spacing: h(10),
                   children: [
                     FilterWidget(
+                      textColor: AppColors.blackColor,
                       type: FilterType.dropdown,
                       color: AppColors.container1Color,
                       items: subjects
@@ -214,6 +214,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                       },
                     ),
                     FilterWidget(
+                      textColor: AppColors.blackColor,
                       type: FilterType.dropdown,
                       color: AppColors.container1Color,
                       selectedValue: selectedTeacher,
@@ -237,6 +238,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                     ),
                     if (availableMonths.isNotEmpty)
                       FilterWidget(
+                        textColor: AppColors.blackColor,
                         text: 'الشهر',
                         type: FilterType.dropdown,
                         color: AppColors.container1Color,

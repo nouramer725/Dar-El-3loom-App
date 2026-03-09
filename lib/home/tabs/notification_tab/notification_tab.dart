@@ -52,6 +52,14 @@ class _NotificationTabState extends State<NotificationTab> {
                       fontSize: sp(20),
                     ),
                   ),
+                  Text(
+                    "قريبا ...",
+                    textAlign: TextAlign.center,
+                    style: AppText.semiBoldText(
+                      color: AppColors.greyColor,
+                      fontSize: sp(20),
+                    ),
+                  ),
                 ],
               ),
             )

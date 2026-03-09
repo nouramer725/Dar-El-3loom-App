@@ -60,6 +60,13 @@ class HomeTeacherView extends StatelessWidget {
                           fontSize: sp(19),
                         ),
                       ),
+                      Text(
+                        teacher?.nMada ?? "كود المدرس",
+                        style: AppText.regularText(
+                          color: AppColors.greyColor,
+                          fontSize: sp(19),
+                        ),
+                      ),
                     ],
                   ),
                 ),

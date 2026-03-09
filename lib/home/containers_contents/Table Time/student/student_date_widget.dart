@@ -89,6 +89,7 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
         children: [
           /// المادة
           FilterWidget(
+            textColor: AppColors.blackColor,
             type: FilterType.dropdown,
             color: AppColors.container2Color,
             selectedValue: selectedSubject,
@@ -106,6 +107,7 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
 
           /// التاريخ
           FilterWidget(
+            textColor: AppColors.blackColor,
             type: FilterType.dropdown,
             color: AppColors.container2Color,
             selectedValue: selectedType,

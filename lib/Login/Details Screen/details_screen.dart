@@ -1,3 +1,4 @@
+import 'package:dar_el_3loom/utils/validators.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
@@ -14,7 +15,7 @@ import 'Controllers/student_controller.dart';
 import 'Widgets/widget.dart';
 
 class DetailsScreen extends StatefulWidget {
-  DetailsScreen({super.key});
+  const DetailsScreen({super.key});
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -22,6 +23,8 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   final formKey = GlobalKey<FormState>();
+  bool showPassword = false;
+  bool showConfirmPassword = false;
 
   @override
   void initState() {
@@ -89,54 +92,86 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           controller.code,
                           TextInputType.name,
                           controller.codeLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "الكود"),
                         ),
                         buildField(
                           "الاسم",
                           controller.name,
                           TextInputType.name,
                           controller.nameLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "الاسم"),
                         ),
                         buildField(
                           "الصف",
                           controller.level,
                           TextInputType.name,
                           controller.levelLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "الصف"),
                         ),
                         buildField(
                           "رقم الطالب",
                           controller.phoneStudent,
                           TextInputType.number,
                           controller.phoneStudentLocked,
+                          validator: (v) =>
+                              AppValidators.phone(v, "رقم الطالب"),
                         ),
                         buildField(
                           "كود الدخول الخاص ب ولي الامر",
                           controller.parentId,
                           TextInputType.number,
                           controller.parentIdLocked,
+                          validator: (v) =>
+                              AppValidators.requiredField(v, "كود ولي الامر"),
                         ),
                         buildField(
                           "رقم ولي الامر",
                           controller.phoneParent,
                           TextInputType.number,
                           controller.phoneParentLocked,
+                          validator: (v) =>
+                              AppValidators.phone(v, "رقم ولي الامر"),
                         ),
                         buildField(
                           "الرقم القومي",
                           controller.nationalId,
                           TextInputType.number,
                           controller.nationalIdLocked,
+                          validator: AppValidators.nationalId,
                         ),
                         buildField(
                           "الباسورد",
                           controller.password,
                           TextInputType.visiblePassword,
                           controller.passwordLocked,
+                          isPassword: true,
+                          isPasswordVisible: showPassword,
+                          validator: AppValidators.password,
+                          onTogglePassword: () {
+                            setState(() {
+                              showPassword = !showPassword;
+                            });
+                          },
                         ),
                         buildField(
                           "تاكيد الباسورد",
                           controller.confirmPassword,
                           TextInputType.visiblePassword,
                           controller.confirmPasswordLocked,
+                          isPassword: true,
+                          isPasswordVisible: showConfirmPassword,
+                          validator: (v) => AppValidators.confirmPassword(
+                            v,
+                            controller.password.text,
+                          ),
+                          onTogglePassword: () {
+                            setState(() {
+                              showConfirmPassword = !showConfirmPassword;
+                            });
+                          },
                         ),
 
                         buildImagePicker(
@@ -227,7 +262,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
                               final oldLogin = loginProvider.loginModel;
 
-                              final updatedLoginModel = StudentLoginModel.fromJson(response);
+                              final updatedLoginModel =
+                                  StudentLoginModel.fromJson(response);
 
                               updatedLoginModel.token ??= oldLogin?.token;
 
@@ -236,14 +272,14 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
                               await loginProvider.setLogin(updatedLoginModel);
 
-
                               AppFlow.getStudentToken();
 
                               print(updatedLoginModel.token);
 
-
                               if (updatedLoginModel.token != null) {
-                                await AppFlow.saveStudentToken(updatedLoginModel.token!);
+                                await AppFlow.saveStudentToken(
+                                  updatedLoginModel.token!,
+                                );
                               }
 
                               print("-----------Update------------------");

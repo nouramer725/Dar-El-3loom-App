@@ -125,6 +125,7 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
             children: [
               /// SUBJECT
               FilterWidget(
+                textColor: AppColors.blackColor,
                 type: FilterType.dropdown,
                 color: AppColors.container2Color,
                 selectedValue: selectedSubject,
@@ -145,6 +146,7 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
 
               /// TEACHER
               FilterWidget(
+                textColor: AppColors.blackColor,
                 type: FilterType.dropdown,
                 color: AppColors.container2Color,
                 selectedValue: selectedTeacher,
@@ -163,6 +165,7 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
 
               /// MONTH
               FilterWidget(
+                textColor: AppColors.blackColor,
                 type: FilterType.dropdown,
                 color: AppColors.container2Color,
                 selectedValue: selectedMonth,

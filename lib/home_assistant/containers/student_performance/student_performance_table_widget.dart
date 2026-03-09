@@ -211,7 +211,7 @@ class _StudentPerformanceWidgetState extends State<StudentPerformanceWidget> {
                     colorContainer: AppColors.container2Color,
                     sideColor: AppColors.container2Color,
                     onPressed: () async {
-                      if (!formKey.currentState!.validate())  {
+                      if (!formKey.currentState!.validate()) {
                         Fluttertoast.showToast(
                           msg: "قم ب ادخال الدرجات",
                           backgroundColor: AppColors.blackColor,

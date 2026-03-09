@@ -146,7 +146,7 @@ class _TaqreerScreenState extends State<TaqreerScreen> {
                               12,
                               (index) => DropdownMenuItem(
                                 value: index + 1,
-                                child: Text("شهر ${index + 1}"),
+                                child: Text("${index + 1}"),
                               ),
                             ),
                             onChanged: (value) {

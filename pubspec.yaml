@@ -57,9 +57,9 @@ dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/app_logo.png"
-  adaptive_icon_foreground: "assets/images/app_logo.png"
-  adaptive_icon_background: "#FFFFFF"  # Background color matching your theme
+  image_path: "assets/images/application.png"
+  adaptive_icon_foreground: "assets/images/application.png"
+  adaptive_icon_background: "#FFFFFF"
   remove_alpha_ios: true
 
 

@@ -61,7 +61,6 @@ class HomeParentView extends StatelessWidget {
                                     ),
                                     padding: EdgeInsets.symmetric(
                                       horizontal: w(16),
-                                      vertical: h(16),
                                     ),
                                     decoration: BoxDecoration(
                                       color: AppColors.whiteColor,
@@ -78,22 +77,34 @@ class HomeParentView extends StatelessWidget {
                                       shrinkWrap: true,
                                       itemCount: provider.children.length,
                                       separatorBuilder: (context, index) =>
-                                          Divider(
-                                            color: AppColors.greyColor
-                                                .withOpacity(0.5),
-                                            thickness: 1,
-                                          ),
+                                          DividerWidget(),
                                       itemBuilder: (context, index) {
                                         final c = provider.children[index];
                                         return ListTile(
                                           leading: c.profilePicture != null
                                               ? CircleAvatar(
-                                                  backgroundImage:
-                                                      NetworkImage(
-                                                        c.profilePicture!,
-                                                      ),
+                                                  backgroundImage: NetworkImage(
+                                                    c.profilePicture!,
+                                                  ),
                                                 )
-                                              : const Icon(Icons.person),
+                                              : Container(
+                                                  padding: EdgeInsets.all(5),
+                                                  decoration: BoxDecoration(
+                                                    color: AppColors.whiteColor,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          30,
+                                                        ),
+                                                    border: Border.all(
+                                                      color:
+                                                          AppColors.greyColor,
+                                                      width: 1,
+                                                    ),
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.person_3_outlined,
+                                                  ),
+                                                ),
                                           title: Text(
                                             c.nTalb ?? '',
                                             style: AppText.regularText(

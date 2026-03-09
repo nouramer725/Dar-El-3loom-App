@@ -37,7 +37,6 @@ class AssistantController extends ChangeNotifier {
   bool get hasPersonalImage =>
       personalImage != null || personalImageUrl != null;
 
-
   bool hasValidValue(String? v) {
     if (v == null) return false;
     final trimmed = v.trim();
@@ -79,12 +78,11 @@ class AssistantController extends ChangeNotifier {
     if (name.text.isNotEmpty) nameLocked = true;
     if (nameTeacher.text.isNotEmpty) nameTeacherLocked = true;
     if (nameMada.text.isNotEmpty) nameMadaLocked = true;
-    if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
-    if (personalId.text.isNotEmpty) personalIdLocked = true;
-    if (password.text.isNotEmpty) {
-      passwordLocked = true;
-      confirmPasswordLocked = true;
-    }
+
+    phoneParentLocked = false;
+    personalIdLocked = false;
+    passwordLocked = false;
+    confirmPasswordLocked = false;
   }
 
   Future<void> pickImage(bool isBirth) async {

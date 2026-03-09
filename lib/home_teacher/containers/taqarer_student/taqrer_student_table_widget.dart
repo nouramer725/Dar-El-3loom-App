@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../../../Model/teacher_login_model.dart';
+import '../../../provider/teacher_login_provider.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
@@ -17,12 +20,36 @@ class TaqrerStudentTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final takiimList = studentData['takiim'] as List<dynamic>? ?? [];
     final totals = studentData['totals'] ?? {};
-
+    final teacherProvider = Provider.of<TeacherLoginProvider>(context);
+    final Teacher? teacher = teacherProvider.teachers;
     String rawDate = '';
+    String? matchedGroup;
 
+    for (var t in takiimList) {
+      if ((t['n_mada'] ?? '') == (teacher?.nMada ?? '')) {
+        matchedGroup = t['no_group']?.toString();
+        break;
+      }
+    }
     if (takiimList.isNotEmpty) {
       rawDate = takiimList[0]['dates']?.toString() ?? '';
     }
+
+    final teacherSubject = teacher?.nMada ?? '';
+    final filteredTakiimList = takiimList
+        .where((t) => (t['n_mada'] ?? '') == teacherSubject)
+        .toList();
+
+    final totalGrades = filteredTakiimList.fold<double>(
+      0,
+      (sum, t) => sum + ((t['gadestudent'] ?? 0).toDouble()),
+    );
+
+    final totalMax = filteredTakiimList.fold<double>(0, (sum, t) {
+      final maxGrade = t['totalmax'];
+      return sum + (maxGrade != null ? maxGrade.toDouble() : 0);
+    });
+    final displayMax = totalMax == 0 ? 100 : totalMax;
 
     String month = '';
 
@@ -34,7 +61,7 @@ class TaqrerStudentTableWidget extends StatelessWidget {
     } catch (e) {
       month = '';
     }
-
+    //0003458473
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: h(15),
@@ -61,13 +88,14 @@ class TaqrerStudentTableWidget extends StatelessWidget {
               fontSize: sp(19),
             ),
           ),
-          Text(
-            "المجموعة: ${takiimList[0]['no_group'] ?? ''}",
-            style: AppText.boldText(
-              color: AppColors.greyColor,
-              fontSize: sp(19),
+          if (matchedGroup != null)
+            Text(
+              "المجموعة: $matchedGroup",
+              style: AppText.boldText(
+                color: AppColors.greyColor,
+                fontSize: sp(19),
+              ),
             ),
-          ),
         ],
 
         Table(
@@ -96,10 +124,10 @@ class TaqrerStudentTableWidget extends StatelessWidget {
         ListView.separated(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          itemCount: takiimList.length,
+          itemCount: filteredTakiimList.length,
           separatorBuilder: (_, __) => SizedBox(height: h(10)),
           itemBuilder: (context, index) {
-            final t = takiimList[index];
+            final t = filteredTakiimList[index];
             return Table(
               columnWidths: const {
                 0: FlexColumnWidth(1),
@@ -127,7 +155,7 @@ class TaqrerStudentTableWidget extends StatelessWidget {
         ),
 
         Table(
-          columnWidths: const {0: FlexColumnWidth(5), 1: FlexColumnWidth(4)},
+          columnWidths: const {0: FlexColumnWidth(11), 1: FlexColumnWidth(5)},
           children: [
             TableRow(
               decoration: BoxDecoration(
@@ -135,10 +163,10 @@ class TaqrerStudentTableWidget extends StatelessWidget {
                 border: Border.all(color: tableTitleColor, width: 2),
               ),
               children: [
-                Cell(text: " درجة الامتحان الشامل لشهر $month", isHeader: true),
+                Cell(text: "درجة الامتحان الشامل لشهر $month", isHeader: true),
                 Cell(
-                  text:
-                      "${totals['totalgrades'] ?? 0}/${totals['totalmax'] ?? 0}",
+                  // text: "$totalGrades/${totals["totalmax"] ?? displayMax}",
+                  text: "$totalGrades/$displayMax",
                   isHeader: true,
                 ),
               ],
@@ -150,6 +178,7 @@ class TaqrerStudentTableWidget extends StatelessWidget {
   }
 }
 
+///0003962835
 class CustomTableCell extends StatelessWidget {
   final String? text;
   final bool isHeader;
@@ -161,6 +190,7 @@ class CustomTableCell extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: h(14)),
       child: Center(
         child: Text(
+          textAlign: TextAlign.center,
           text ?? '',
           style: isHeader
               ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(18))
@@ -184,6 +214,7 @@ class Cell extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(h(10)),
       child: Text(
+        textAlign: TextAlign.center,
         text,
         style: isHeader
             ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(16))

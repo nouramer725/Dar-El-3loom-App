@@ -30,7 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   String code = '';
   String password = '';
   var formKey = GlobalKey<FormState>();
-
+  bool showPassword = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,14 +76,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     fillColor: AppColors.transparentColor,
                     borderColor: AppColors.container1Color,
                     borderWidth: 2,
+
                     hintText: "الباسورد",
                     hintStyle: AppText.boldText(
                       color: AppColors.textColorLogin,
                       fontSize: sp(16),
                     ),
+
+                    obscureText: !showPassword,
+
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        showPassword ? Icons.visibility : Icons.visibility_off,
+                        color: AppColors.textColorLogin,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          showPassword = !showPassword;
+                        });
+                      },
+                    ),
+
                     onChanged: (value) {
                       password = value;
                     },
+
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "برجاء ادخال الباسورد";

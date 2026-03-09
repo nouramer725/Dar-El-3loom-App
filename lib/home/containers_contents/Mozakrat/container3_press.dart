@@ -83,11 +83,6 @@ class _MozakratScreenState extends State<MozakratScreen> {
   Widget build(BuildContext context) {
     return Consumer<ParentLoginProvider>(
       builder: (context, parentProvider, _) {
-        final studentProvider = Provider.of<StudentLoginProvider>(
-          context,
-          listen: false,
-        );
-
         return Scaffold(
           appBar: AppBar(
             centerTitle: false,
@@ -114,6 +109,7 @@ class _MozakratScreenState extends State<MozakratScreen> {
                 children: [
                   /// 🔹 Filter Dropdown
                   FilterWidget(
+                    textColor: AppColors.blackColor,
                     type: FilterType.dropdown,
                     color: AppColors.container3Color,
                     items: [

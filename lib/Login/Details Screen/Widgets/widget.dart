@@ -9,8 +9,12 @@ Widget buildField(
   String hint,
   TextEditingController controller,
   TextInputType keyboardType,
-  bool locked,
-) {
+  bool locked, {
+  bool isPassword = false,
+  bool isPasswordVisible = false,
+  VoidCallback? onTogglePassword,
+  String? Function(String?)? validator,
+}) {
   return CustomTextFormFieldWidget(
     enabled: !locked,
     shadowColor: AppColors.container2Color,
@@ -26,7 +30,20 @@ Widget buildField(
       fontSize: sp(16),
     ),
     controller: controller,
-    validator: (v) => v == null || v.isEmpty ? "ادخل $hint" : null,
+
+    obscureText: isPassword ? !isPasswordVisible : false,
+
+    suffixIcon: isPassword
+        ? IconButton(
+            icon: Icon(
+              isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: AppColors.textColorLogin,
+            ),
+            onPressed: onTogglePassword,
+          )
+        : null,
+
+    validator: validator ?? (v) => v == null || v.isEmpty ? "ادخل $hint" : null,
   );
 }
 

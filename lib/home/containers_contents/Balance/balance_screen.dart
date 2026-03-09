@@ -141,15 +141,18 @@ class _BalanceScreenState extends State<BalanceScreen> {
                       children: [
                         /// Subject
                         FilterWidget(
+                          textColor: AppColors.blackColor,
                           type: FilterType.dropdown,
                           color: AppColors.container4Color,
                           selectedValue: selectedSubject,
                           text: "المادة",
                           items: filtersData
+                              .map((e) => e['n_mada'] as String)
+                              .toSet()
                               .map<DropdownMenuItem<String>>(
                                 (e) => DropdownMenuItem<String>(
-                                  value: e['n_mada'] as String,
-                                  child: Text(e['n_mada'] as String),
+                                  value: e,
+                                  child: Text(e),
                                 ),
                               )
                               .toList(),
@@ -164,11 +167,13 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
                         /// Teacher
                         FilterWidget(
+                          textColor: AppColors.blackColor,
                           type: FilterType.dropdown,
                           color: AppColors.container4Color,
                           selectedValue: selectedTeacher,
                           text: "المدرس",
                           items: teachers
+                              .toSet()
                               .map<DropdownMenuItem<String>>(
                                 (t) => DropdownMenuItem<String>(
                                   value: t,
@@ -185,6 +190,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
                         /// Status
                         FilterWidget(
+                          textColor: AppColors.blackColor,
                           type: FilterType.dropdown,
                           color: AppColors.container4Color,
                           selectedValue: selectedStatus,

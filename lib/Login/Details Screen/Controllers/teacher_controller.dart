@@ -71,16 +71,22 @@ class TeacherController extends ChangeNotifier {
         : '')!;
     personalImageUrl = buildImageUrl(teacher.personalImage);
 
-    // Lock fields if already have data
+    // // Lock fields if already have data
     if (id.text.isNotEmpty) idLocked = true;
     if (name.text.isNotEmpty) nameLocked = true;
-    if (nameMada.text.isNotEmpty) nameMadaLocked = true;
-    if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
-    if (personalId.text.isNotEmpty) personalIdLocked = true;
-    if (password.text.isNotEmpty) {
-      passwordLocked = true;
-      confirmPasswordLocked = true;
-    }
+    // if (nameMada.text.isNotEmpty) nameMadaLocked = true;
+    // if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
+    // if (personalId.text.isNotEmpty) personalIdLocked = true;
+    // if (password.text.isNotEmpty) {
+    //   passwordLocked = true;
+    //   confirmPasswordLocked = true;
+    // }
+    // idLocked = false;
+    // nameLocked = false;
+    phoneParentLocked = false;
+    personalIdLocked = false;
+    passwordLocked = false;
+    confirmPasswordLocked = false;
   }
 
   Future<void> pickImage(bool isBirth) async {
