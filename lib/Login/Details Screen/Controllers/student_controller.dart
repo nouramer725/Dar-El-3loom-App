@@ -92,7 +92,7 @@ class StudentController extends ChangeNotifier {
     if (level.text.isNotEmpty) levelLocked = true;
     if (phoneStudent.text.isNotEmpty) phoneStudentLocked = true;
     if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
-    if (nationalId.text.isNotEmpty) nationalIdLocked = true;
+    nationalIdLocked = false;
     if (parentId.text.isNotEmpty) parentIdLocked = true;
     if (password.text.isNotEmpty) {
       passwordLocked = true;
