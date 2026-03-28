@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:dar_el_3loom/Model/teacher_login_model.dart';
+import 'package:dar_el_3loom/models/teacher_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app_flow.dart';

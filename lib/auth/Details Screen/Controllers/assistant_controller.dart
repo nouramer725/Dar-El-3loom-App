@@ -1,12 +1,12 @@
 import 'dart:io';
-import 'package:dar_el_3loom/Model/parent_login_model.dart';
+import 'package:dar_el_3loom/models/assistant_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ParentController extends ChangeNotifier {
-  ParentController({Parent? parent}) {
-    if (parent != null) {
-      _loadStudentData(parent);
+class AssistantController extends ChangeNotifier {
+  AssistantController({Assistant? assistant}) {
+    if (assistant != null) {
+      _loadStudentData(assistant);
     }
     loading = false;
     notifyListeners();
@@ -14,6 +14,8 @@ class ParentController extends ChangeNotifier {
 
   final id = TextEditingController();
   final name = TextEditingController();
+  final nameTeacher = TextEditingController();
+  final nameMada = TextEditingController();
   final phoneParent = TextEditingController();
   final personalId = TextEditingController();
   final password = TextEditingController();
@@ -21,6 +23,8 @@ class ParentController extends ChangeNotifier {
 
   bool idLocked = false;
   bool nameLocked = false;
+  bool nameTeacherLocked = false;
+  bool nameMadaLocked = false;
   bool phoneParentLocked = false;
   bool personalIdLocked = false;
   bool passwordLocked = false;
@@ -56,24 +60,29 @@ class ParentController extends ChangeNotifier {
     }
   }
 
-  void _loadStudentData(Parent parent) {
-    id.text = (hasValidValue(parent.id) ? parent.id : '')!;
-    name.text = (hasValidValue(parent.name) ? parent.name : '')!;
-    phoneParent.text = (hasValidValue(parent.tel) ? parent.tel : '')!;
-    personalId.text = (hasValidValue(parent.personalId)
-        ? parent.personalId
+  void _loadStudentData(Assistant assistant) {
+    id.text = (hasValidValue(assistant.code) ? assistant.code : '')!;
+    name.text = (hasValidValue(assistant.name) ? assistant.name : '')!;
+    nameMada.text = (hasValidValue(assistant.nMada) ? assistant.nMada : '')!;
+    nameTeacher.text = (hasValidValue(assistant.nMod) ? assistant.nMod : '')!;
+    phoneParent.text = (hasValidValue(assistant.phonenumber)
+        ? assistant.phonenumber
         : '')!;
-    personalImageUrl = buildImageUrl(parent.profileImage);
+    personalId.text = (hasValidValue(assistant.personalId)
+        ? assistant.personalId
+        : '')!;
+    personalImageUrl = buildImageUrl(assistant.personalImage);
 
     // Lock fields if already have data
     if (id.text.isNotEmpty) idLocked = true;
     if (name.text.isNotEmpty) nameLocked = true;
-    if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
+    if (nameTeacher.text.isNotEmpty) nameTeacherLocked = true;
+    if (nameMada.text.isNotEmpty) nameMadaLocked = true;
+
+    phoneParentLocked = false;
     personalIdLocked = false;
-    if (password.text.isNotEmpty) {
-      passwordLocked = true;
-      confirmPasswordLocked = true;
-    }
+    passwordLocked = false;
+    confirmPasswordLocked = false;
   }
 
   Future<void> pickImage(bool isBirth) async {
@@ -89,12 +98,15 @@ class ParentController extends ChangeNotifier {
   Map<String, dynamic> buildUpdateRequest() {
     final data = <String, dynamic>{};
 
-    if (!idLocked) data['id'] = id.text;
+    if (!idLocked) data['code'] = id.text;
     if (!nameLocked) data['name'] = name.text;
-    if (!phoneParentLocked) data['tel'] = phoneParent.text;
+    if (!nameTeacherLocked) data['teacher_name'] = nameTeacher.text;
+    if (!nameMadaLocked) data['n_mada'] = nameMada.text;
+    if (!phoneParentLocked) data['phonenumber'] = phoneParent.text;
     if (!personalIdLocked) data['personal_id'] = personalId.text;
     if (!passwordLocked) data['password'] = password.text;
-    if (personalImage != null) data['profile_image'] = personalImage;
+    if (personalImage != null) data['personal_image'] = personalImage;
+
     return data;
   }
 

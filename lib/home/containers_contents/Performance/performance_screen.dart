@@ -2,14 +2,14 @@ import 'package:dar_el_3loom/home/containers_contents/Performance/table_widget.d
 import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Model/performance_model.dart';
+import '../../../models/performance_model.dart';
 import '../../../provider/student_login_provider.dart';
 import '../../../provider/parent_login_provider.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 import '../Mozakrat/filter_widget.dart';
-import '../../../BackendSetup Data/Api/api_service.dart';
+import '../../../backend_setup/Api/api_service.dart';
 
 class PerformanceScreen extends StatefulWidget {
   const PerformanceScreen({super.key});

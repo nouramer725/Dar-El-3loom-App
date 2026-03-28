@@ -1,16 +1,15 @@
-import 'package:dar_el_3loom/Model/assistant_login_model.dart';
-import 'package:dar_el_3loom/Model/student_login_model.dart';
-import 'package:dar_el_3loom/Model/teacher_login_model.dart';
-import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
-import 'package:dar_el_3loom/provider/student_login_provider.dart';
+import 'package:dar_el_3loom/models/teacher_login_model.dart';
 import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../BackendSetup Data/Api/api_service.dart';
-import '../../Model/parent_login_model.dart';
-import '../../provider/app_flow.dart';
+import '../../../../backend_setup/Api/api_service.dart';
+import '../../models/assistant_login_model.dart';
+import '../../models/parent_login_model.dart';
+import '../../models/student_login_model.dart';
+import '../../provider/assistant_login_provider.dart';
 import '../../provider/parent_login_provider.dart';
+import '../../provider/student_login_provider.dart';
 import '../../utils/app_assets.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
@@ -19,18 +18,18 @@ import '../../utils/responsive.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
 import '../../widgets/custom_text_form_field_widget.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class FirstTimeLoginScreen extends StatefulWidget {
+  const FirstTimeLoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<FirstTimeLoginScreen> createState() => _FirstTimeLoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _FirstTimeLoginScreenState extends State<FirstTimeLoginScreen> {
   String code = '';
-  String password = '';
-  var formKey = GlobalKey<FormState>();
-  bool showPassword = false;
+  String phoneNumber = '';
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,68 +44,45 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                   Image.asset(AppAssets.darEl3loomLogo, fit: BoxFit.fill),
                   CustomTextFormFieldWidget(
-                    shadowColor: AppColors.container1Color,
+                    shadowColor: AppColors.container2Color,
                     filled: false,
                     cursorColor: AppColors.textColorLogin,
                     keyboardType: TextInputType.number,
                     fillColor: AppColors.transparentColor,
-                    borderColor: AppColors.container1Color,
+                    borderColor: AppColors.container2Color,
                     borderWidth: 2,
                     hintText: "الكود",
                     hintStyle: AppText.boldText(
                       color: AppColors.textColorLogin,
                       fontSize: sp(16),
                     ),
-                    onChanged: (value) {
-                      code = value;
-                    },
+                    onChanged: (value) => code = value,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
                         return "برجاء ادخال الكود";
-                      } else {
-                        return null;
                       }
+                      return null;
                     },
                   ),
                   CustomTextFormFieldWidget(
                     cursorColor: AppColors.textColorLogin,
-                    shadowColor: AppColors.container1Color,
-                    keyboardType: TextInputType.visiblePassword,
+                    shadowColor: AppColors.container2Color,
+                    keyboardType: TextInputType.phone,
                     filled: false,
                     fillColor: AppColors.transparentColor,
-                    borderColor: AppColors.container1Color,
+                    borderColor: AppColors.container2Color,
                     borderWidth: 2,
-
-                    hintText: "الباسورد",
+                    hintText: "رقم الهاتف",
                     hintStyle: AppText.boldText(
                       color: AppColors.textColorLogin,
                       fontSize: sp(16),
                     ),
-
-                    obscureText: !showPassword,
-
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        showPassword ? Icons.visibility : Icons.visibility_off,
-                        color: AppColors.textColorLogin,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          showPassword = !showPassword;
-                        });
-                      },
-                    ),
-
-                    onChanged: (value) {
-                      password = value;
-                    },
-
+                    onChanged: (value) => phoneNumber = value,
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return "برجاء ادخال الباسورد";
-                      } else {
-                        return null;
+                        return "برجاء ادخال رقم الهاتف";
                       }
+                      return null;
                     },
                   ),
                   CustomElevatedButtonWidget(
@@ -116,142 +92,31 @@ class _LoginScreenState extends State<LoginScreen> {
                       fontSize: sp(16),
                     ),
                     text: "انضم",
-                    colorContainer: AppColors.container1Color,
+                    colorContainer: AppColors.container2Color,
                     onPressed: () async {
                       if (!formKey.currentState!.validate()) return;
 
                       try {
                         final api = ApiService();
 
-                        /// 1️⃣ تسجيل دخول الطالب
-                        final studentResponse = await api.login(
+                        final studentResponse = await api.verifyStudent(
                           code: code,
-                          password: password,
+                          parentNumber: phoneNumber,
                         );
+
                         final studentModel = StudentLoginModel.fromJson(
                           studentResponse,
                         );
 
                         if (studentModel.status == 'success' &&
                             studentModel.data?.student != null) {
-                          Provider.of<StudentLoginProvider>(
-                            context,
-                            listen: false,
-                          ).setLogin(studentModel);
+                          final studentProvider =
+                              Provider.of<StudentLoginProvider>(
+                                context,
+                                listen: false,
+                              );
 
-                          if (studentModel.token != null) {
-                            await AppFlow.saveStudentToken(studentModel.token!);
-                          }
-
-                          Fluttertoast.showToast(
-                            msg: "تم تسجيل الدخول كطالب بنجاح",
-                            backgroundColor: Colors.green,
-                            textColor: Colors.white,
-                            fontSize: sp(16),
-                            gravity: ToastGravity.TOP,
-                          );
-
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            AppRoutes.homeScreenName,
-                            (route) => false,
-                          );
-                          return;
-                        }
-
-                        /// 2️⃣ تسجيل دخول ولي الأمر
-                        final parentResponse = await api.loginParent(
-                          id: code,
-                          password: password,
-                        );
-                        final parentModel = ParentLoginModel.fromJson(
-                          parentResponse,
-                        );
-
-                        if (parentModel.status == 'success' &&
-                            parentModel.data?.parent != null) {
-                          Provider.of<ParentLoginProvider>(
-                            context,
-                            listen: false,
-                          ).setLoginParent(parentModel);
-
-                          if (parentModel.token != null) {
-                            await AppFlow.saveParentToken(parentModel.token!);
-                          }
-
-                          Fluttertoast.showToast(
-                            msg: "تم تسجيل الدخول ل ولي الامر بنجاح",
-                            backgroundColor: Colors.green,
-                            textColor: Colors.white,
-                            fontSize: sp(16),
-                            gravity: ToastGravity.TOP,
-                          );
-
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            AppRoutes.homeParentScreenName,
-                            (route) => false,
-                          );
-                          return;
-                        }
-
-                        ///  تسجيل دخول teacher
-                        final teacherResponse = await api.loginTeacher(
-                          code: code,
-                          password: password,
-                        );
-                        final teacherModel = TeacherLoginModel.fromJson(
-                          teacherResponse,
-                        );
-
-                        if (teacherModel.status == 'success' &&
-                            teacherModel.data?.teacher != null) {
-                          Provider.of<TeacherLoginProvider>(
-                            context,
-                            listen: false,
-                          ).setLoginTeacher(teacherModel);
-
-                          if (teacherModel.token != null) {
-                            await AppFlow.saveTeacherToken(teacherModel.token!);
-                          }
-
-                          Fluttertoast.showToast(
-                            msg: "تم تسجيل الدخول ل المدرس بنجاح",
-                            backgroundColor: Colors.green,
-                            textColor: Colors.white,
-                            fontSize: sp(16),
-                            gravity: ToastGravity.TOP,
-                          );
-
-                          Navigator.pushNamedAndRemoveUntil(
-                            context,
-                            AppRoutes.homeTeacherScreenName,
-                            (route) => false,
-                          );
-                          return;
-                        }
-
-                        ///  تسجيل دخول assistant
-                        final assistantResponse = await api.loginAssistant(
-                          code: code,
-                          password: password,
-                        );
-                        final assistantModel = AssistantLoginModel.fromJson(
-                          assistantResponse,
-                        );
-
-                        if (assistantModel.status == 'success' &&
-                            assistantModel.data?.assistant != null) {
-                          Provider.of<AssistantLoginProvider>(
-                            context,
-                            listen: false,
-                          ).setLoginAssistant(assistantModel);
-
-                          if (assistantModel.token != null) {
-                            await AppFlow.saveAssistantToken(
-                              assistantModel.token!,
-                            );
-                          }
+                          await studentProvider.setLogin(studentModel);
 
                           Fluttertoast.showToast(
                             msg: "تم تسجيل الدخول بنجاح",
@@ -261,26 +126,129 @@ class _LoginScreenState extends State<LoginScreen> {
                             gravity: ToastGravity.TOP,
                           );
 
-                          Navigator.pushNamedAndRemoveUntil(
+                          Navigator.pushNamed(context, AppRoutes.detailsScreen);
+                          return;
+                        }
+
+                        final parentResponse = await api.verifyParent(
+                          id: int.tryParse(code) ?? 0,
+                          parentNumber: phoneNumber,
+                        );
+
+                        final parentModel = ParentLoginModel.fromJson(
+                          parentResponse,
+                        );
+
+                        if (parentModel.status == 'success' &&
+                            parentModel.data?.parent != null) {
+                          final parentProvider =
+                              Provider.of<ParentLoginProvider>(
+                                context,
+                                listen: false,
+                              );
+
+                          await parentProvider.setLoginParent(parentModel);
+
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
+
+                          Navigator.pushNamed(
                             context,
-                            AppRoutes.homeAssistantScreenName,
-                            (route) => false,
+                            AppRoutes.detailsParentScreen,
                           );
                           return;
                         }
 
+                        final teacherResponse = await api.verifyTeacher(
+                          id: code,
+                          parentNumber: phoneNumber,
+                        );
+
+                        final teacherModel = TeacherLoginModel.fromJson(
+                          teacherResponse,
+                        );
+
+                        if (teacherModel.status == 'success' &&
+                            teacherModel.data?.teacher != null) {
+                          final teacherProvider =
+                              Provider.of<TeacherLoginProvider>(
+                                context,
+                                listen: false,
+                              );
+
+                          await teacherProvider.setLoginTeacher(teacherModel);
+
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.detailsTeacherScreen,
+                          );
+                          return;
+                        }
+
+                        final assistantResponse = await api.verifyAssistant(
+                          id: code,
+                          parentNumber: phoneNumber,
+                        );
+
+                        final assistantModel = AssistantLoginModel.fromJson(
+                          assistantResponse,
+                        );
+
+                        if (assistantModel.status == 'success' &&
+                            assistantModel.data?.assistant != null) {
+                          final assistantProvider =
+                          Provider.of<AssistantLoginProvider>(
+                            context,
+                            listen: false,
+                          );
+
+                          await assistantProvider.setLoginAssistant(assistantModel);
+
+                          Fluttertoast.showToast(
+                            msg: "تم تسجيل الدخول بنجاح",
+                            backgroundColor: Colors.green,
+                            textColor: Colors.white,
+                            fontSize: sp(16),
+                            gravity: ToastGravity.TOP,
+                          );
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.detailsAssistantScreen,
+                          );
+                          return;
+                        }
+
+                        /// 3️⃣ لو الاتنين فشلوا
                         Fluttertoast.showToast(
-                          msg: "كود أو كلمة المرور غير صحيحة",
+                          msg: "الكود أو رقم التليفون غير صحيح",
                           backgroundColor: AppColors.wrongIconColor,
                           textColor: Colors.white,
+                          fontSize: sp(16),
+                          gravity: ToastGravity.TOP,
                         );
                       } catch (e) {
                         Fluttertoast.showToast(
-                          msg: "حدث خطأ أثناء تسجيل الدخول",
+                          msg: "حدث خطأ، حاول مرة اخرى",
                           backgroundColor: AppColors.wrongIconColor,
                           textColor: Colors.white,
+                          fontSize: sp(16),
+                          gravity: ToastGravity.TOP,
                         );
-                        debugPrint("Login error: $e");
+                        debugPrint("Verify error: $e");
                       }
                     },
                   ),

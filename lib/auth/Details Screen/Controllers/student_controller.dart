@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:dar_el_3loom/Model/student_login_model.dart';
+import 'package:dar_el_3loom/models/student_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 

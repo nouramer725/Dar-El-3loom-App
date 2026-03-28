@@ -1,4 +1,4 @@
-import 'package:dar_el_3loom/Model/mozakrat_model.dart';
+import 'package:dar_el_3loom/models/mozakrat_model.dart';
 import 'package:dar_el_3loom/home/containers_contents/Mozakrat/table_cell.dart';
 import 'package:dar_el_3loom/home/containers_contents/Mozakrat/table_cell_title.dart';
 import 'package:flutter/material.dart';

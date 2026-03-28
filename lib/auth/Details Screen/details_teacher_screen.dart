@@ -1,27 +1,27 @@
-import 'package:dar_el_3loom/Login/Details%20Screen/Controllers/assistant_controller.dart';
-import 'package:dar_el_3loom/Model/assistant_login_model.dart';
+import 'package:dar_el_3loom/models/teacher_login_model.dart';
+import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../BackendSetup Data/Api/api_service.dart';
+import '../../../../backend_setup/Api/api_service.dart';
 import '../../provider/app_flow.dart';
-import '../../provider/assistant_login_provider.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
 import '../../utils/app_text.dart';
 import '../../utils/responsive.dart';
 import '../../utils/validators.dart';
 import '../../widgets/custom_elevated_button_widget.dart';
+import 'Controllers/teacher_controller.dart';
 import 'Widgets/widget.dart';
 
-class DetailsAssistantScreen extends StatefulWidget {
-  const DetailsAssistantScreen({super.key});
+class DetailsTeacherScreen extends StatefulWidget {
+  const DetailsTeacherScreen({super.key});
 
   @override
-  State<DetailsAssistantScreen> createState() => _DetailsAssistantScreenState();
+  State<DetailsTeacherScreen> createState() => _DetailsTeacherScreenState();
 }
 
-class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
+class _DetailsTeacherScreenState extends State<DetailsTeacherScreen> {
   final formKey = GlobalKey<FormState>();
   bool showPassword = false;
   bool showConfirmPassword = false;
@@ -29,23 +29,23 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
   @override
   void initState() {
     super.initState();
-    final loginProvider = Provider.of<AssistantLoginProvider>(
+    final loginProvider = Provider.of<TeacherLoginProvider>(
       context,
       listen: false,
     );
     final token = loginProvider.token;
-    final assistant = loginProvider.loginModel?.data?.assistant;
+    final teacher = loginProvider.loginModel?.data?.teacher;
 
     print("Token from provider: $token");
-    print("Teacher ID: ${assistant?.code}");
+    print("Teacher ID: ${teacher?.code}");
   }
 
   @override
   Widget build(BuildContext context) {
-    final assistantProvider = Provider.of<AssistantLoginProvider>(context);
-    final assistant = assistantProvider.loginModel?.data?.assistant;
+    final teacherProvider = Provider.of<TeacherLoginProvider>(context);
+    final teacher = teacherProvider.loginModel?.data?.teacher;
 
-    if (assistant == null) {
+    if (teacher == null) {
       return Scaffold(
         body: Center(
           child: Text(
@@ -60,8 +60,8 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
     }
 
     return ChangeNotifierProvider(
-      create: (_) => AssistantController(assistant: assistant),
-      child: Consumer<AssistantController>(
+      create: (_) => TeacherController(teacher: teacher),
+      child: Consumer<TeacherController>(
         builder: (context, controller, _) {
           if (controller.loading) {
             return Scaffold(
@@ -104,14 +104,6 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                               AppValidators.requiredField(v, "الاسم"),
                         ),
                         buildField(
-                          "اسم المدرس",
-                          controller.nameTeacher,
-                          TextInputType.name,
-                          controller.nameTeacherLocked,
-                          validator: (v) =>
-                              AppValidators.requiredField(v, "اسم المدرس"),
-                        ),
-                        buildField(
                           "اسم المادة",
                           controller.nameMada,
                           TextInputType.name,
@@ -127,12 +119,12 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                           validator: AppValidators.nationalId,
                         ),
                         buildField(
-                          "رقم المساعد",
+                          "رقم المدرس",
                           controller.phoneParent,
                           TextInputType.number,
                           controller.phoneParentLocked,
                           validator: (v) =>
-                              AppValidators.phone(v, "رقم المساعد"),
+                              AppValidators.phone(v,  "رقم المدرس"),
                         ),
                         buildField(
                           "الباسورد",
@@ -140,8 +132,8 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                           TextInputType.visiblePassword,
                           controller.passwordLocked,
                           isPassword: true,
-                          validator: AppValidators.password,
                           isPasswordVisible: showPassword,
+                          validator: AppValidators.password,
                           onTogglePassword: () {
                             setState(() {
                               showPassword = !showPassword;
@@ -185,17 +177,14 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                             List<String> errors = [];
 
                             // Validation checks
-                            if (!formKey.currentState!.validate()) {
+                            if (!formKey.currentState!.validate())
                               errors.add("الرجاء ملء جميع الحقول بشكل صحيح");
-                            }
                             if (controller.password.text !=
-                                controller.confirmPassword.text) {
+                                controller.confirmPassword.text)
                               errors.add("كلمة المرور غير مطابقة");
-                            }
                             if (controller.personalImage == null &&
-                                controller.personalImageUrl == null) {
+                                controller.personalImageUrl == null)
                               errors.add("برجاء اختيار صورة شخصية");
-                            }
 
                             if (errors.isNotEmpty) {
                               Fluttertoast.showToast(
@@ -210,23 +199,22 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
 
                             try {
                               final loginProvider =
-                                  Provider.of<AssistantLoginProvider>(
+                                  Provider.of<TeacherLoginProvider>(
                                     context,
                                     listen: false,
                                   );
 
                               final token = loginProvider.token;
-                              final assistant = loginProvider.loginModel;
+                              final teacher = loginProvider.loginModel;
 
-                              if (token == null || assistant == null) {
+                              if (token == null || teacher == null) {
                                 throw Exception("User not logged in");
                               }
 
-                              final updatedAssistant = Assistant(
+                              final updatedTeacher = Teacher(
                                 code: controller.id.text,
-                                name: controller.name.text,
+                                nMod: controller.name.text,
                                 nMada: controller.nameMada.text,
-                                nMod: controller.nameTeacher.text,
                                 phonenumber: controller.phoneParent.text,
                                 personalId: controller.personalId.text,
                                 password: controller.password.text,
@@ -236,30 +224,30 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
 
                               final api = ApiService(token: token);
 
-                              final response = await api.updateAssistantInfo(
-                                updatedAssistant,
+                              final response = await api.updateTeacherInfo(
+                                updatedTeacher,
                               );
 
                               final oldLogin = loginProvider.loginModel;
 
                               final updatedLoginModel =
-                                  AssistantLoginModel.fromJson(response);
+                                  TeacherLoginModel.fromJson(response);
 
                               updatedLoginModel.token ??= oldLogin?.token;
 
-                              updatedLoginModel.data?.assistant?.password ??=
-                                  oldLogin?.data?.assistant?.password;
+                              updatedLoginModel.data?.teacher?.password ??=
+                                  oldLogin?.data?.teacher?.password;
 
-                              await loginProvider.setLoginAssistant(
+                              await loginProvider.setLoginTeacher(
                                 updatedLoginModel,
                               );
 
-                              AppFlow.getAssistantToken();
+                              AppFlow.getTeacherToken();
 
                               print(updatedLoginModel.token);
 
                               if (updatedLoginModel.token != null) {
-                                await AppFlow.saveAssistantToken(
+                                await AppFlow.saveTeacherToken(
                                   updatedLoginModel.token!,
                                 );
                               }
@@ -278,15 +266,17 @@ class _DetailsAssistantScreenState extends State<DetailsAssistantScreen> {
                               // print("-----------------------------");
 
                               Fluttertoast.showToast(
-                                msg: "تم تحديث بيانات المساعد بنجاح",
+                                msg: "تم تحديث بيانات المدرس بنجاح",
                                 backgroundColor: Colors.green,
                                 textColor: Colors.white,
                                 fontSize: sp(16),
                                 gravity: ToastGravity.TOP,
                               );
+
+                              // Navigate to home and remove all previous screens
                               Navigator.pushNamedAndRemoveUntil(
                                 context,
-                                AppRoutes.homeAssistantScreenName,
+                                AppRoutes.homeTeacherScreenName,
                                 (route) => false,
                               );
                             } catch (e) {

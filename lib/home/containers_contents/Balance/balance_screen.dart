@@ -1,8 +1,8 @@
-import 'package:dar_el_3loom/Model/balance_model.dart';
+import 'package:dar_el_3loom/models/balance_model.dart';
 import 'package:dar_el_3loom/home/containers_contents/Balance/table_widget_balance.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../BackendSetup Data/Api/api_service.dart';
+import '../../../backend_setup/Api/api_service.dart';
 import '../../../provider/student_login_provider.dart';
 import '../../../provider/parent_login_provider.dart';
 import '../../../utils/app_assets.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../BackendSetup Data/Api/api_service.dart';
-import '../../../../Model/student_time_model.dart';
+import '../../../../backend_setup/Api/api_service.dart';
+import '../../../../models/student_time_model.dart';
 import '../../../../provider/student_login_provider.dart';
 import '../../../../provider/parent_login_provider.dart';
 import '../../../../utils/app_assets.dart';

@@ -1,7 +1,7 @@
 import 'package:dar_el_3loom/home/tabs/profile/profile_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Model/student_login_model.dart';
+import '../../../models/student_login_model.dart';
 import '../../../provider/app_flow.dart';
 import '../../../provider/student_login_provider.dart';
 import '../../../utils/app_assets.dart';

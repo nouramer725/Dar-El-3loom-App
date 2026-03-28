@@ -1,15 +1,15 @@
 import 'dart:io';
-import 'package:dar_el_3loom/Model/assistant_login_model.dart';
-import 'package:dar_el_3loom/Model/mozakrat_model.dart';
-import 'package:dar_el_3loom/Model/parent_login_model.dart';
-import 'package:dar_el_3loom/Model/student_login_model.dart';
-import 'package:dar_el_3loom/Model/teacher_login_model.dart';
+import 'package:dar_el_3loom/models/assistant_login_model.dart';
+import 'package:dar_el_3loom/models/mozakrat_model.dart';
+import 'package:dar_el_3loom/models/parent_login_model.dart';
+import 'package:dar_el_3loom/models/student_login_model.dart';
+import 'package:dar_el_3loom/models/teacher_login_model.dart';
 import 'package:dio/dio.dart';
-import '../../Model/balance_model.dart';
-import '../../Model/group_model.dart';
-import '../../Model/lessons_date_model.dart';
-import '../../Model/student_time_model.dart';
-import '../../Model/takim_model.dart';
+import '../../models/balance_model.dart';
+import '../../models/group_model.dart';
+import '../../models/lessons_date_model.dart';
+import '../../models/student_time_model.dart';
+import '../../models/takim_model.dart';
 import '../../home_teacher/tabs/profile/profile_tabs/get_assistant/assistant_model.dart';
 import '../cache_service.dart';
 

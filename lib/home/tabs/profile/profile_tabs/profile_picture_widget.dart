@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:dar_el_3loom/Model/student_login_model.dart';
+import 'package:dar_el_3loom/models/student_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import '../../../../BackendSetup Data/Api/api_service.dart';
+import '../../../../backend_setup/Api/api_service.dart';
 import '../../../../provider/student_login_provider.dart';
 import '../../../../utils/app_assets.dart';
 import '../../../../utils/app_colors.dart';

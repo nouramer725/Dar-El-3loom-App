@@ -1,8 +1,8 @@
-import 'package:dar_el_3loom/Model/mozakrat_model.dart';
+import 'package:dar_el_3loom/models/mozakrat_model.dart';
 import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../BackendSetup Data/Api/api_service.dart';
+import '../../../backend_setup/Api/api_service.dart';
 import '../../../provider/student_login_provider.dart';
 import '../../../provider/parent_login_provider.dart';
 import '../../../utils/app_colors.dart';

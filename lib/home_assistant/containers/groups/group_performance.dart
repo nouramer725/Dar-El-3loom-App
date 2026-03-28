@@ -1,8 +1,8 @@
 import 'package:dar_el_3loom/home/containers_contents/Mozakrat/filter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../BackendSetup Data/Api/api_service.dart';
-import '../../../Model/group_model.dart';
+import '../../../../backend_setup/Api/api_service.dart';
+import '../../../models/group_model.dart';
 import '../../../provider/assistant_login_provider.dart';
 import '../../../socket/socket_service.dart';
 import '../../../utils/app_colors.dart';

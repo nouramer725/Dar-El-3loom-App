@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Model/teacher_login_model.dart';
+import '../../../models/teacher_login_model.dart';
 import '../../../provider/teacher_login_provider.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';

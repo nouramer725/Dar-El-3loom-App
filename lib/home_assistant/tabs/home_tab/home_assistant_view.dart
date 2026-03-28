@@ -1,4 +1,4 @@
-import 'package:dar_el_3loom/Model/assistant_login_model.dart';
+import 'package:dar_el_3loom/models/assistant_login_model.dart';
 import 'package:dar_el_3loom/home/tabs/home_tab/widget_container.dart';
 import 'package:dar_el_3loom/provider/assistant_login_provider.dart';
 import 'package:flutter/material.dart';

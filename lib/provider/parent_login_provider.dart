@@ -1,9 +1,9 @@
 import 'dart:convert';
-import 'package:dar_el_3loom/Model/parent_login_model.dart';
+import 'package:dar_el_3loom/models/parent_login_model.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../BackendSetup Data/Api/api_service.dart';
-import '../Model/student_login_model.dart';
+import '../../../../backend_setup/Api/api_service.dart';
+import '../models/student_login_model.dart';
 import 'app_flow.dart';
 
 class ParentLoginProvider with ChangeNotifier {

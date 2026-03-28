@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../../utils/responsive.dart';
-import '../../../Model/performance_model.dart';
+import '../../../models/performance_model.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 

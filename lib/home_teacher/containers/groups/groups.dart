@@ -2,13 +2,13 @@ import 'package:dar_el_3loom/provider/teacher_login_provider.dart';
 import 'package:dar_el_3loom/utils/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../Model/group_model.dart';
+import '../../../models/group_model.dart';
 import '../../../home/containers_contents/Mozakrat/filter_widget.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
 import 'groups_teacher_table_widget.dart';
-import '../../../BackendSetup Data/Api/api_service.dart';
+import '../../../../backend_setup/Api/api_service.dart';
 
 class GroupsScreen extends StatefulWidget {
   const GroupsScreen({super.key});

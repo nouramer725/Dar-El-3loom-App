@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-
-import '../../../../../BackendSetup Data/Api/api_service.dart';
+import '../../../../../backend_setup/Api/api_service.dart';
 import 'assistant_model.dart';
 
 class AssistantProvider extends ChangeNotifier {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Model/assistant_login_model.dart';
+import '../models/assistant_login_model.dart';
 import 'app_flow.dart';
 
 class AssistantLoginProvider with ChangeNotifier {

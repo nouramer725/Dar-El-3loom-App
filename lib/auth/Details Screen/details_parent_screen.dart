@@ -1,10 +1,10 @@
-import 'package:dar_el_3loom/Login/Details%20Screen/Controllers/parent_controller.dart';
-import 'package:dar_el_3loom/Model/parent_login_model.dart';
+import 'package:dar_el_3loom/auth/Details%20Screen/Controllers/parent_controller.dart';
+import 'package:dar_el_3loom/models/parent_login_model.dart';
 import 'package:dar_el_3loom/provider/parent_login_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
-import '../../BackendSetup Data/Api/api_service.dart';
+import '../../../../backend_setup/Api/api_service.dart';
 import '../../provider/app_flow.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_routes.dart';
