@@ -194,10 +194,13 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                       type: FilterType.dropdown,
                       color: AppColors.container1Color,
                       items: subjects
+                          .where((s) => s['subject_name'] != null)
                           .map<DropdownMenuItem<String>>(
                             (s) => DropdownMenuItem<String>(
-                              value: s['subject_name'] as String,
-                              child: Text(s['subject_name'] as String),
+                              value: s['subject_name']?.toString() ?? '',
+                              child: Text(
+                                s['subject_name']?.toString() ?? 'Unknown',
+                              ),
                             ),
                           )
                           .toList(),

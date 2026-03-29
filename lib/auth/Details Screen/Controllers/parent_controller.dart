@@ -67,7 +67,7 @@ class ParentController extends ChangeNotifier {
 
     // Lock fields if already have data
     if (id.text.isNotEmpty) idLocked = true;
-    if (name.text.isNotEmpty) nameLocked = true;
+    nameLocked = false;
     if (phoneParent.text.isNotEmpty) phoneParentLocked = true;
     personalIdLocked = false;
     if (password.text.isNotEmpty) {

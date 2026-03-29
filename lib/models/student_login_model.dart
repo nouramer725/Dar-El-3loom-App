@@ -83,7 +83,6 @@ class Student {
     parentId = json['parent_id']?.toString();
     birthCertificate = json['birth_certificate']?.toString();
     profilePicture = json['profile_picture'] as String?;
-
     verified = json['verified'] == 1 || json['verified'] == true;
   }
 

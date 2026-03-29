@@ -71,18 +71,12 @@ class StudentController extends ChangeNotifier {
     code.text = (hasValidValue(student.codTalb) ? student.codTalb : '')!;
     name.text = (hasValidValue(student.nTalb) ? student.nTalb : '')!;
     level.text = (hasValidValue(student.nSaf) ? student.nSaf : '')!;
-    phoneStudent.text = (hasValidValue(student.tel)
-        ? student.tel
-        : '')!;
-    phoneParent.text = (hasValidValue(student.tel1)
-        ? student.tel1
-        : '')!;
+    phoneStudent.text = (hasValidValue(student.tel1) ? student.tel1 : '')!;
+    phoneParent.text = (hasValidValue(student.tel) ? student.tel : '')!;
     nationalId.text = (hasValidValue(student.personalId)
         ? student.personalId
         : '')!;
-    parentId.text = (hasValidValue(student.parentId)
-        ? student.parentId
-        : '')!;
+    parentId.text = (hasValidValue(student.parentId) ? student.parentId : '')!;
     birthImageUrl = buildImageUrl(student.birthCertificate);
     personalImageUrl = buildImageUrl(student.profilePicture);
 
@@ -127,12 +121,11 @@ class StudentController extends ChangeNotifier {
     if (!codeLocked) data['cod_talb'] = code.text;
     if (!nameLocked) data['n_talb'] = name.text;
     if (!levelLocked) data['n_saf'] = selectedLevel;
-    if (!phoneStudentLocked) data['tel'] = phoneStudent.text;
-    if (!phoneParentLocked) data['tel_1'] = phoneParent.text;
+    if (!phoneStudentLocked) data['tel_1'] = phoneStudent.text;
+    if (!phoneParentLocked) data['tel'] = phoneParent.text;
     if (!nationalIdLocked) data['personal_id'] = nationalId.text;
     if (!parentIdLocked) data['parent_id'] = parentId.text;
     if (!passwordLocked) data['password'] = password.text;
-
     if (birthImage != null) data['birth_certificate'] = birthImage;
     if (personalImage != null) data['profile_picture'] = personalImage;
 

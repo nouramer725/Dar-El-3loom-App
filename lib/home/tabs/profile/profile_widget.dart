@@ -11,7 +11,7 @@ class ProfileWidget extends StatelessWidget {
   ProfileWidget({
     this.onTap,
     required this.text,
-    required this.icon,
+    this.icon = const SizedBox(),
     super.key,
   });
 

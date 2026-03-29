@@ -150,7 +150,7 @@ class _MozakratScreenState extends State<MozakratScreen> {
                           ),
                           child: TableWidget(
                             tableTitleColor: AppColors.container3Color,
-                            headers: ["المذكرة", "المدرس", "المادة", "السعر"],
+                            headers: ["المدرس", "المذكرة", "المادة", "السعر"],
                             lessons: mozakrat,
                           ),
                         ),

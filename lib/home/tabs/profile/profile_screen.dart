@@ -67,7 +67,6 @@ class ProfileScreen extends StatelessWidget {
               text:
                   "الكود الخاص ب ولي الامر : ${student?.parentId ?? "الكود الخاص ب ولي الامر"}",
               onTap: () async {},
-              icon: Icon(Icons.add_alert),
             ),
           ],
         ),
