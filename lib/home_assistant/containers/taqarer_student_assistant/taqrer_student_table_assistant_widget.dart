@@ -127,7 +127,7 @@ class TaqrerStudentTableAssistantWidget extends StatelessWidget {
         ),
 
         Table(
-          columnWidths: const {0: FlexColumnWidth(5), 1: FlexColumnWidth(4)},
+          columnWidths: const {0: FlexColumnWidth(5), 1: FlexColumnWidth(2)},
           children: [
             TableRow(
               decoration: BoxDecoration(
@@ -135,7 +135,7 @@ class TaqrerStudentTableAssistantWidget extends StatelessWidget {
                 border: Border.all(color: tableTitleColor, width: 2),
               ),
               children: [
-                Cell(text: " درجة الامتحان الشامل لشهر $month", isHeader: true),
+                Cell(text: " درجة الامتحان الشامل", isHeader: true),
                 Cell(
                   text:
                       "${totals['totalgrades'] ?? 0}/${totals['totalmax'] ?? 0}",
@@ -159,16 +159,15 @@ class CustomTableCell extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: h(14)),
-      child: Center(
-        child: Text(
-          text ?? '',
-          style: isHeader
-              ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(18))
-              : AppText.mediumText(
-                  color: AppColors.blackColor,
-                  fontSize: sp(17),
-                ),
-        ),
+      child: Text(
+        textAlign: TextAlign.center,
+        text ?? '',
+        style: isHeader
+            ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(18))
+            : AppText.mediumText(
+                color: AppColors.blackColor,
+                fontSize: sp(17),
+              ),
       ),
     );
   }
@@ -184,6 +183,7 @@ class Cell extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(h(10)),
       child: Text(
+        textAlign: TextAlign.center,
         text,
         style: isHeader
             ? AppText.boldText(color: AppColors.blackColor, fontSize: sp(16))
