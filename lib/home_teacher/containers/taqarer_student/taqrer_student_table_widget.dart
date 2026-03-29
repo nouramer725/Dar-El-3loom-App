@@ -50,17 +50,6 @@ class TaqrerStudentTableWidget extends StatelessWidget {
       return sum + (maxGrade != null ? maxGrade.toDouble() : 0);
     });
     final displayMax = totalMax == 0 ? 100 : totalMax;
-
-    String month = '';
-
-    try {
-      if (rawDate.isNotEmpty) {
-        DateTime parsedDate = DateTime.parse(rawDate);
-        month = parsedDate.month.toString();
-      }
-    } catch (e) {
-      month = '';
-    }
     //0003458473
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -163,10 +152,10 @@ class TaqrerStudentTableWidget extends StatelessWidget {
                 border: Border.all(color: tableTitleColor, width: 2),
               ),
               children: [
-                Cell(text: "درجة الامتحان الشامل لشهر $month", isHeader: true),
+                Cell(text: "درجة الامتحان الشامل", isHeader: true),
                 Cell(
-                  // text: "$totalGrades/${totals["totalmax"] ?? displayMax}",
-                  text: "$totalGrades/$displayMax",
+                  text: "$totalGrades/${totals["totalmax"] ?? displayMax}",
+                  // text: "$totalGrades/$displayMax",
                   isHeader: true,
                 ),
               ],
