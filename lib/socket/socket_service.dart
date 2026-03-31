@@ -11,7 +11,7 @@ class SocketService {
 
   void connect() {
     socket = IO.io(
-      "http://192.168.1.12:3000",
+      "https://daral3lom.cloud",
       IO.OptionBuilder()
           .setTransports(['websocket'])
           .enableReconnection()

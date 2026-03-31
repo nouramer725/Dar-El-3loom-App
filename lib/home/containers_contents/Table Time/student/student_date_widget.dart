@@ -55,7 +55,14 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
   }
 
   Future<void> fetchSubjects() async {
-    subjects = await apiService.fetchScheduleSubjects(childId: childId);
+    final data = await apiService.fetchScheduleSubjects(childId: childId);
+
+    subjects = data
+        .where(
+          (s) => s != null && s.trim().isNotEmpty && s.toLowerCase() != "null",
+        )
+        .toList();
+
     setState(() => isLoading = false);
   }
 
@@ -76,66 +83,67 @@ class _StudentDateWidgetState extends State<StudentDateWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child:
-      isLoading
+      child: isLoading
           ? const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.container2Color,
-        ),
-      )
-          :
-      Column(
-        spacing: h(10),
-        children: [
-          /// المادة
-          FilterWidget(
-            textColor: AppColors.blackColor,
-            type: FilterType.dropdown,
-            color: AppColors.container2Color,
-            selectedValue: selectedSubject,
-            text: "المادة",
-            items: subjects
-                .map((s) => DropdownMenuItem(value: s, child: Text(s)))
-                .toList(),
-            onChanged: (v) {
-              setState(() {
-                selectedSubject = v;
-              });
-              fetchDetails();
-            },
-          ),
-
-          /// التاريخ
-          FilterWidget(
-            textColor: AppColors.blackColor,
-            type: FilterType.dropdown,
-            color: AppColors.container2Color,
-            selectedValue: selectedType,
-            text: "التاريخ",
-            items: const [
-              DropdownMenuItem(value: "today", child: Text("اليوم")),
-              DropdownMenuItem(value: "future", child: Text("القادم")),
-            ],
-            onChanged: (v) {
-              setState(() {
-                selectedType = v;
-              });
-              fetchDetails();
-            },
-          ),
-
-          SizedBox(height: h(20)),
-
-          /// جدول أو صورة فارغة
-          if (sessions.isNotEmpty)
-            StudentDatesTableWidget(
-              tableTitleColor: AppColors.container2Color,
-              sessions: sessions,
+              child: CircularProgressIndicator(
+                color: AppColors.container2Color,
+              ),
             )
-          else
-            Image.asset(AppAssets.container2Image),
-        ],
-      ),
+          : Column(
+              spacing: h(10),
+              children: [
+                /// المادة
+                FilterWidget(
+                  textColor: AppColors.blackColor,
+                  type: FilterType.dropdown,
+                  color: AppColors.container2Color,
+                  selectedValue: selectedSubject,
+                  text: "المادة",
+                  items: subjects
+                      .where(
+                        (s) => s.trim().isNotEmpty && s.toLowerCase() != "null",
+                      )
+                      .map((s) => DropdownMenuItem(value: s, child: Text(s)))
+                      .toList(),
+                  onChanged: (v) {
+                    setState(() {
+                      selectedSubject = v;
+                    });
+                    fetchDetails();
+                  },
+                ),
+
+                /// التاريخ
+                FilterWidget(
+                  textColor: AppColors.blackColor,
+                  type: FilterType.dropdown,
+                  color: AppColors.container2Color,
+                  selectedValue: selectedType,
+                  text: "التاريخ",
+                  items: const [
+                    DropdownMenuItem(value: "today", child: Text("اليوم")),
+                    DropdownMenuItem(value: "future", child: Text("القادم")),
+                  ],
+                  onChanged: (v) {
+                    setState(() {
+                      selectedType = v;
+                    });
+                    fetchDetails();
+                  },
+                ),
+
+                SizedBox(height: h(20)),
+
+                /// جدول أو صورة فارغة
+                if (sessions.isNotEmpty)
+                  StudentDatesTableWidget(
+                    tableTitleColor: AppColors.container2Color,
+                    sessions: sessions,
+                  )
+                else
+                  Image.asset(AppAssets.container2Image),
+              ],
+            ),
     );
   }
 }

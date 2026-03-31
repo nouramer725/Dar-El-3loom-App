@@ -51,7 +51,7 @@ class TeacherController extends ChangeNotifier {
       return path;
     }
 
-    const baseUrl = 'http://10.0.2.2:3000';
+    const baseUrl = 'https://daral3lom.cloud';
     if (path.startsWith('/')) {
       return '$baseUrl$path';
     } else {

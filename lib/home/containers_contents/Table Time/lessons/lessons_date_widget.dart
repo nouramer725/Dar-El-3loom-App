@@ -61,7 +61,13 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
   }
 
   Future<void> fetchFilters() async {
-    subjects = await apiService.fetchLessonsFilters(childId: childId);
+    final data = await apiService.fetchLessonsFilters(childId: childId);
+
+    subjects = data.where((s) {
+      final name = s['subject_name']?.toString().trim().toLowerCase();
+      return name != null && name.isNotEmpty && name != "null";
+    }).toList();
+
     setState(() => isLoading = false);
   }
 
@@ -130,12 +136,22 @@ class _LessonsDateWidgetState extends State<LessonsDateWidget> {
                 color: AppColors.container2Color,
                 selectedValue: selectedSubject,
                 text: "المادة",
-                items: subjects.map<DropdownMenuItem<String>>((s) {
-                  return DropdownMenuItem<String>(
-                    value: s['subject_name'].toString(),
-                    child: Text(s['subject_name'].toString()),
-                  );
-                }).toList(),
+                items: subjects
+                    .where((s) {
+                      final name = s['subject_name']
+                          ?.toString()
+                          .trim()
+                          .toLowerCase();
+                      return name != null && name.isNotEmpty && name != "null";
+                    })
+                    .map<DropdownMenuItem<String>>((s) {
+                      final name = s['subject_name'].toString();
+                      return DropdownMenuItem<String>(
+                        value: name,
+                        child: Text(name),
+                      );
+                    })
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     selectedSubject = value;

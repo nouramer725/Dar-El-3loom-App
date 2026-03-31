@@ -19,9 +19,7 @@ class ApiService {
   ApiService({String? token}) {
     dio = Dio(
       BaseOptions(
-        //mobile : 192.168.1.12
-        //emulator : 10.0.2.2
-        baseUrl: 'http://192.168.1.12:3000',
+        baseUrl: 'https://daral3lom.cloud',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer $token',
