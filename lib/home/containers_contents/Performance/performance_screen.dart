@@ -273,6 +273,7 @@ class _PerformanceScreenState extends State<PerformanceScreen> {
                         ? PerformanceTableWidget(
                             tableTitleColor: AppColors.container1Color,
                             sessions: fetchedSessions,
+                            monthName: selectedMonth!.split('/')[0],
                           )
                         : Image.asset(AppAssets.container1Image),
                   ],
