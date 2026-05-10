@@ -580,7 +580,7 @@ class ApiService {
     return List<Map<String, dynamic>>.from(response.data['data']);
   }
 
-  Future<List<BalanceModel>> fetchBalanceDetails({
+  Future<Map<String, dynamic>> fetchBalanceDetails({
     String? subject,
     String? teacher,
     String? status,
@@ -598,7 +598,16 @@ class ApiService {
 
     final data = response.data['data'] as List;
 
-    return data.map((e) => BalanceModel.fromJson(e)).toList();
+    final balances =
+    data.map((e) => BalanceModel.fromJson(e)).toList();
+
+    final total =
+        double.tryParse(response.data['total'].toString()) ?? 0;
+
+    return {
+      "balances": balances,
+      "total": total,
+    };
   }
 
   Future<Map<String, dynamic>?> fetchTakiim({

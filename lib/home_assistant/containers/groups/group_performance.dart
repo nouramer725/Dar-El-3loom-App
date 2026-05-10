@@ -8,6 +8,7 @@ import '../../../socket/socket_service.dart';
 import '../../../utils/app_colors.dart';
 import '../../../utils/app_text.dart';
 import '../../../utils/responsive.dart';
+import '../../../widgets/custom_text_form_field_widget.dart';
 import 'groups_assistant_performance_widget.dart';
 
 class GroupPerformanceScreen extends StatefulWidget {
@@ -30,6 +31,12 @@ class _GroupPerformanceScreenState extends State<GroupPerformanceScreen> {
   bool hasChanges = false;
   SocketService? socketService;
 
+  List<StudentModel> allStudents = [];
+  List<StudentModel> filteredStudents = [];
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +44,15 @@ class _GroupPerformanceScreenState extends State<GroupPerformanceScreen> {
 
     socketService = SocketService();
     socketService?.connect();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    codeController.dispose();
+    socketService?.disconnect();
+
+    super.dispose();
   }
 
   void printSelectedStudents() {
@@ -47,6 +63,23 @@ class _GroupPerformanceScreenState extends State<GroupPerformanceScreen> {
         );
       }
     }
+  }
+
+  void filterStudents() {
+    final nameQuery = nameController.text.toLowerCase().trim();
+    final codeQuery = codeController.text.toLowerCase().trim();
+
+    setState(() {
+      filteredStudents = allStudents.where((student) {
+        final matchesName = student.name.toLowerCase().contains(nameQuery);
+
+        final matchesCode = student.code.toLowerCase().contains(codeQuery);
+
+        return matchesName && matchesCode;
+      }).toList();
+
+      students = filteredStudents;
+    });
   }
 
   Future<void> loadGroups() async {
@@ -87,9 +120,14 @@ class _GroupPerformanceScreenState extends State<GroupPerformanceScreen> {
     if (!mounted) return;
 
     setState(() {
-      students = group?.students ?? [];
+      allStudents = group?.students ?? [];
+      filteredStudents = List.from(allStudents);
+
+      students = filteredStudents;
+
       attendance = List.generate(students.length, (_) => false);
       homework = List.generate(students.length, (_) => false);
+
       loadingStudents = false;
       hasChanges = false;
     });
@@ -218,7 +256,44 @@ class _GroupPerformanceScreenState extends State<GroupPerformanceScreen> {
                       }
                     },
                   ),
-
+                  if (selectedGroup != null || students.isNotEmpty)
+                    Row(
+                      spacing: w(17),
+                      children: [
+                        Expanded(
+                          child: CustomTextFormFieldWidget(
+                            onChanged: (_) => filterStudents(),
+                            controller: nameController,
+                            keyboardType: TextInputType.text,
+                            hintText: "بحث بالاسم",
+                            cursorColor: AppColors.container3Color,
+                            borderColor: AppColors.container3Color,
+                            borderWidth: 2,
+                            hintStyle: AppText.boldText(
+                              color: AppColors.greyColor,
+                              fontSize: sp(16),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: CustomTextFormFieldWidget(
+                            controller: codeController,
+                            onChanged: (_) => filterStudents(),
+                            cursorColor: AppColors.container3Color,
+                            borderColor: AppColors.container3Color,
+                            borderWidth: 2,
+                            hintStyle: AppText.boldText(
+                              color: AppColors.greyColor,
+                              fontSize: sp(16),
+                            ),
+                            hintText: "بحث بالكود",
+                            prefixIcon: const Icon(Icons.search),
+                            filled: true,
+                            fillColor: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   if (loadingStudents)
                     const Center(
                       child: CircularProgressIndicator(

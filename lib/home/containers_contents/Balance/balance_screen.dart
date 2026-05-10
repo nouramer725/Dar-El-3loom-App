@@ -26,7 +26,7 @@ class _BalanceScreenState extends State<BalanceScreen> {
   String? selectedSubject;
   String? selectedTeacher;
   String? selectedStatus;
-
+  double totalPayments = 0;
   bool isLoading = true;
 
   late ApiService apiService;
@@ -95,15 +95,19 @@ class _BalanceScreenState extends State<BalanceScreen> {
       childId = parentProvider.selectedChild!.codTalb;
     }
 
-    balances = await apiService.fetchBalanceDetails(
+    final result = await apiService.fetchBalanceDetails(
       subject: selectedSubject,
       teacher: selectedTeacher,
       status: selectedStatus,
       childId: childId,
     );
 
+    balances = result["balances"];
+    totalPayments = result["total"];
+
     setState(() => isLoading = false);
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +219,36 @@ class _BalanceScreenState extends State<BalanceScreen> {
 
                         SizedBox(height: h(20)),
 
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "اجمالي المدفوعات : ",
+                                  textAlign: TextAlign.center,
+                                  style: AppText.boldText(
+                                    color: AppColors.blackColor,
+                                    fontSize: sp(18),
+                                  ),
+                                ),
+                              ),
+
+                              Expanded(
+                                child: Text(
+                                  totalPayments.toStringAsFixed(0),
+                                  textAlign: TextAlign.end,
+                                  style: AppText.boldText(
+                                    color: AppColors.blackColor,
+                                    fontSize: sp(18),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        SizedBox(height: h(20)),
                         if (balances.isNotEmpty)
                           BalanceTableWidget(
                             tableTitleColor: AppColors.container4Color,
