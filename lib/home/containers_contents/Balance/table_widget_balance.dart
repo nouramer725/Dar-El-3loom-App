@@ -7,10 +7,12 @@ import '../../../utils/app_text.dart';
 class BalanceTableWidget extends StatelessWidget {
   final Color tableTitleColor;
   final List<BalanceModel> balances;
+  final String total;
 
   const BalanceTableWidget({
     required this.tableTitleColor,
     required this.balances,
+    required this.total,
     super.key,
   });
 
@@ -83,6 +85,27 @@ class BalanceTableWidget extends StatelessWidget {
               ],
             );
           },
+        ),
+
+        SizedBox(height: h(30)),
+
+        Table(
+          columnWidths: const {0: FlexColumnWidth(15), 1: FlexColumnWidth(9)},
+          children: [
+            TableRow(
+              decoration: BoxDecoration(
+                color: tableTitleColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              children: [
+                const CustomTableCell(
+                  text: "اجمالي المدفوعات : ",
+                  isHeader: true,
+                ),
+                CustomTableCell(text: total, isHeader: true),
+              ],
+            ),
+          ],
         ),
       ],
     );

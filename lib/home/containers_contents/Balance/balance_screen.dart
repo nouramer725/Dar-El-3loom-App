@@ -108,7 +108,6 @@ class _BalanceScreenState extends State<BalanceScreen> {
     setState(() => isLoading = false);
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<ParentLoginProvider, StudentLoginProvider>(
@@ -217,42 +216,46 @@ class _BalanceScreenState extends State<BalanceScreen> {
                           },
                         ),
 
-                        SizedBox(height: h(20)),
+                        // SizedBox(height: h(20)),
 
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  "اجمالي المدفوعات : ",
-                                  textAlign: TextAlign.center,
-                                  style: AppText.boldText(
-                                    color: AppColors.blackColor,
-                                    fontSize: sp(18),
-                                  ),
-                                ),
-                              ),
-
-                              Expanded(
-                                child: Text(
-                                  totalPayments.toStringAsFixed(0),
-                                  textAlign: TextAlign.end,
-                                  style: AppText.boldText(
-                                    color: AppColors.blackColor,
-                                    fontSize: sp(18),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+                        // if (totalPayments != 0)
+                        //   Container(
+                        //     padding: EdgeInsets.symmetric(horizontal: w(10)),
+                        //     decoration: BoxDecoration(
+                        //       borderRadius: BorderRadius.circular(10),
+                        //     ),
+                        //     child: Row(
+                        //       children: [
+                        //         Expanded(
+                        //           child: Text(
+                        //             "اجمالي المدفوعات : ",
+                        //             style: AppText.regularText(
+                        //               color: AppColors.blackColor,
+                        //               fontSize: sp(18),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //
+                        //         Expanded(
+                        //           child: Text(
+                        //             totalPayments.toStringAsFixed(0),
+                        //             textAlign: TextAlign.end,
+                        //             style: AppText.regularText(
+                        //               color: AppColors.blackColor,
+                        //               fontSize: sp(18),
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
 
                         SizedBox(height: h(20)),
                         if (balances.isNotEmpty)
                           BalanceTableWidget(
                             tableTitleColor: AppColors.container4Color,
                             balances: balances,
+                            total: totalPayments.toStringAsFixed(0),
                           )
                         else
                           Image.asset(AppAssets.container4Image),
