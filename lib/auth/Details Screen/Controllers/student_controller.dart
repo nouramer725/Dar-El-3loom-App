@@ -32,15 +32,15 @@ class StudentController extends ChangeNotifier {
   bool confirmPasswordLocked = false;
   bool levelLocked = false;
 
-  File? birthImage;
+  // File? birthImage;
   File? personalImage;
 
-  String? birthImageUrl;
+  // String? birthImageUrl;
   String? personalImageUrl;
 
   String? selectedLevel;
 
-  bool get hasBirthImage => birthImage != null || birthImageUrl != null;
+  // bool get hasBirthImage => birthImage != null || birthImageUrl != null;
   bool get hasPersonalImage =>
       personalImage != null || personalImageUrl != null;
 
@@ -77,7 +77,7 @@ class StudentController extends ChangeNotifier {
         ? student.personalId
         : '')!;
     parentId.text = (hasValidValue(student.parentId) ? student.parentId : '')!;
-    birthImageUrl = buildImageUrl(student.birthCertificate);
+    // birthImageUrl = buildImageUrl(student.birthCertificate);
     personalImageUrl = buildImageUrl(student.profilePicture);
 
     // Lock fields if already have data
@@ -105,8 +105,8 @@ class StudentController extends ChangeNotifier {
     final image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       if (isBirth) {
-        birthImage = File(image.path);
-        birthImageUrl = null;
+        // birthImage = File(image.path);
+        // birthImageUrl = null;
       } else {
         personalImage = File(image.path);
         personalImageUrl = null;
@@ -126,7 +126,7 @@ class StudentController extends ChangeNotifier {
     if (!nationalIdLocked) data['personal_id'] = nationalId.text;
     if (!parentIdLocked) data['parent_id'] = parentId.text;
     if (!passwordLocked) data['password'] = password.text;
-    if (birthImage != null) data['birth_certificate'] = birthImage;
+    // if (birthImage != null) data['birth_certificate'] = birthImage;
     if (personalImage != null) data['profile_picture'] = personalImage;
 
     return data;

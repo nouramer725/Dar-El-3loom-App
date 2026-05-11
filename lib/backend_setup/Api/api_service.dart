@@ -119,15 +119,15 @@ class ApiService {
       "password": student.password,
     });
 
-    if (student.birthCertificate != null &&
-        student.birthCertificate!.isNotEmpty) {
-      formData.files.add(
-        MapEntry(
-          "birth_certificate",
-          await MultipartFile.fromFile(student.birthCertificate!),
-        ),
-      );
-    }
+    // if (student.birthCertificate != null &&
+    //     student.birthCertificate!.isNotEmpty) {
+    //   formData.files.add(
+    //     MapEntry(
+    //       "birth_certificate",
+    //       await MultipartFile.fromFile(student.birthCertificate!),
+    //     ),
+    //   );
+    // }
 
     if (student.profilePicture != null && student.profilePicture!.isNotEmpty) {
       formData.files.add(

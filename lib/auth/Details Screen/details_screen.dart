@@ -174,13 +174,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           },
                         ),
 
-                        buildImagePicker(
-                          context,
-                          "شهادة الميلاد",
-                          controller.birthImage,
-                          () => controller.pickImage(true),
-                          controller.birthImageUrl,
-                        ),
+                        // buildImagePicker(
+                        //   context,
+                        //   "شهادة الميلاد",
+                        //   controller.birthImage,
+                        //   () => controller.pickImage(true),
+                        //   controller.birthImageUrl,
+                        // ),
                         buildImagePicker(
                           context,
                           "صورة شخصية",
@@ -211,9 +211,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             if (controller.personalImage == null &&
                                 controller.personalImageUrl == null)
                               errors.add("برجاء اختيار صورة شخصية");
-                            if (controller.birthImage == null &&
-                                controller.birthImageUrl == null)
-                              errors.add("برجاء اختيار شهادة الميلاد");
+                            // if (controller.birthImage == null &&
+                            //     controller.birthImageUrl == null)
+                            //   errors.add("برجاء اختيار شهادة الميلاد");
 
                             if (errors.isNotEmpty) {
                               Fluttertoast.showToast(
@@ -247,7 +247,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 tel1: controller.phoneStudent.text,
                                 tel: controller.phoneParent.text,
                                 personalId: controller.nationalId.text,
-                                birthCertificate: controller.birthImage?.path,
+                                // birthCertificate: controller.birthImage?.path,
                                 profilePicture: controller.personalImage?.path,
                                 verified: true,
                                 password: controller.password.text,
