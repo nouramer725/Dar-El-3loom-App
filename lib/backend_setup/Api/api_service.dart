@@ -598,16 +598,13 @@ class ApiService {
 
     final data = response.data['data'] as List;
 
-    final balances =
-    data.map((e) => BalanceModel.fromJson(e)).toList();
+    final balances = data.map((e) => BalanceModel.fromJson(e)).toList();
 
-    final total =
-        double.tryParse(response.data['total'].toString()) ?? 0;
+    final total = double.tryParse(response.data['total'].toString()) ?? 0;
+    final totalCashIn =
+        double.tryParse(response.data['totalCashIn'].toString()) ?? 0;
 
-    return {
-      "balances": balances,
-      "total": total,
-    };
+    return {"balances": balances, "total": total, "totalCashIn": totalCashIn};
   }
 
   Future<Map<String, dynamic>?> fetchTakiim({

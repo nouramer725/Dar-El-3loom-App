@@ -8,11 +8,13 @@ class BalanceTableWidget extends StatelessWidget {
   final Color tableTitleColor;
   final List<BalanceModel> balances;
   final String total;
+  final String totalCashIn;
 
   const BalanceTableWidget({
     required this.tableTitleColor,
     required this.balances,
     required this.total,
+    required this.totalCashIn,
     super.key,
   });
 
@@ -95,11 +97,36 @@ class BalanceTableWidget extends StatelessWidget {
             TableRow(
               decoration: BoxDecoration(
                 color: tableTitleColor,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
               ),
               children: [
                 const CustomTableCell(
                   text: "اجمالي المدفوعات : ",
+                  isHeader: true,
+                ),
+                CustomTableCell(text: totalCashIn, isHeader: true),
+              ],
+            ),
+          ],
+        ),
+
+        Table(
+          columnWidths: const {0: FlexColumnWidth(15), 1: FlexColumnWidth(9)},
+          children: [
+            TableRow(
+              decoration: BoxDecoration(
+                color: tableTitleColor,
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              children: [
+                const CustomTableCell(
+                  text: "اجمالي المديونية : ",
                   isHeader: true,
                 ),
                 CustomTableCell(text: total, isHeader: true),
